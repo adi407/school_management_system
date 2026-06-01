@@ -1,0 +1,60 @@
+.teacher-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+
+.stat-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 20px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+}
+
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity .15s, transform .15s;
+  &:hover { opacity: .88; transform: translateX(2px); }
+  &--purple { background: rgba(var(--purple-rgb, 147,51,234), .1); color: var(--accent-5); }
+  &--blue   { background: rgba(var(--accent-rgb), .1);              color: var(--accent);   }
+  &--green  { background: rgba(var(--green-rgb),  .1);              color: var(--success);  }
+}
+.section-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; }
+
+.schedule-list { }
+.schedule-item {
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  border-bottom: 1px solid var(--border); transition: background var(--transition);
+  &:last-child { border-bottom: none; }
+  &:hover { background: var(--bg-hover); }
+  &--done { opacity: .55; }
+  &__time    { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); width: 90px; flex-shrink: 0; }
+  &__body    { flex: 1; }
+  &__subject { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  &__meta    { margin-top: 2px; }
+}
+
+.task-list { }
+.task-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  &:last-child { border-bottom: none; }
+  &__body { flex: 1; }
+  &__text { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+}
+
+@media (max-width: 1100px) {
+  .teacher-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .schedule-item__time { width: 72px; font-size: 10px; }
+}

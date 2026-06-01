@@ -1,0 +1,111 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Campus Pulse ✨ USP</span>
+    <h1 class="page-header__title">Student Wellness Dashboard</h1>
+    <p class="page-header__subtitle">Today's anonymous mood check-ins — {{ today | date:'EEE, d MMMM yyyy' }}</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--ghost btn--sm" (click)="load()">↻ Refresh</button>
+  </div>
+</div>
+
+<!-- Alert banner -->
+@if (alertClasses().length > 0) {
+  <div class="alert-banner">
+    <div class="alert-banner__icon">🚨</div>
+    <div class="alert-banner__body">
+      <strong>Counselor Alert: {{ alertClasses().length }} class{{ alertClasses().length > 1 ? 'es need' : ' needs' }} attention</strong>
+      <div class="text-sm">
+        @for (cls of alertClasses(); track cls.classId) {
+          <span class="alert-class-tag">{{ cls.className }} ({{ cls.negativePct | number:'1.0-1' }}% negative)</span>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+@if (loading()) {
+  <div class="loading-state"><div class="spinner"></div><span>Loading pulse data…</span></div>
+}
+
+@else if (error()) {
+  <div class="alert alert--error">{{ error() }}</div>
+}
+
+@else {
+
+<!-- School-wide summary -->
+<div class="summary-row mb-32">
+  <div class="summary-card">
+    <div class="summary-card__value">{{ totalCheckins() }}</div>
+    <div class="summary-card__label">Total Check-ins Today</div>
+  </div>
+  <div class="summary-card summary-card--green">
+    <div class="summary-card__value">{{ overallPositivePct() }}%</div>
+    <div class="summary-card__label">Students Feeling Great / Good</div>
+  </div>
+  <div class="summary-card summary-card--red">
+    <div class="summary-card__value">{{ alertClasses().length }}</div>
+    <div class="summary-card__label">Classes Needing Attention</div>
+  </div>
+</div>
+
+<!-- Per-class cards -->
+@if (pulses().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">💙</div>
+    <h3>No check-ins yet today</h3>
+    <p>Students haven't submitted their mood check-ins yet. Check back later.</p>
+  </div>
+}
+
+<div class="class-grid">
+  @for (pulse of pulses(); track pulse.classId) {
+    <div class="class-card" [ngClass]="pulse.alertTriggered ? 'class-card--alert' : ''">
+      <div class="class-card__header">
+        <div>
+          <div class="class-name">{{ pulse.className }}</div>
+          <div class="text-xs text-muted">{{ pulse.totalCheckins }} check-ins</div>
+        </div>
+        @if (pulse.alertTriggered) {
+          <span class="alert-badge">🚨 Alert</span>
+        } @else {
+          <span class="ok-badge">✓ OK</span>
+        }
+      </div>
+
+      <!-- Mood distribution bar -->
+      <div class="mood-bar" title="Mood breakdown">
+        @for (mood of moodKeys; track mood) {
+          @if (moodCount(pulse, mood) > 0) {
+            <div class="mood-bar__segment"
+                 [style.width.%]="moodBarWidth(moodCount(pulse, mood), pulse.totalCheckins)"
+                 [style.background]="MOOD_CONFIG[mood].color"
+                 [title]="MOOD_CONFIG[mood].emoji + ' ' + MOOD_CONFIG[mood].label + ': ' + moodCount(pulse, mood)">
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Mood emoji counts -->
+      <div class="mood-counts">
+        @for (mood of moodKeys; track mood) {
+          <div class="mood-count" [title]="MOOD_CONFIG[mood].label">
+            <span class="mood-count__emoji">{{ MOOD_CONFIG[mood].emoji }}</span>
+            <span class="mood-count__num">{{ moodCount(pulse, mood) }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Negative % indicator -->
+      @if (pulse.totalCheckins > 0) {
+        <div class="neg-indicator" [ngClass]="pulse.alertTriggered ? 'neg-indicator--alert' : ''">
+          {{ pulse.negativePct | number:'1.0-1' }}% negative
+          @if (pulse.alertTriggered) { — follow up recommended }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+}

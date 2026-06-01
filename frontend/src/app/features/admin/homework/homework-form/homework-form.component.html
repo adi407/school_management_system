@@ -1,0 +1,141 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Academics</span>
+    <h1 class="page-header__title">{{ isEdit() ? 'Edit' : 'New' }} Assignment</h1>
+    <p class="page-header__subtitle">Assign homework to a class or subject</p>
+  </div>
+  <div class="page-header__actions">
+    <a [routerLink]="backUrl()" class="btn btn--ghost">← Back to Homework</a>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+}
+
+@else {
+  <div class="form-card card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      @if (error()) {
+        <div class="alert alert--error mb-24">{{ error() }}</div>
+      }
+
+      <!-- School-wide broadcast toggle -->
+      <div class="broadcast-toggle" [class.broadcast-toggle--active]="f['isSchoolWide'].value">
+        <label class="toggle-label">
+          <input type="checkbox" formControlName="isSchoolWide" class="toggle-checkbox">
+          <span class="toggle-text">
+            <strong>📢 Broadcast to all classes</strong>
+            <span class="text-muted text-sm">
+              {{ f['isSchoolWide'].value
+                ? ' — Visible to every student &amp; parent in the school'
+                : ' — Assign to a specific class below' }}
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <!-- Class & Subject row (hidden when school-wide) -->
+      @if (!f['isSchoolWide'].value) {
+        <div class="form-row">
+          <div class="form-group" [class.is-invalid]="f['classId'].invalid && f['classId'].touched">
+            <label class="form-label">Class <span class="required">*</span></label>
+            <select formControlName="classId" class="form-select">
+              <option value="">Select class…</option>
+              @for (cls of classes(); track cls.id) {
+                <option [value]="cls.id">{{ cls.name }}</option>
+              }
+            </select>
+            @if (f['classId'].invalid && f['classId'].touched) {
+              <span class="field-error">Class is required</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Subject <span class="text-muted">(optional)</span></label>
+            <select formControlName="subjectId" class="form-select">
+              <option value="">No subject</option>
+              @for (sub of subjects(); track sub.id) {
+                <option [value]="sub.id">{{ sub.name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      }
+
+      <!-- Title -->
+      <div class="form-group" [class.is-invalid]="f['title'].invalid && f['title'].touched">
+        <label class="form-label">Title <span class="required">*</span></label>
+        <input formControlName="title" type="text" class="form-input"
+               placeholder="e.g. Chapter 5 Exercise — Quadratic Equations">
+        @if (f['title'].invalid && f['title'].touched) {
+          <span class="field-error">Title must be at least 5 characters</span>
+        }
+      </div>
+
+      <!-- Description -->
+      <div class="form-group" [class.is-invalid]="f['description'].invalid && f['description'].touched">
+        <label class="form-label">Description / Instructions <span class="required">*</span></label>
+        <textarea formControlName="description" class="form-textarea" rows="5"
+                  placeholder="Explain what students need to do, page numbers, format requirements…"></textarea>
+        @if (f['description'].invalid && f['description'].touched) {
+          <span class="field-error">Description must be at least 10 characters</span>
+        }
+      </div>
+
+      <!-- Due date + estimated time row -->
+      <div class="form-row">
+        <div class="form-group" [class.is-invalid]="f['dueDate'].invalid && f['dueDate'].touched">
+          <label class="form-label">Due Date <span class="required">*</span></label>
+          <input formControlName="dueDate" type="date" class="form-input">
+          @if (f['dueDate'].invalid && f['dueDate'].touched) {
+            <span class="field-error">Due date is required and must be in the future</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Estimated Time <span class="text-muted">(minutes)</span></label>
+          <input formControlName="estimatedMinutes" type="number" class="form-input"
+                 min="5" max="240" placeholder="e.g. 45">
+        </div>
+      </div>
+
+      <!-- Academic Year (optional) -->
+      <div class="form-group">
+        <label class="form-label">Academic Year <span class="text-muted">(optional)</span></label>
+        <select formControlName="academicYearId" class="form-select">
+          <option value="">Select academic year…</option>
+          @for (ay of academicYears(); track ay.id) {
+            <option [value]="ay.id">{{ ay.name }}{{ ay.isCurrent ? ' (Current)' : '' }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Publish toggle -->
+      <div class="publish-toggle">
+        <label class="toggle-label">
+          <input type="checkbox" formControlName="isPublished" class="toggle-checkbox">
+          <span class="toggle-text">
+            <strong>{{ f['isPublished'].value ? 'Published' : 'Draft' }}</strong>
+            <span class="text-muted text-sm">
+              {{ f['isPublished'].value
+                ? ' — Students can see this assignment immediately'
+                : ' — Save as draft; publish when ready' }}
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <a [routerLink]="backUrl()" class="btn btn--ghost">Cancel</a>
+        <button type="submit" class="btn btn--primary" [disabled]="submitting()">
+          @if (submitting()) { <span class="spinner spinner--sm"></span> }
+          {{ isEdit() ? 'Update Assignment' : 'Create Assignment' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+}

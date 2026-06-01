@@ -1,0 +1,133 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Parent Portal</span>
+    <h1 class="page-header__title">
+      @if (data()) { Welcome, {{ data()!.guardianName.split(' ')[0] }} 👋 } @else { Welcome back 👋 }
+    </h1>
+    <p class="page-header__subtitle">
+      @if (data()) { Tracking progress for {{ data()!.studentName }} } @else { Loading… }
+    </p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">Loading dashboard…</div>
+} @else if (error()) {
+  <div class="empty-state">
+    <div class="empty-state__icon">⚠️</div>
+    <div class="empty-state__title">{{ error() }}</div>
+  </div>
+} @else if (child) {
+  <!-- Child card -->
+  <div class="child-card card mb-24">
+    <div class="child-card__avatar">{{ child.photoInitials }}</div>
+    <div class="child-card__info">
+      <div class="child-card__name">{{ child.name }}</div>
+      <div class="text-sm text-muted">{{ child.class }} · Roll No. {{ child.rollNumber }}</div>
+      <div class="text-xs text-muted font-mono">{{ child.admissionNumber }}</div>
+    </div>
+    <div class="child-card__stats">
+      <div class="child-stat">
+        <span class="child-stat__val" style="color:var(--success)">{{ attendance.percentage }}%</span>
+        <span class="child-stat__lbl">Attendance</span>
+      </div>
+      <div class="child-stat">
+        <span class="child-stat__val" style="color:var(--error)">
+          ₹{{ (feeSummary.pending / 1000).toFixed(0) }}K
+        </span>
+        <span class="child-stat__lbl">Fee Due</span>
+      </div>
+      <div class="child-stat">
+        <span class="child-stat__val">{{ upcomingHomework.length }}</span>
+        <span class="child-stat__lbl">Homework</span>
+      </div>
+    </div>
+    <a routerLink="/parent/homework" class="homework-shortcut">
+      📝 View Homework
+    </a>
+  </div>
+
+  <div class="parent-grid">
+    <!-- Attendance + Fee -->
+    <div class="left-col">
+      <h2 class="section-title">Attendance Summary</h2>
+      <div class="card fee-card">
+        <div class="fee-row">
+          <span class="text-muted text-sm">Total Days</span>
+          <span class="fw-600">{{ attendance.total }}</span>
+        </div>
+        <div class="fee-row">
+          <span class="text-muted text-sm">Present</span>
+          <span class="fw-600" style="color:var(--success)">{{ attendance.present }}</span>
+        </div>
+        <div class="fee-row">
+          <span class="text-muted text-sm">Absent</span>
+          <span class="fw-600" style="color:var(--error)">{{ attendance.absent }}</span>
+        </div>
+        <div class="fee-row">
+          <span class="text-muted text-sm">Late</span>
+          <span class="fw-600" style="color:var(--warning)">{{ attendance.late }}</span>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top:24px">Fee Summary</h2>
+      <div class="card fee-card">
+        <div class="fee-row">
+          <span class="text-muted text-sm">Total Fee</span>
+          <span class="fw-600">₹{{ feeSummary.totalFee | number }}</span>
+        </div>
+        <div class="fee-row">
+          <span class="text-muted text-sm">Paid</span>
+          <span class="fw-600" style="color:var(--success)">₹{{ feeSummary.paid | number }}</span>
+        </div>
+        <div class="fee-row">
+          <span class="text-muted text-sm">Pending</span>
+          <span class="fw-600" style="color:var(--error)">₹{{ feeSummary.pending | number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notices + Homework -->
+    <div class="right-col">
+      <h2 class="section-title">Upcoming Homework</h2>
+      <div class="card" style="overflow:hidden">
+        @if (upcomingHomework.length === 0) {
+          <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">
+            No pending homework 🎉
+          </div>
+        }
+        @for (hw of upcomingHomework; track hw.title) {
+          <div class="exam-row">
+            <div class="exam-row__date">{{ hw.dueDate | date:'d MMM' }}</div>
+            <div class="exam-row__subject">
+              <div>{{ hw.title }}</div>
+              <div class="text-xs text-muted">{{ hw.subjectName ?? 'General' }}</div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <h2 class="section-title" style="margin-top:24px">School Notices</h2>
+      <div class="card" style="overflow:hidden">
+        @if (notices.length === 0) {
+          <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">
+            No active announcements
+          </div>
+        }
+        @for (notice of notices; track notice.id) {
+          <div class="notice-item">
+            @if (notice.isPinned) {
+              <span class="badge badge--green text-xs" style="flex-shrink:0">Pinned</span>
+            } @else {
+              <span class="badge badge--blue text-xs" style="flex-shrink:0">Notice</span>
+            }
+            <div>
+              <div class="notice-item__title">{{ notice.title }}</div>
+              <div class="text-xs text-muted">{{ notice.publishedAt | date:'d MMM yyyy' }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

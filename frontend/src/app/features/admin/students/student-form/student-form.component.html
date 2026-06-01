@@ -1,0 +1,326 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Students</span>
+    <h1 class="page-header__title">Add New Student</h1>
+    <p class="page-header__subtitle">Complete all steps to enroll a student</p>
+  </div>
+  <div class="page-header__actions">
+    <a routerLink="/admin/students" class="btn btn--ghost">← Back</a>
+  </div>
+</div>
+
+<!-- Step indicator -->
+<div class="step-bar">
+  @for (step of steps; track step.n) {
+    <div class="step-bar__item"
+         [class.step-bar__item--active]="currentStep() === step.n"
+         [class.step-bar__item--done]="currentStep() > step.n"
+         (click)="goToStep(step.n)">
+      <div class="step-bar__circle">
+        @if (currentStep() > step.n) { ✓ } @else { {{ step.n }} }
+      </div>
+      <span class="step-bar__label">{{ step.label }}</span>
+    </div>
+    @if (step.n < 5) {
+      <div class="step-bar__line" [class.step-bar__line--done]="currentStep() > step.n"></div>
+    }
+  }
+</div>
+
+@if (error()) {
+  <div class="alert alert--error" style="margin-bottom:16px">{{ error() }}</div>
+}
+
+<div class="form-card">
+
+  <!-- ── Step 1: Personal Info ──────────────────────────────────────── -->
+  @if (currentStep() === 1) {
+    <form [formGroup]="personalForm">
+      <h2 class="form-card__title">Personal Information</h2>
+      <div class="form-grid-2">
+
+        <div class="field">
+          <label class="field__label">First Name *</label>
+          <input class="field__input" formControlName="firstName" placeholder="Arjun" />
+          @if (fieldError(personalForm, 'firstName')) {
+            <span class="field__error">{{ fieldError(personalForm, 'firstName') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Last Name *</label>
+          <input class="field__input" formControlName="lastName" placeholder="Sharma" />
+          @if (fieldError(personalForm, 'lastName')) {
+            <span class="field__error">{{ fieldError(personalForm, 'lastName') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Date of Birth *</label>
+          <input class="field__input" type="date" formControlName="dateOfBirth" />
+          @if (fieldError(personalForm, 'dateOfBirth')) {
+            <span class="field__error">{{ fieldError(personalForm, 'dateOfBirth') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Gender *</label>
+          <select class="field__input" formControlName="gender">
+            <option value="">Select gender</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+            <option value="OTHER">Other</option>
+          </select>
+          @if (fieldError(personalForm, 'gender')) {
+            <span class="field__error">{{ fieldError(personalForm, 'gender') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Category *</label>
+          <select class="field__input" formControlName="category">
+            <option value="GEN">General</option>
+            <option value="OBC">OBC</option>
+            <option value="SC">SC</option>
+            <option value="ST">ST</option>
+            <option value="EWS">EWS</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Blood Group</label>
+          <select class="field__input" formControlName="bloodGroup">
+            <option value="">Select</option>
+            @for (bg of ['A+','A-','B+','B-','O+','O-','AB+','AB-']; track bg) {
+              <option [value]="bg">{{ bg }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Nationality</label>
+          <input class="field__input" formControlName="nationality" placeholder="Indian" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Religion</label>
+          <input class="field__input" formControlName="religion" placeholder="e.g. Hindu, Muslim, Christian" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Caste</label>
+          <input class="field__input" formControlName="caste" placeholder="Optional" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Mother Tongue</label>
+          <input class="field__input" formControlName="motherTongue" placeholder="e.g. Hindi, Tamil" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Aadhaar No.</label>
+          <input class="field__input" formControlName="aadhaarNo" placeholder="12-digit number" maxlength="12" />
+        </div>
+
+      </div>
+    </form>
+  }
+
+  <!-- ── Step 2: Academic ───────────────────────────────────────────── -->
+  @if (currentStep() === 2) {
+    <form [formGroup]="academicForm">
+      <h2 class="form-card__title">Academic Details</h2>
+      <div class="form-grid-2">
+
+        <div class="field">
+          <label class="field__label">Class</label>
+          <select class="field__input" formControlName="classId">
+            <option value="">Select class (optional)</option>
+            @for (cls of classes; track cls.id) {
+              <option [value]="cls.id">{{ cls.name }}</option>
+            }
+          </select>
+          @if (!classes.length) {
+            <span class="field__hint text-muted text-xs">No classes set up yet — you can assign later.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Roll Number</label>
+          <input class="field__input" formControlName="rollNo" placeholder="Auto-assigned if blank" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">House Group</label>
+          <input class="field__input" formControlName="houseGroup" placeholder="e.g. Lotus, Rose" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Admission Date *</label>
+          <input class="field__input" type="date" formControlName="admissionDate" />
+          @if (fieldError(academicForm, 'admissionDate')) {
+            <span class="field__error">{{ fieldError(academicForm, 'admissionDate') }}</span>
+          }
+        </div>
+
+      </div>
+    </form>
+  }
+
+  <!-- ── Step 3: Guardian ───────────────────────────────────────────── -->
+  @if (currentStep() === 3) {
+    <form [formGroup]="guardianForm">
+      <h2 class="form-card__title">Guardian Details</h2>
+      <div class="form-grid-2">
+
+        <div class="field">
+          <label class="field__label">Guardian Name *</label>
+          <input class="field__input" formControlName="guardianName" placeholder="Full name" />
+          @if (fieldError(guardianForm, 'guardianName')) {
+            <span class="field__error">{{ fieldError(guardianForm, 'guardianName') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Relationship *</label>
+          <select class="field__input" formControlName="guardianRelation">
+            <option value="FATHER">Father</option>
+            <option value="MOTHER">Mother</option>
+            <option value="GUARDIAN">Guardian</option>
+            <option value="SIBLING">Sibling</option>
+            <option value="GRANDPARENT">Grandparent</option>
+            <option value="OTHER">Other</option>
+          </select>
+          @if (fieldError(guardianForm, 'guardianRelation')) {
+            <span class="field__error">{{ fieldError(guardianForm, 'guardianRelation') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Phone *</label>
+          <input class="field__input" type="tel" formControlName="guardianPhone" placeholder="10-digit mobile" />
+          @if (fieldError(guardianForm, 'guardianPhone')) {
+            <span class="field__error">{{ fieldError(guardianForm, 'guardianPhone') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Email</label>
+          <input class="field__input" type="email" formControlName="guardianEmail" placeholder="parent@example.com" />
+          @if (fieldError(guardianForm, 'guardianEmail')) {
+            <span class="field__error">{{ fieldError(guardianForm, 'guardianEmail') }}</span>
+          }
+        </div>
+
+      </div>
+    </form>
+  }
+
+  <!-- ── Step 4: Medical ────────────────────────────────────────────── -->
+  @if (currentStep() === 4) {
+    <form [formGroup]="medicalForm">
+      <h2 class="form-card__title">Medical Information <span class="optional-tag">Optional</span></h2>
+      <div class="form-grid-2">
+
+        <div class="field">
+          <label class="field__label">Known Allergies</label>
+          <input class="field__input" formControlName="allergies" placeholder="e.g. Peanuts, Dust" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Chronic Conditions</label>
+          <input class="field__input" formControlName="chronicCondition" placeholder="e.g. Asthma, Diabetes" />
+        </div>
+
+        <div class="field">
+          <label class="field__label">Emergency Contact</label>
+          <input class="field__input" formControlName="emergencyContact" placeholder="Name &amp; phone" />
+        </div>
+
+        <div class="field field--full">
+          <label class="field__label">Additional Medical Notes</label>
+          <textarea class="field__input" formControlName="medicalNotes" rows="3"
+                    placeholder="Any other relevant medical information"></textarea>
+        </div>
+
+      </div>
+    </form>
+  }
+
+  <!-- ── Step 5: Review ─────────────────────────────────────────────── -->
+  @if (currentStep() === 5) {
+    <h2 class="form-card__title">Review &amp; Confirm</h2>
+    <div class="review-grid">
+
+      <div class="review-section">
+        <h3 class="review-section__title">Personal</h3>
+        <dl class="review-list">
+          <div class="review-list__row"><dt>Name</dt>    <dd>{{ pf['firstName'].value }} {{ pf['lastName'].value }}</dd></div>
+          <div class="review-list__row"><dt>DOB</dt>     <dd>{{ pf['dateOfBirth'].value }}</dd></div>
+          <div class="review-list__row"><dt>Gender</dt>  <dd>{{ pf['gender'].value }}</dd></div>
+          <div class="review-list__row"><dt>Category</dt><dd>{{ pf['category'].value }}</dd></div>
+          @if (pf['bloodGroup'].value) {
+            <div class="review-list__row"><dt>Blood Group</dt><dd>{{ pf['bloodGroup'].value }}</dd></div>
+          }
+          @if (pf['nationality'].value) {
+            <div class="review-list__row"><dt>Nationality</dt><dd>{{ pf['nationality'].value }}</dd></div>
+          }
+          @if (pf['religion'].value) {
+            <div class="review-list__row"><dt>Religion</dt><dd>{{ pf['religion'].value }}</dd></div>
+          }
+          @if (pf['motherTongue'].value) {
+            <div class="review-list__row"><dt>Mother Tongue</dt><dd>{{ pf['motherTongue'].value }}</dd></div>
+          }
+          @if (pf['aadhaarNo'].value) {
+            <div class="review-list__row"><dt>Aadhaar No.</dt><dd>{{ pf['aadhaarNo'].value }}</dd></div>
+          }
+        </dl>
+      </div>
+
+      <div class="review-section">
+        <h3 class="review-section__title">Academic</h3>
+        <dl class="review-list">
+          <div class="review-list__row"><dt>Class</dt>          <dd>{{ selectedClassName() }}</dd></div>
+          <div class="review-list__row"><dt>Admission Date</dt> <dd>{{ af['admissionDate'].value }}</dd></div>
+          @if (af['rollNo'].value) {
+            <div class="review-list__row"><dt>Roll No.</dt><dd>{{ af['rollNo'].value }}</dd></div>
+          }
+          @if (af['houseGroup'].value) {
+            <div class="review-list__row"><dt>House Group</dt><dd>{{ af['houseGroup'].value }}</dd></div>
+          }
+        </dl>
+      </div>
+
+      <div class="review-section">
+        <h3 class="review-section__title">Guardian</h3>
+        <dl class="review-list">
+          <div class="review-list__row"><dt>Name</dt>    <dd>{{ gf['guardianName'].value }}</dd></div>
+          <div class="review-list__row"><dt>Relation</dt><dd>{{ gf['guardianRelation'].value }}</dd></div>
+          <div class="review-list__row"><dt>Phone</dt>   <dd>{{ gf['guardianPhone'].value }}</dd></div>
+          @if (gf['guardianEmail'].value) {
+            <div class="review-list__row"><dt>Email</dt><dd>{{ gf['guardianEmail'].value }}</dd></div>
+          }
+        </dl>
+      </div>
+
+    </div>
+  }
+
+  <!-- Navigation -->
+  <div class="form-card__footer">
+    <button class="btn btn--ghost" [class.invisible]="currentStep() === 1" (click)="prev()">← Back</button>
+    <div class="step-dots">
+      @for (step of steps; track step.n) {
+        <span class="step-dot" [class.step-dot--active]="currentStep() === step.n"></span>
+      }
+    </div>
+    @if (currentStep() < 5) {
+      <button class="btn btn--primary" [disabled]="!stepValid()" (click)="next()">Next →</button>
+    } @else {
+      <button class="btn btn--primary" [disabled]="submitting()" (click)="submit()">
+        @if (submitting()) { <span class="spinner"></span> Enrolling… } @else { Enroll Student }
+      </button>
+    }
+  </div>
+
+</div>

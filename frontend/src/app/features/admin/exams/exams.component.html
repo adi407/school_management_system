@@ -1,0 +1,110 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Examinations</span>
+    <h1 class="page-header__title">Exam Schedule</h1>
+    <p class="page-header__subtitle">Manage exams, schedules and results</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--primary" (click)="openCreate()">+ Create Exam</button>
+  </div>
+</div>
+
+<!-- Status filter tabs -->
+<div class="tab-bar" style="margin-bottom:20px">
+  @for (s of ['ALL','UPCOMING','ONGOING','COMPLETED']; track s) {
+    <button class="tab-bar__tab" [class.tab-bar__tab--active]="filterStatus() === s"
+            (click)="filterStatus.set(s)">{{ s }}</button>
+  }
+</div>
+
+@if (loading()) {
+  <div class="loading-state text-muted text-sm" style="padding:40px 0;text-align:center">Loading exams…</div>
+} @else if (filteredExams().length === 0) {
+  <div class="empty-state card" style="padding:60px;text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">📋</div>
+    <div class="fw-600 mb-8">No exams found</div>
+    <div class="text-muted text-sm">Click "Create Exam" to add your first exam.</div>
+  </div>
+} @else {
+  <div class="exam-list">
+    @for (exam of filteredExams(); track exam.id) {
+      <div class="exam-card card">
+        <div class="exam-card__left">
+          <div class="exam-card__icon">📝</div>
+          <div>
+            <div class="exam-card__name">{{ exam.name }}</div>
+            <div class="exam-card__meta text-muted text-sm">
+              {{ exam.className || 'All Classes' }} · {{ exam.totalSubjects }} subjects
+              @if (exam.description) { · {{ exam.description }} }
+            </div>
+          </div>
+        </div>
+        <div class="exam-card__dates text-sm text-muted">
+          {{ exam.startDate | date:'d MMM' }} – {{ exam.endDate | date:'d MMM yyyy' }}
+        </div>
+        <span class="badge badge--blue text-xs">{{ typeLabel(exam.examType) }}</span>
+        <span class="badge badge--{{ statusColor(exam.status) }}">{{ exam.status }}</span>
+        <div class="row-actions">
+          <button class="action-btn action-btn--ghost" (click)="openEdit(exam)">Edit</button>
+          <button class="action-btn action-btn--danger" (click)="delete(exam.id)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Create / Edit Modal -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="showModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">{{ editingId() ? 'Edit Exam' : 'Create Exam' }}</h2>
+        <button class="modal__close" (click)="showModal.set(false)">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="form-grid">
+          <div class="form-group form-group--full">
+            <label class="form-label">Exam Name *</label>
+            <input class="form-input" placeholder="e.g. Mid-Term 1" [value]="form().name"
+                   (input)="updateForm({name: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Exam Type *</label>
+            <select class="form-input" [value]="form().examType"
+                    (change)="updateForm({examType: $any($event.target).value})">
+              @for (t of examTypes; track t) {
+                <option [value]="t">{{ typeLabel(t) }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Subjects</label>
+            <input type="number" class="form-input" min="1" [value]="form().totalSubjects"
+                   (input)="updateForm({totalSubjects: +$any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start Date *</label>
+            <input type="date" class="form-input" [value]="form().startDate"
+                   (input)="updateForm({startDate: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Date *</label>
+            <input type="date" class="form-input" [value]="form().endDate"
+                   (input)="updateForm({endDate: $any($event.target).value})" />
+          </div>
+          <div class="form-group form-group--full">
+            <label class="form-label">Description</label>
+            <input class="form-input" placeholder="Optional notes…" [value]="form().description ?? ''"
+                   (input)="updateForm({description: $any($event.target).value})" />
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="showModal.set(false)">Cancel</button>
+        <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : (editingId() ? 'Update Exam' : 'Create Exam') }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

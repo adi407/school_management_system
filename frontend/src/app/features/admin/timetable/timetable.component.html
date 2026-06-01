@@ -1,0 +1,125 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Schedule</span>
+    <h1 class="page-header__title">Timetable</h1>
+    <p class="page-header__subtitle">Click any cell to assign or edit a period</p>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls mb-24">
+  <select class="filter-select" [value]="selectedClass()"
+    (change)="selectedClass.set($any($event.target).value); loadTimetable()">
+    <option value="">— Select Class —</option>
+    @for (c of classes(); track c.id) {
+      <option [value]="c.id">{{ c.name }}</option>
+    }
+  </select>
+
+  <select class="filter-select" [value]="selectedAcademicYear()"
+    (change)="selectedAcademicYear.set($any($event.target).value); loadTimetable()">
+    <option value="">— Academic Year —</option>
+    @for (y of academicYears(); track y.id) {
+      <option [value]="y.id">{{ y.name }}</option>
+    }
+  </select>
+</div>
+
+@if (!selectedClass()) {
+  <div class="empty-state">
+    <div class="empty-state__icon">📅</div>
+    <div class="empty-state__title">Select a class to view or edit its timetable</div>
+  </div>
+} @else if (loading()) {
+  <div class="loading-state">Loading timetable…</div>
+} @else {
+  <div class="tt-wrap">
+    <table class="tt-table">
+      <thead>
+        <tr>
+          <th class="tt-period-col">Period</th>
+          @for (d of days; track d) {
+            <th>{{ dayLabel(d) }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of periods; track p) {
+          <tr>
+            <td class="tt-period-label">P{{ p }}</td>
+            @for (d of days; track d) {
+              @let slot = grid()[d][p];
+              <td class="tt-cell" [class.tt-cell--filled]="slot" (click)="openSlotModal(d, p)">
+                @if (slot) {
+                  <div class="tt-slot">
+                    <div class="tt-slot__subject">{{ slot.subjectName ?? '—' }}</div>
+                    <div class="tt-slot__teacher text-xs text-muted">{{ slot.teacherName ?? '' }}</div>
+                    @if (slot.roomNo) {
+                      <div class="tt-slot__room text-xs text-muted">{{ slot.roomNo }}</div>
+                    }
+                    <div class="tt-slot__time text-xs text-muted">{{ slot.startTime }}–{{ slot.endTime }}</div>
+                  </div>
+                } @else {
+                  <span class="tt-cell__add">+</span>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ dayLabel(f['dayOfWeek'].value!) }} · Period {{ f['periodNo'].value }}</h2>
+      <button class="modal__close" (click)="closeModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="form" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-select" formControlName="subjectId">
+            <option [value]="null">— None —</option>
+            @for (s of subjects(); track s.id) {
+              <option [value]="s.id">{{ s.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teacher</label>
+          <select class="form-select" formControlName="teacherId">
+            <option [value]="null">— None —</option>
+            @for (t of teachers(); track t.id) {
+              <option [value]="t.id">{{ t.fullName }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Start Time</label>
+          <input class="form-input" type="time" formControlName="startTime" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Time</label>
+          <input class="form-input" type="time" formControlName="endTime" />
+        </div>
+        <div class="form-group form-group--full">
+          <label class="form-label">Room No.</label>
+          <input class="form-input" formControlName="roomNo" placeholder="e.g. B-204" />
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      @if (editingSlot()) {
+        <button class="btn btn--ghost btn--danger" [disabled]="saving()" (click)="deleteSlot()">Clear Slot</button>
+      }
+      <button class="btn btn--ghost" (click)="closeModal()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="saveSlot()">
+        {{ saving() ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
+  </div>
+}

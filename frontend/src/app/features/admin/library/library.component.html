@@ -1,0 +1,186 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Library</span>
+    <h1 class="page-header__title">Library Management</h1>
+    <p class="page-header__subtitle">{{ books().length }} books · {{ overdueCount() }} overdue</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--ghost" (click)="activeTab.set('issued'); showIssue.set(false)">📋 Issued ({{ issuedBooks().length }})</button>
+    <button class="btn btn--primary" (click)="openAddBook()">+ Add Book</button>
+  </div>
+</div>
+
+<div class="tab-bar" style="margin-bottom:20px">
+  <button class="tab-bar__tab" [class.tab-bar__tab--active]="activeTab() === 'books'"  (click)="activeTab.set('books')">📚 Catalogue</button>
+  <button class="tab-bar__tab" [class.tab-bar__tab--active]="activeTab() === 'issued'" (click)="activeTab.set('issued')">📋 Issued Books</button>
+</div>
+
+@if (loading()) {
+  <div class="loading-state text-muted text-sm" style="padding:40px 0;text-align:center">Loading library…</div>
+}
+
+@if (!loading() && activeTab() === 'books') {
+  <div class="lib-search">
+    <input class="search-input" placeholder="Search title, author or ISBN…"
+           [value]="search()" (input)="search.set($any($event.target).value)" />
+  </div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Title</th><th>Author</th><th>Category</th><th>ISBN</th><th>Copies</th><th>Available</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        @for (book of filteredBooks(); track book.id) {
+          <tr class="table-row">
+            <td class="fw-600">{{ book.title }}</td>
+            <td class="text-sm text-muted">{{ book.author ?? '—' }}</td>
+            <td><span class="badge badge--blue">{{ book.category ?? '—' }}</span></td>
+            <td class="font-mono text-xs text-muted">{{ book.isbn ?? '—' }}</td>
+            <td class="text-sm">{{ book.totalCopies }}</td>
+            <td><span class="badge badge--{{ availabilityColor(book) }}">{{ book.availableCopies }} free</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="action-btn action-btn--ghost"
+                        [disabled]="book.availableCopies === 0"
+                        (click)="openIssue(book)">Issue</button>
+                <button class="action-btn action-btn--danger" (click)="deleteBook(book.id)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        }
+        @if (filteredBooks().length === 0 && !loading()) {
+          <tr><td colspan="7" class="text-center text-muted" style="padding:32px">No books found</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+@if (!loading() && activeTab() === 'issued') {
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Book</th><th>Borrower</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        @for (issue of issuedBooks(); track issue.id) {
+          <tr class="table-row">
+            <td class="fw-600">{{ issue.bookTitle }}</td>
+            <td class="text-sm">{{ issue.borrowerName ?? '—' }}</td>
+            <td class="text-sm text-muted">{{ issue.issueDate | date:'dd MMM yyyy' }}</td>
+            <td class="text-sm" [class.text-error]="issue.isOverdue">{{ issue.dueDate | date:'dd MMM yyyy' }}</td>
+            <td>
+              @if (issue.isReturned) {
+                <span class="badge badge--green">Returned</span>
+              } @else if (issue.isOverdue) {
+                <span class="badge badge--red">Overdue</span>
+              } @else {
+                <span class="badge badge--yellow">Issued</span>
+              }
+            </td>
+            <td>
+              <div class="row-actions">
+                @if (!issue.isReturned) {
+                  <button class="action-btn action-btn--ghost" (click)="returnBook(issue.id)">Return</button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+        @if (issuedBooks().length === 0) {
+          <tr><td colspan="6" class="text-center text-muted" style="padding:32px">No books issued yet</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+<!-- Add Book Modal -->
+@if (showAddBook()) {
+  <div class="modal-overlay" (click)="showAddBook.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">Add Book to Catalogue</h2>
+        <button class="modal__close" (click)="showAddBook.set(false)">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="form-grid">
+          <div class="form-group form-group--full">
+            <label class="form-label">Title *</label>
+            <input class="form-input" placeholder="Book title" [value]="bookForm().title"
+                   (input)="updateBookForm({title: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Author</label>
+            <input class="form-input" placeholder="Author name" [value]="bookForm().author ?? ''"
+                   (input)="updateBookForm({author: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input class="form-input" placeholder="e.g. Textbook, Fiction" [value]="bookForm().category ?? ''"
+                   (input)="updateBookForm({category: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">ISBN</label>
+            <input class="form-input" placeholder="ISBN number" [value]="bookForm().isbn ?? ''"
+                   (input)="updateBookForm({isbn: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Copies *</label>
+            <input type="number" class="form-input" min="1" [value]="bookForm().totalCopies"
+                   (input)="updateBookForm({totalCopies: +$any($event.target).value})" />
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="showAddBook.set(false)">Cancel</button>
+        <button class="btn btn--primary" (click)="saveBook()" [disabled]="savingBook()">
+          {{ savingBook() ? 'Saving…' : 'Add Book' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Issue Book Modal -->
+@if (showIssue()) {
+  <div class="modal-overlay" (click)="showIssue.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">Issue Book</h2>
+        <button class="modal__close" (click)="showIssue.set(false)">✕</button>
+      </div>
+      <div class="modal__body">
+        @if (issuingBook()) {
+          <div class="issue-book-info card" style="margin-bottom:20px;padding:14px 16px;background:var(--bg-hover)">
+            <div class="fw-600">{{ issuingBook()!.title }}</div>
+            <div class="text-sm text-muted">{{ issuingBook()!.availableCopies }} copies available</div>
+          </div>
+        }
+        <div class="form-grid">
+          <div class="form-group form-group--full">
+            <label class="form-label">Borrower Name *</label>
+            <input class="form-input" placeholder="Student or staff name" [value]="issueForm().borrowerName ?? ''"
+                   (input)="updateIssueForm({borrowerName: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Issue Date</label>
+            <input type="date" class="form-input" [value]="issueForm().issueDate"
+                   (input)="updateIssueForm({issueDate: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Due Date</label>
+            <input type="date" class="form-input" [value]="issueForm().dueDate"
+                   (input)="updateIssueForm({dueDate: $any($event.target).value})" />
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="showIssue.set(false)">Cancel</button>
+        <button class="btn btn--primary" (click)="saveIssue()" [disabled]="savingIssue()">
+          {{ savingIssue() ? 'Issuing…' : 'Issue Book' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

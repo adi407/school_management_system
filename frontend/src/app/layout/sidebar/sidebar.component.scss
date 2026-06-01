@@ -1,0 +1,131 @@
+.sidebar {
+  position: fixed; left: 0; top: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--bg2);
+  border-right: 1.5px solid var(--border);
+  z-index: 100;
+  display: flex; flex-direction: column;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+
+  &::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 180px;
+    background: linear-gradient(180deg, rgba(10,132,255,0.05) 0%, transparent 100%);
+    pointer-events: none; z-index: 0;
+  }
+
+  &--collapsed {
+    width: var(--sidebar-collapsed);
+    .logo-text, .nav-item__label, .nav-group-label, .user-details, .logout-btn { display: none; }
+    .nav-item { justify-content: center; padding: 9px 0; margin: 1px 6px; }
+    .sidebar__logo { justify-content: center; }
+    .sidebar__user { justify-content: center; padding: 12px 0; }
+    .nav-group-divider { display: block; }
+  }
+
+  &__logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 16px; height: 52px;
+    border-bottom: 1.5px solid var(--border);
+    flex-shrink: 0; position: relative; z-index: 1;
+  }
+
+  &__nav {
+    flex: 1; overflow-y: auto; padding: 10px 0 16px;
+    position: relative; z-index: 1;
+    &::-webkit-scrollbar { width: 2px; }
+    &::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+  }
+
+  &__user {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    border-top: 1.5px solid var(--border); flex-shrink: 0;
+    position: relative; z-index: 1; background: var(--bg2);
+  }
+}
+
+.logo-mark {
+  flex-shrink: 0; width: 32px; height: 32px;
+  background: var(--gradient); border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.35);
+}
+
+.logo-text {
+  font-size: 16px; font-weight: 800; color: var(--text-primary);
+  letter-spacing: -0.5px; flex: 1;
+}
+
+.collapse-btn {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all var(--transition);
+  margin-left: auto;
+  &:hover { background: var(--bg-hover); color: var(--text-primary); }
+}
+
+.nav-group-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text-3);
+  padding: 16px 16px 6px; display: block;
+}
+
+.nav-group-divider {
+  height: 1px; background: var(--border); margin: 8px 10px; display: none;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; margin: 1px 8px;
+  border-radius: 9px; color: var(--text-secondary);
+  font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: all var(--transition);
+
+  &:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+  &--active {
+    background: var(--accent-soft) !important;
+    color: var(--accent) !important;
+    font-weight: 600;
+    .nav-item__icon { color: var(--accent); }
+  }
+}
+
+.nav-item__icon { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+.nav-item__label { flex: 1; }
+
+.user-avatar {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  background: var(--gradient); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff;
+}
+
+.user-details { flex: 1; min-width: 0; }
+.user-name { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { display: block; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; }
+
+.logout-btn {
+  width: 28px; height: 28px; border-radius: 7px; background: transparent;
+  border: 1px solid var(--border); color: var(--text-muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all var(--transition);
+  &:hover { background: rgba(var(--red-rgb),.10); color: var(--error); border-color: rgba(var(--red-rgb),.25); }
+}
+
+// ── Mobile ───────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.28s;
+    width: var(--sidebar-width) !important;
+    z-index: 100;
+
+    &--mobile-open {
+      transform: translateX(0);
+    }
+  }
+}

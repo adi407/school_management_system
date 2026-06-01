@@ -1,0 +1,138 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Super Admin</span>
+    <h1 class="page-header__title">Enroll New School</h1>
+    <p class="page-header__subtitle">Set up a new school on the platform</p>
+  </div>
+  <a routerLink="/super-admin/schools" class="btn btn--outline">← Back</a>
+</div>
+
+<!-- Step indicator -->
+<div class="steps">
+  <div class="step" [class.step--active]="step() >= 1" [class.step--done]="step() > 1">
+    <div class="step__dot">@if (step() > 1) { ✓ } @else { 1 }</div>
+    <span>School Details</span>
+  </div>
+  <div class="step-line" [class.step-line--done]="step() > 1"></div>
+  <div class="step" [class.step--active]="step() >= 2">
+    <div class="step__dot">2</div>
+    <span>Admin Account</span>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="form-card">
+
+  <!-- ── Step 1: School Details ── -->
+  @if (step() === 1) {
+    <div class="form-section">
+      <h2 class="form-section__title">School Information</h2>
+      <div class="form-grid">
+        <div class="field">
+          <label class="field__label">School Name *</label>
+          <input class="field__input" formControlName="name" placeholder="e.g. Greenfield Academy" />
+          @if (isInvalid('name')) { <span class="field__error">School name is required</span> }
+        </div>
+        <div class="field">
+          <label class="field__label">School Code *</label>
+          <input class="field__input field__input--mono" formControlName="code" placeholder="e.g. GFA" style="text-transform:uppercase" />
+          @if (isInvalid('code')) { <span class="field__error">2–10 alphanumeric characters required</span> }
+          <span class="field__hint">Used as unique identifier (e.g. GFA)</span>
+        </div>
+        <div class="field">
+          <label class="field__label">Board *</label>
+          <select class="field__select" formControlName="board">
+            <option value="CBSE">CBSE</option>
+            <option value="ICSE">ICSE</option>
+            <option value="STATE">State Board</option>
+            <option value="IB">IB (International)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Subscription Tier *</label>
+          <select class="field__select" formControlName="subscriptionTier">
+            <option value="FREE">Free — Core features only</option>
+            <option value="BASIC">Basic — + Exams, Fees, Timetable</option>
+            <option value="PREMIUM">Premium — + Library, Transport, Hostel</option>
+            <option value="ENTERPRISE">Enterprise — All features</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Official Email</label>
+          <input class="field__input" type="email" formControlName="email" placeholder="admin@school.edu.in" />
+          @if (isInvalid('email')) { <span class="field__error">Enter a valid email</span> }
+        </div>
+        <div class="field">
+          <label class="field__label">Phone</label>
+          <input class="field__input" formControlName="phone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="field field--full">
+          <label class="field__label">Address</label>
+          <textarea class="field__textarea" formControlName="address" placeholder="123 School Road, City, State - 400001" rows="2"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label">Timezone</label>
+          <select class="field__select" formControlName="timezone">
+            <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+            <option value="America/New_York">America/New_York (EST)</option>
+            <option value="Europe/London">Europe/London (GMT)</option>
+            <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Subscription Expiry</label>
+          <input class="field__input" type="date" formControlName="subscriptionExpiry" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn--primary" (click)="nextStep()">
+          Continue to Admin Setup →
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ── Step 2: Admin Account ── -->
+  @if (step() === 2) {
+    <div class="form-section">
+      <h2 class="form-section__title">School Admin Account</h2>
+      <p class="form-section__desc">This account will be the primary administrator for <strong>{{ form.get('name')?.value }}</strong>.</p>
+      <div class="form-grid">
+        <div class="field">
+          <label class="field__label">Admin Name</label>
+          <input class="field__input" formControlName="adminName" placeholder="Full name" />
+        </div>
+        <div class="field">
+          <label class="field__label">Admin Email *</label>
+          <input class="field__input" type="email" formControlName="adminEmail" placeholder="admin@school.edu.in" />
+          @if (isInvalid('adminEmail')) { <span class="field__error">Valid email required</span> }
+        </div>
+        <div class="field field--full">
+          <label class="field__label">Temporary Password *</label>
+          <input class="field__input" type="password" formControlName="adminPassword" placeholder="Min. 8 characters" />
+          @if (isInvalid('adminPassword')) { <span class="field__error">Password must be at least 8 characters</span> }
+          <span class="field__hint">Admin should change this on first login</span>
+        </div>
+      </div>
+
+      <!-- Review summary -->
+      <div class="review-card">
+        <div class="review-card__title">Review</div>
+        <div class="review-grid">
+          <div><span class="review-label">School</span><span class="review-value">{{ form.get('name')?.value }}</span></div>
+          <div><span class="review-label">Code</span><span class="review-value font-mono">{{ form.get('code')?.value?.toUpperCase() }}</span></div>
+          <div><span class="review-label">Board</span><span class="review-value">{{ form.get('board')?.value }}</span></div>
+          <div><span class="review-label">Tier</span><span class="review-value">{{ form.get('subscriptionTier')?.value }}</span></div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn--ghost" (click)="step.set(1)">← Back</button>
+        <button type="submit" class="btn btn--primary" [disabled]="loading()">
+          @if (loading()) { <span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Enrolling... }
+          @else { Enroll School ✓ }
+        </button>
+      </div>
+    </div>
+  }
+
+</form>

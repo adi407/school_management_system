@@ -1,0 +1,10 @@
+.mb-24 { margin-bottom: 24px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; margin-top: 32px; }
+.section-title  { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+
+.school-name-cell { display: flex; align-items: center; gap: 10px; }
+.school-avatar {
+  width: 32px; height: 32px; border-radius: 9px; background: var(--gradient);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}

@@ -1,0 +1,111 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Activities</span>
+    <h1 class="page-header__title">Extra-Curricular Activities</h1>
+    <p class="page-header__subtitle">{{ activities().length }} activities across all categories</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--primary" (click)="openCreate()">+ Add Activity</button>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state text-muted text-sm" style="padding:40px 0;text-align:center">Loading activities…</div>
+} @else if (activities().length === 0) {
+  <div class="empty-state card" style="padding:60px;text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">🏆</div>
+    <div class="fw-600 mb-8">No activities yet</div>
+    <div class="text-muted text-sm">Click "Add Activity" to add your first extra-curricular activity.</div>
+  </div>
+} @else {
+  <div class="activity-grid">
+    @for (act of activities(); track act.id) {
+      <div class="act-card card">
+        <div class="act-card__header">
+          <span class="badge badge--{{ categoryColor(act.category) }}">{{ act.category }}</span>
+          <span class="badge badge--{{ act.status === 'ACTIVE' ? 'green' : 'gray' }}">{{ act.status }}</span>
+        </div>
+        <h3 class="act-card__name">{{ act.name }}</h3>
+        <div class="act-card__meta">
+          <div class="act-meta-row">
+            <span class="text-muted text-xs">Coach</span>
+            <span class="text-sm fw-500">{{ act.coach ?? '—' }}</span>
+          </div>
+          <div class="act-meta-row">
+            <span class="text-muted text-xs">Schedule</span>
+            <span class="text-sm">{{ act.schedule ?? '—' }}</span>
+          </div>
+        </div>
+        <div class="act-card__capacity">
+          <div class="capacity-bar">
+            <div class="capacity-bar__fill" [style.width.%]="100"></div>
+          </div>
+          <div class="text-xs text-muted" style="margin-top:4px">Capacity: {{ act.capacity }}</div>
+        </div>
+        <div class="act-card__footer">
+          <button class="btn btn--ghost btn--sm" (click)="openEdit(act)">Edit</button>
+          <button class="btn btn--ghost btn--sm" style="color:var(--error)" (click)="delete(act.id)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Create / Edit Modal -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="showModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">{{ editingId() ? 'Edit Activity' : 'Add Activity' }}</h2>
+        <button class="modal__close" (click)="showModal.set(false)">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="form-grid">
+          <div class="form-group form-group--full">
+            <label class="form-label">Activity Name *</label>
+            <input class="form-input" placeholder="e.g. Cricket Team" [value]="form().name"
+                   (input)="updateForm({name: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-input" [value]="form().category"
+                    (change)="updateForm({category: $any($event.target).value})">
+              @for (c of categories; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Capacity</label>
+            <input type="number" class="form-input" min="1" [value]="form().capacity"
+                   (input)="updateForm({capacity: +$any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Coach / Instructor</label>
+            <input class="form-input" placeholder="Name of coach" [value]="form().coach ?? ''"
+                   (input)="updateForm({coach: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Schedule</label>
+            <input class="form-input" placeholder="e.g. Mon & Wed 3–5 PM" [value]="form().schedule ?? ''"
+                   (input)="updateForm({schedule: $any($event.target).value})" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-input" [value]="form().status ?? 'ACTIVE'"
+                    (change)="updateForm({status: $any($event.target).value})">
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="showModal.set(false)">Cancel</button>
+        <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : (editingId() ? 'Update' : 'Add Activity') }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

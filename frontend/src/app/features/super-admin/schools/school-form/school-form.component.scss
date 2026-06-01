@@ -1,0 +1,49 @@
+.steps {
+  display: flex; align-items: center; gap: 0; margin-bottom: 32px;
+}
+.step {
+  display: flex; align-items: center; gap: 10px; color: var(--text-muted);
+  &--active { color: var(--text-primary); .step__dot { background: var(--accent); color: #fff; border-color: var(--accent); } }
+  &--done   { color: var(--success); .step__dot { background: var(--success); color: #07111C; border-color: var(--success); } }
+  span { font-size: 13px; font-weight: 600; }
+}
+.step__dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg3); border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; transition: all var(--transition);
+}
+.step-line {
+  flex: 1; max-width: 80px; height: 2px; background: var(--border); margin: 0 12px;
+  &--done { background: var(--success); }
+}
+
+.form-card {
+  background: var(--card-bg); backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--border); border-radius: var(--radius-xl);
+  padding: 32px; max-width: 760px;
+  position: relative;
+  &::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--shimmer-line), transparent); }
+}
+
+.form-section__title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.form-section__desc  { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 28px;
+  .field--full { grid-column: 1 / -1; }
+}
+
+.field__hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.field__input--mono { font-family: var(--font-mono); }
+
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+.review-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 18px; margin-bottom: 24px;
+}
+.review-card__title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--text-3); margin-bottom: 14px; }
+.review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.review-label { display: block; font-size: 10px; text-transform: uppercase; color: var(--text-3); letter-spacing: 0.8px; margin-bottom: 3px; }
+.review-value { font-size: 13px; font-weight: 600; color: var(--text-primary); }

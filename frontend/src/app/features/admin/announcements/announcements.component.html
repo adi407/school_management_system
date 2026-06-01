@@ -1,0 +1,122 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Communication</span>
+    <h1 class="page-header__title">Announcements</h1>
+    <p class="page-header__subtitle">{{ pinnedCount() }} pinned · {{ items().length }} total</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--primary" (click)="openCreate()">+ New Announcement</button>
+  </div>
+</div>
+
+<div class="filter-bar mb-24">
+  <div class="search-wrap">
+    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" placeholder="Search announcements…" [value]="search()" (input)="search.set($any($event.target).value)" />
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">Loading announcements…</div>
+} @else if (items().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">📢</div>
+    <div class="empty-state__title">No announcements yet</div>
+    <div class="empty-state__sub">Publish your first notice to students, parents or staff.</div>
+  </div>
+} @else {
+  <div class="ann-list">
+    @for (item of filtered(); track item.id) {
+      <div class="ann-card card" [class.ann-card--pinned]="item.isPinned" [class.ann-card--expired]="isExpired(item)">
+        <div class="ann-card__top">
+          <div class="ann-card__title-row">
+            @if (item.isPinned) { <span class="pin-icon">📌</span> }
+            <h3 class="ann-card__title">{{ item.title }}</h3>
+            @if (isExpired(item)) { <span class="badge badge--red text-xs">Expired</span> }
+          </div>
+          <div class="ann-card__actions">
+            <button class="action-btn action-btn--ghost" (click)="openEdit(item)">Edit</button>
+            <button class="action-btn action-btn--ghost action-btn--danger" (click)="delete(item)">Delete</button>
+          </div>
+        </div>
+        <p class="ann-card__body">{{ item.body }}</p>
+        <div class="ann-card__meta">
+          <span class="ann-card__audience">
+            <span class="meta-label">To:</span> {{ rolesLabel(item.targetRoles) }}
+          </span>
+          <span class="ann-card__by">
+            <span class="meta-label">By:</span> {{ item.publishedByName }}
+          </span>
+          <span class="ann-card__date text-muted">{{ item.publishedAt | date:'dd MMM yyyy, h:mm a' }}</span>
+          @if (item.expiresAt) {
+            <span class="ann-card__expires text-muted">Expires: {{ item.expiresAt | date:'dd MMM yyyy' }}</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Modal -->
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ editingId() ? 'Edit Announcement' : 'New Announcement' }}</h2>
+      <button class="modal__close" (click)="closeModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="form" class="form-stack">
+
+        <div class="form-group">
+          <label class="form-label">Title <span class="required">*</span></label>
+          <input class="form-input" formControlName="title" placeholder="e.g. Holiday notice – Diwali break" />
+          @if (f['title'].touched && f['title'].invalid) {
+            <span class="form-error">Title is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message <span class="required">*</span></label>
+          <textarea class="form-input form-textarea" formControlName="body" rows="4"
+            placeholder="Write your announcement here…"></textarea>
+          @if (f['body'].touched && f['body'].invalid) {
+            <span class="form-error">Message is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Audience (leave empty for everyone)</label>
+          <div class="role-chips">
+            @for (role of allRoles; track role) {
+              <button type="button" class="role-chip" [class.role-chip--active]="isRoleSelected(role)"
+                (click)="toggleRole(role)">
+                {{ role }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Expires At (optional)</label>
+            <input class="form-input" type="datetime-local" formControlName="expiresAt" />
+          </div>
+          <div class="form-group form-group--center">
+            <label class="toggle-label">
+              <input type="checkbox" formControlName="isPinned" />
+              <span>Pin to top</span>
+            </label>
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeModal()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="submit()">
+        {{ saving() ? 'Publishing…' : (editingId() ? 'Update' : 'Publish') }}
+      </button>
+    </div>
+  </div>
+}

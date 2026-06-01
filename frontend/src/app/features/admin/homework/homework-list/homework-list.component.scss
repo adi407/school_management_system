@@ -1,0 +1,80 @@
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  min-width: 160px;
+  cursor: pointer;
+}
+
+.hw-title { font-weight: 500; color: var(--text); }
+
+.due-badge {
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  gap: 1px;
+
+  &--upcoming  { background: rgba(var(--accent-rgb), .12); color: var(--accent); }
+  &--due-soon  { background: rgba(var(--yellow-rgb), .15); color: var(--warning); }
+  &--due-today { background: rgba(var(--orange-rgb), .15); color: var(--warning); }
+  &--overdue   { background: rgba(var(--red-rgb), .12);    color: var(--error);   }
+}
+
+.due-badge__sub { font-size: 10px; font-weight: 400; opacity: .8; }
+
+.status-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  &--green { background: rgba(var(--green-rgb), .12); color: var(--success); }
+  &--gray  { background: rgba(var(--border-rgb), .25); color: var(--text-muted); }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.text-danger { color: var(--error); }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  padding: 40px 0;
+  justify-content: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+
+  &__icon { font-size: 48px; margin-bottom: 16px; }
+  h3 { color: var(--text); margin-bottom: 8px; }
+  p  { margin-bottom: 20px; }
+}

@@ -1,0 +1,295 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Finance</span>
+    <h1 class="page-header__title">Fee Management</h1>
+    <p class="page-header__subtitle">Collect and track student fee payments</p>
+  </div>
+  <div class="page-header__actions">
+    @if (activeTab() === 'payments') {
+      <button class="btn btn--primary" (click)="openPaymentModal()">+ Collect Fee</button>
+    } @else {
+      <button class="btn btn--primary" (click)="openStructureModal()">+ Add Fee Head</button>
+    }
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tab-bar mb-24">
+  <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'payments'"   (click)="setTab('payments')">Payments</button>
+  <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'structures'" (click)="setTab('structures')">Fee Structures</button>
+</div>
+
+<!-- ── PAYMENTS TAB ─────────────────────────────────────────────────────────── -->
+@if (activeTab() === 'payments') {
+
+  <!-- KPI row -->
+  <div class="grid-3 mb-24">
+    <div class="stat-card stat-card--green">
+      <div class="stat-card__icon" style="background:rgba(var(--green-rgb),.12);color:var(--success)">₹</div>
+      <div class="stat-card__label">Total Collected</div>
+      <div class="stat-card__value">₹{{ (totalCollected() / 1000).toFixed(1) }}K</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__icon" style="background:rgba(var(--accent-rgb),.12);color:var(--accent)">📄</div>
+      <div class="stat-card__label">Total Receipts</div>
+      <div class="stat-card__value">{{ payments().length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__icon" style="background:rgba(var(--accent-rgb),.12);color:var(--accent)">📋</div>
+      <div class="stat-card__label">Fee Structures</div>
+      <div class="stat-card__value">{{ structures().length }}</div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="filter-bar mb-16">
+    <div class="filter-bar__search">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" placeholder="Search by student name, admission no or receipt…" [value]="search()" (input)="search.set($any($event.target).value)" />
+    </div>
+  </div>
+
+  @if (payments().length === 0) {
+    <div class="empty-state">
+      <div class="empty-state__icon">💳</div>
+      <div class="empty-state__title">No payments recorded yet</div>
+      <div class="empty-state__sub">Click "Collect Fee" to record your first payment.</div>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Receipt</th>
+            <th>Student</th>
+            <th>Fee Type</th>
+            <th>Amount</th>
+            <th>Mode</th>
+            <th>Date</th>
+            <th>Collected By</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of filteredPayments(); track p.id) {
+            <tr class="table-row">
+              <td class="font-mono text-sm">{{ p.receiptNo }}</td>
+              <td>
+                <div class="fw-600">{{ p.studentName }}</div>
+                <div class="text-xs text-muted font-mono">{{ p.admissionNo }}</div>
+              </td>
+              <td class="text-sm">{{ p.feeType ?? '—' }}</td>
+              <td class="fw-600">₹{{ p.amountPaid | number }}</td>
+              <td><span class="badge badge--blue">{{ modeLabel(p.paymentMode) }}</span></td>
+              <td class="text-sm text-muted">{{ p.paymentDate | date:'dd MMM yyyy' }}</td>
+              <td class="text-sm text-muted">{{ p.collectedByEmail }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+<!-- ── FEE STRUCTURES TAB ───────────────────────────────────────────────────── -->
+@if (activeTab() === 'structures') {
+  @if (structures().length === 0) {
+    <div class="empty-state">
+      <div class="empty-state__icon">📋</div>
+      <div class="empty-state__title">No fee structures defined</div>
+      <div class="empty-state__sub">Click "Add Fee Head" to define tuition, transport, or other fee types.</div>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fee Type</th>
+            <th>Amount</th>
+            <th>Class</th>
+            <th>Academic Year</th>
+            <th>Recurring</th>
+            <th>Due Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of structures(); track s.id) {
+            <tr class="table-row">
+              <td class="fw-600">{{ s.feeType }}</td>
+              <td class="fw-600">₹{{ s.amount | number }}</td>
+              <td class="text-sm">{{ s.className ?? 'All Classes' }}</td>
+              <td class="text-sm text-muted">{{ s.academicYearName ?? '—' }}</td>
+              <td>
+                @if (s.isRecurring) {
+                  <span class="badge badge--blue">{{ s.frequency }}</span>
+                } @else {
+                  <span class="text-muted text-sm">One-time</span>
+                }
+              </td>
+              <td class="text-sm text-muted">{{ s.dueDate ? (s.dueDate | date:'dd MMM yyyy') : '—' }}</td>
+              <td>
+                <button class="action-btn action-btn--ghost action-btn--danger" (click)="deleteStructure(s.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+<!-- ── COLLECT PAYMENT MODAL ──────────────────────────────────────────────────── -->
+@if (showPaymentModal()) {
+  <div class="modal-backdrop" (click)="closePaymentModal()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">Collect Fee Payment</h2>
+      <button class="modal__close" (click)="closePaymentModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="paymentForm" class="form-grid">
+
+        <div class="form-group form-group--full">
+          <label class="form-label">Student <span class="required">*</span></label>
+          <select class="form-select" formControlName="studentId">
+            <option value="">— Select student —</option>
+            @for (st of students(); track st.id) {
+              <option [value]="st.id">{{ st.firstName }} {{ st.lastName }} ({{ st.admissionNo }})</option>
+            }
+          </select>
+          @if (f['studentId'].touched && f['studentId'].invalid) {
+            <span class="form-error">Student is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Fee Structure (optional)</label>
+          <select class="form-select" formControlName="feeStructureId">
+            <option [value]="null">— None —</option>
+            @for (s of structures(); track s.id) {
+              <option [value]="s.id">{{ s.feeType }} – ₹{{ s.amount }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount Paid (₹) <span class="required">*</span></label>
+          <input class="form-input" type="number" min="1" formControlName="amountPaid" placeholder="0.00" />
+          @if (f['amountPaid'].touched && f['amountPaid'].invalid) {
+            <span class="form-error">Valid amount required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Date <span class="required">*</span></label>
+          <input class="form-input" type="date" formControlName="paymentDate" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Mode <span class="required">*</span></label>
+          <select class="form-select" formControlName="paymentMode">
+            @for (m of paymentModes; track m) {
+              <option [value]="m">{{ modeLabel(m) }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label">Remarks</label>
+          <input class="form-input" type="text" formControlName="remarks" placeholder="Optional note" />
+        </div>
+
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closePaymentModal()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="submitPayment()">
+        {{ saving() ? 'Saving…' : 'Record Payment' }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ── ADD FEE STRUCTURE MODAL ───────────────────────────────────────────────── -->
+@if (showStructureModal()) {
+  <div class="modal-backdrop" (click)="closeStructureModal()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">New Fee Structure</h2>
+      <button class="modal__close" (click)="closeStructureModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="structureForm" class="form-grid">
+
+        <div class="form-group">
+          <label class="form-label">Fee Type <span class="required">*</span></label>
+          <input class="form-input" formControlName="feeType" placeholder="e.g. Tuition, Transport, Library" />
+          @if (sf['feeType'].touched && sf['feeType'].invalid) {
+            <span class="form-error">Fee type is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount (₹) <span class="required">*</span></label>
+          <input class="form-input" type="number" min="1" formControlName="amount" placeholder="0.00" />
+          @if (sf['amount'].touched && sf['amount'].invalid) {
+            <span class="form-error">Valid amount required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Class (optional)</label>
+          <select class="form-select" formControlName="classId">
+            <option [value]="null">All Classes</option>
+            @for (c of classes(); track c.id) {
+              <option [value]="c.id">{{ c.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Academic Year (optional)</label>
+          <select class="form-select" formControlName="academicYearId">
+            <option [value]="null">— Any —</option>
+            @for (y of academicYears(); track y.id) {
+              <option [value]="y.id">{{ y.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Due Date</label>
+          <input class="form-input" type="date" formControlName="dueDate" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Frequency</label>
+          <select class="form-select" formControlName="frequency">
+            @for (f of frequencies; track f) {
+              <option [value]="f">{{ f }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label">Description</label>
+          <input class="form-input" formControlName="description" placeholder="Optional description" />
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="toggle-label">
+            <input type="checkbox" formControlName="isRecurring" />
+            <span>Recurring fee</span>
+          </label>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeStructureModal()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="submitStructure()">
+        {{ saving() ? 'Saving…' : 'Create Structure' }}
+      </button>
+    </div>
+  </div>
+}

@@ -1,0 +1,122 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Academics</span>
+    <h1 class="page-header__title">Homework</h1>
+    <p class="page-header__subtitle">
+      {{ totalElements() }} assignment{{ totalElements() !== 1 ? 's' : '' }} assigned
+    </p>
+  </div>
+  <div class="page-header__actions">
+    <a routerLink="/admin/homework/new" class="btn btn--primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New Assignment
+    </a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filter-bar mb-24">
+  <select class="form-select" [(ngModel)]="selectedClassId" (change)="applyFilters()">
+    <option value="">All Classes</option>
+    @for (cls of classes(); track cls.id) {
+      <option [value]="cls.id">{{ cls.name }}</option>
+    }
+  </select>
+
+  <select class="form-select" [(ngModel)]="selectedSubjectId" (change)="applyFilters()">
+    <option value="">All Subjects</option>
+    @for (sub of subjects(); track sub.id) {
+      <option [value]="sub.id">{{ sub.name }}</option>
+    }
+  </select>
+
+  @if (selectedClassId || selectedSubjectId) {
+    <button class="btn btn--ghost btn--sm" (click)="clearFilters()">Clear filters</button>
+  }
+</div>
+
+<!-- Loading -->
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <span>Loading assignments…</span>
+  </div>
+}
+
+<!-- Empty state -->
+@else if (homework().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">📚</div>
+    <h3>No homework found</h3>
+    <p>Create your first assignment using the button above.</p>
+    <a routerLink="/admin/homework/new" class="btn btn--primary">New Assignment</a>
+  </div>
+}
+
+<!-- Table -->
+@else {
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Class</th>
+          <th>Subject</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (hw of homework(); track hw.id) {
+          <tr>
+            <td>
+              <div class="hw-title">{{ hw.title }}</div>
+              @if (hw.estimatedMinutes) {
+                <div class="text-xs text-muted">~{{ hw.estimatedMinutes }} min</div>
+              }
+            </td>
+            <td>{{ hw.className }}</td>
+            <td>{{ hw.subjectName ?? '—' }}</td>
+            <td>
+              <span class="due-badge due-badge--{{ dueBadge(hw.daysUntilDue) }}">
+                {{ hw.dueDate | date:'d MMM' }}
+                <span class="due-badge__sub">{{ dueLabel(hw.daysUntilDue) }}</span>
+              </span>
+            </td>
+            <td>
+              <span class="status-pill" [ngClass]="hw.isPublished ? 'status-pill--green' : 'status-pill--gray'">
+                {{ hw.isPublished ? 'Published' : 'Draft' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn--ghost btn--sm" (click)="togglePublish(hw)"
+                        [title]="hw.isPublished ? 'Unpublish' : 'Publish'">
+                  {{ hw.isPublished ? '⏸' : '▶' }}
+                </button>
+                <a [routerLink]="['/admin/homework', hw.id, 'edit']"
+                   class="btn btn--ghost btn--sm" title="Edit">✏</a>
+                <button class="btn btn--ghost btn--sm text-danger" (click)="deleteHomework(hw)"
+                        title="Delete">🗑</button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  @if (totalPages() > 1) {
+    <div class="pagination mt-16">
+      <button class="btn btn--ghost btn--sm" (click)="prevPage()" [disabled]="page() === 0">← Prev</button>
+      <span class="text-sm text-muted">
+        Showing {{ page() * 20 + 1 }}–{{ displayEnd() }} of {{ totalElements() }}
+      </span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="page() >= totalPages() - 1">Next →</button>
+    </div>
+  }
+}

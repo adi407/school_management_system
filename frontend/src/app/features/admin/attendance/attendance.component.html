@@ -1,0 +1,98 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Attendance</span>
+    <h1 class="page-header__title">Mark Attendance</h1>
+    <p class="page-header__subtitle">{{ today | date:'EEEE, d MMMM yyyy' }}</p>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="att-controls">
+  <select class="filter-select" [value]="selectedClass()"
+          (change)="selectedClass.set($any($event.target).value)">
+    <option value="">Select class…</option>
+    @for (cls of classes(); track cls.id) {
+      <option [value]="cls.id">{{ cls.name }}</option>
+    }
+  </select>
+
+  <input type="date" class="filter-select"
+         [value]="selectedDate()"
+         (change)="selectedDate.set($any($event.target).value)" />
+
+  <button class="btn btn--primary btn--sm" [disabled]="!selectedClass() || loading()" (click)="loadRoll()">
+    @if (loading()) { <span class="btn-spinner"></span> Loading… } @else { Load Roll }
+  </button>
+
+  @if (rollLoaded()) {
+    <div class="att-quick">
+      <button class="btn btn--ghost btn--sm" (click)="markAll('PRESENT')">✓ All Present</button>
+      <button class="btn btn--ghost btn--sm" (click)="markAll('ABSENT')">✗ All Absent</button>
+    </div>
+  }
+</div>
+
+@if (rollLoaded()) {
+  <!-- Summary bar -->
+  <div class="att-summary">
+    <div class="att-chip att-chip--green">✓ Present: {{ presentCount() }}</div>
+    <div class="att-chip att-chip--red">✗ Absent: {{ absentCount() }}</div>
+    <div class="att-chip att-chip--orange">⏱ Late: {{ lateCount() }}</div>
+    <div class="att-chip">📊 {{ percentage() }}% attendance</div>
+  </div>
+
+  <!-- Attendance table -->
+  <div class="card" style="overflow:hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:120px">Adm. No.</th>
+          <th>Student Name</th>
+          <th>Status</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.studentId) {
+          <tr class="table-row"
+              [class.att-row--absent]="row.status === 'ABSENT'"
+              [class.att-row--late]="row.status === 'LATE'">
+            <td class="font-mono text-sm text-muted">{{ row.admissionNo }}</td>
+            <td class="fw-500">{{ row.name }}</td>
+            <td>
+              <div class="status-toggle">
+                @for (s of ['PRESENT','ABSENT','LATE','EXCUSED']; track s) {
+                  <button
+                    class="status-btn status-btn--{{ s.toLowerCase() }}"
+                    [class.status-btn--active]="row.status === s"
+                    (click)="setStatus(row.studentId, $any(s))">
+                    {{ s === 'PRESENT' ? '✓' : s === 'ABSENT' ? '✗' : s === 'LATE' ? '⏱' : 'E' }}
+                  </button>
+                }
+              </div>
+            </td>
+            <td>
+              <input type="text" class="remarks-input" [(ngModel)]="row.remarks"
+                     placeholder="Optional remarks…" />
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Save -->
+  <div class="att-footer">
+    <button class="btn btn--primary" [disabled]="saving()" (click)="save()">
+      @if (saving()) { <span class="btn-spinner"></span> Saving… } @else { Save Attendance }
+    </button>
+  </div>
+}
+
+@if (!rollLoaded() && !loading()) {
+  <div class="empty-state">
+    <div class="empty-state__icon">📋</div>
+    <h3>Select a class and date</h3>
+    <p>Choose a class and date above, then click Load Roll to begin marking attendance.</p>
+  </div>
+}

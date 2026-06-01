@@ -1,0 +1,93 @@
+<div class="login-page">
+
+  <!-- Ambient orbs -->
+  <div class="orb orb--blue"></div>
+  <div class="orb orb--purple"></div>
+
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-card__logo">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="5"  r="3" fill="white" opacity="0.95"/>
+          <circle cx="4"  cy="17" r="3" fill="white" opacity="0.80"/>
+          <circle cx="18" cy="17" r="3" fill="white" opacity="0.70"/>
+          <line x1="11" y1="5"  x2="4"  y2="17" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+          <line x1="11" y1="5"  x2="18" y2="17" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+          <line x1="4"  y1="17" x2="18" y2="17" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span class="logo-name">EduCloud SMS</span>
+    </div>
+
+    <h1 class="login-card__title">Welcome back</h1>
+    <p class="login-card__subtitle">Sign in to your school management portal</p>
+
+    <!-- Error banner -->
+    @if (error()) {
+      <div class="error-banner">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ error() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+
+      <!-- Email -->
+      <div class="field">
+        <label class="field__label" for="email">Email address</label>
+        <input id="email" type="email" formControlName="email"
+               class="field__input" placeholder="you@school.edu.in"
+               autocomplete="email" />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <span class="field__error">Please enter a valid email address</span>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label class="field__label" for="password">Password</label>
+        <div class="pass-wrap">
+          <input id="password" [type]="showPass() ? 'text' : 'password'"
+                 formControlName="password" class="field__input"
+                 placeholder="••••••••" autocomplete="current-password" />
+          <button type="button" class="pass-toggle" (click)="showPass.set(!showPass())">
+            @if (showPass()) {
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            } @else {
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            }
+          </button>
+        </div>
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <span class="field__error">Password must be at least 6 characters</span>
+        }
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn--primary btn--lg submit-btn" [disabled]="loading()">
+        @if (loading()) {
+          <span class="spinner" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,0.3);border-top-color:#fff"></span>
+          Signing in...
+        } @else {
+          Sign in
+        }
+      </button>
+    </form>
+
+    <!-- Demo accounts -->
+    <div class="demo-accounts">
+      <span class="demo-accounts__label">Quick demo login &nbsp;·&nbsp; password: Admin&#64;1234</span>
+      <div class="demo-accounts__grid">
+        @for (acc of demoAccounts; track acc.role) {
+          <button class="demo-card" (click)="fillDemo(acc.email)" type="button">
+            <span class="demo-card__role">{{ acc.label }}</span>
+            <span class="demo-card__email">{{ acc.email }}</span>
+          </button>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

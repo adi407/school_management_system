@@ -1,0 +1,81 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Teacher Portal</span>
+    <h1 class="page-header__title">{{ greeting() }}{{ teacherName() ? ', ' + teacherName().split(' ')[0] : '' }} 👋</h1>
+    <p class="page-header__subtitle">{{ today | date:'EEEE, d MMMM yyyy' }}</p>
+  </div>
+  <div class="page-header__actions">
+    @if (!loading() && data()) {
+      <div class="stat-pill">📚 {{ totalHomework() }} assignments</div>
+      <div class="stat-pill">🏫 {{ classesCount() }} classes today</div>
+    }
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state text-muted text-sm" style="padding:40px 0;text-align:center">Loading dashboard…</div>
+} @else {
+
+<div class="teacher-grid">
+  <!-- Today's schedule -->
+  <div>
+    <h2 class="section-title">Today's Schedule</h2>
+    @if (todaySchedule().length === 0) {
+      <div class="card" style="padding:32px;text-align:center;color:var(--text-muted)">
+        🎉 No classes scheduled for today
+      </div>
+    } @else {
+      <div class="schedule-list card" style="overflow:hidden">
+        @for (slot of todaySchedule(); track slot.id) {
+          <div class="schedule-item">
+            <div class="schedule-item__time">{{ slot.startTime }} – {{ slot.endTime }}</div>
+            <div class="schedule-item__body">
+              <div class="schedule-item__subject">{{ slot.subjectName ?? 'Free Period' }}</div>
+              <div class="schedule-item__meta text-xs text-muted">
+                {{ slot.className ?? '' }}{{ slot.roomNo ? ' · ' + slot.roomNo : '' }}
+              </div>
+            </div>
+            <a routerLink="/teacher/attendance" class="btn btn--ghost btn--sm">Take Attendance</a>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Pending homework + Quick links -->
+  <div>
+    <h2 class="section-title">Recent Homework</h2>
+    @if (pendingHomework().length === 0) {
+      <div class="card" style="padding:32px;text-align:center;color:var(--text-muted)">
+        ✅ No pending homework
+      </div>
+    } @else {
+      <div class="task-list card" style="overflow:hidden">
+        @for (hw of pendingHomework(); track hw.id) {
+          <div class="task-item">
+            <span class="badge badge--{{ dueColor(hw.daysUntilDue) }} text-xs">{{ dueLabel(hw.daysUntilDue) }}</span>
+            <div class="task-item__body">
+              <div class="task-item__text">{{ hw.title }}</div>
+              <div class="text-xs text-muted">{{ hw.className ?? 'No class' }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <h2 class="section-title" style="margin-top:24px">Quick Links</h2>
+    <div class="quick-links">
+      <a routerLink="/teacher/homework" class="quick-link quick-link--purple">
+        <span>📝</span><span>My Homework</span>
+      </a>
+      <a routerLink="/teacher/homework" class="quick-link quick-link--blue">
+        <span>+</span><span>New Assignment</span>
+      </a>
+      <a routerLink="/teacher/attendance" class="quick-link quick-link--green">
+        <span>✓</span><span>Attendance</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+} <!-- end @if loading -->

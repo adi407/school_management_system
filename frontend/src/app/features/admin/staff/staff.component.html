@@ -1,0 +1,124 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Staff</span>
+    <h1 class="page-header__title">Staff Directory</h1>
+    <p class="page-header__subtitle">{{ activeCount() }} active of {{ staff().length }} total</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--primary" (click)="openCreate()">+ Add Staff</button>
+  </div>
+</div>
+
+<div class="filter-row mb-24">
+  <div class="search-wrap">
+    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" placeholder="Search by name or email…" [value]="search()" (input)="search.set($any($event.target).value)" />
+  </div>
+  <select class="filter-select" [value]="roleFilter()" (change)="roleFilter.set($any($event.target).value)">
+    <option value="">All Roles</option>
+    @for (r of staffRoles; track r) { <option [value]="r">{{ r }}</option> }
+  </select>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">Loading staff…</div>
+} @else if (staff().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">👥</div>
+    <div class="empty-state__title">No staff members yet</div>
+    <div class="empty-state__sub">Click "Add Staff" to create teacher or admin accounts.</div>
+  </div>
+} @else {
+  <div class="staff-grid">
+    @for (member of filtered(); track member.id) {
+      <div class="staff-card card" [class.staff-card--inactive]="!member.isActive">
+        <div class="staff-card__top">
+          <div class="staff-card__avatar" [attr.data-role]="member.role[0]">{{ initials(member.fullName) }}</div>
+          <div class="staff-card__info">
+            <div class="staff-card__name">{{ displayName(member) }}</div>
+            <div class="staff-card__email text-muted text-xs">{{ member.email }}</div>
+            @if (member.department) {
+              <div class="staff-card__dept text-muted text-xs" style="margin-top:2px">📂 {{ member.department }}</div>
+            }
+          </div>
+          <div class="staff-card__badge-wrap">
+            <span class="badge badge--{{ roleColor(member.role) }} text-xs">{{ member.role.replace('_',' ') }}</span>
+            @if (!member.isActive) {
+              <span class="badge badge--neutral text-xs" style="margin-top:4px">Inactive</span>
+            }
+          </div>
+        </div>
+        <div class="staff-card__footer">
+          <button class="btn btn--ghost btn--sm" (click)="openEdit(member)">✏ Edit</button>
+          @if (member.isActive) {
+            <button class="btn btn--ghost btn--sm" style="color:var(--error)" (click)="deactivate(member)">Deactivate</button>
+          } @else {
+            <span class="text-muted text-xs" style="padding:0 4px">Deactivated</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Modal -->
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ editingId() ? 'Edit Staff Member' : 'Add Staff Member' }}</h2>
+      <button class="modal__close" (click)="closeModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="form" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">First Name <span class="required">*</span></label>
+          <input class="form-input" formControlName="firstName" />
+          @if (f['firstName'].touched && f['firstName'].invalid) {
+            <span class="form-error">Required</span>
+          }
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name <span class="required">*</span></label>
+          <input class="form-input" formControlName="lastName" />
+          @if (f['lastName'].touched && f['lastName'].invalid) {
+            <span class="form-error">Required</span>
+          }
+        </div>
+        <div class="form-group form-group--full">
+          <label class="form-label">Email <span class="required">*</span></label>
+          <input class="form-input" type="email" formControlName="email" />
+          @if (f['email'].touched && f['email'].invalid) {
+            <span class="form-error">Valid email required</span>
+          }
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role <span class="required">*</span></label>
+          <select class="form-select" formControlName="role">
+            @for (r of staffRoles; track r) { <option [value]="r">{{ r }}</option> }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <input class="form-input" formControlName="department" placeholder="e.g. Mathematics" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-input" formControlName="phone" />
+        </div>
+        @if (!editingId()) {
+          <div class="form-group">
+            <label class="form-label">Password (blank = Welcome&#64;1234)</label>
+            <input class="form-input" type="password" formControlName="password" />
+          </div>
+        }
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeModal()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="submit()">
+        {{ saving() ? 'Saving…' : (editingId() ? 'Update' : 'Create') }}
+      </button>
+    </div>
+  </div>
+}

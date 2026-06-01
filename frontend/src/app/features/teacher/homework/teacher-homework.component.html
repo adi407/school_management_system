@@ -1,0 +1,60 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Teacher</span>
+    <h1 class="page-header__title">My Homework</h1>
+    <p class="page-header__subtitle">{{ upcomingCount() }} upcoming · {{ overdueCount() }} overdue</p>
+  </div>
+  <div class="page-header__actions">
+    <a routerLink="/teacher/homework/new" class="btn btn--primary">+ New Assignment</a>
+  </div>
+</div>
+
+<!-- Filter by class -->
+<div class="filter-bar mb-20">
+  <select class="form-select" [(ngModel)]="selectedClass" (change)="load()">
+    <option value="">All My Classes</option>
+    @for (cls of classes(); track cls.id) {
+      <option [value]="cls.id">{{ cls.name }}</option>
+    }
+  </select>
+</div>
+
+@if (loading()) {
+  <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+}
+
+@else if (homework().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">📝</div>
+    <h3>No assignments yet</h3>
+    <p>Create your first homework assignment for your class.</p>
+  </div>
+}
+
+@else {
+  <div class="hw-list">
+    @for (hw of homework(); track hw.id) {
+      <div class="hw-row" [ngClass]="'hw-row--' + dueBadge(hw.daysUntilDue)">
+        <div class="hw-row__left">
+          <div class="hw-row__subject">{{ hw.subjectName ?? 'General' }}</div>
+          <div class="hw-row__title">{{ hw.title }}</div>
+          <div class="hw-row__class text-sm text-muted">{{ hw.className }}</div>
+        </div>
+        <div class="hw-row__right">
+          <div class="hw-row__due">{{ hw.dueDate | date:'d MMM' }}</div>
+          @if (hw.daysUntilDue < 0) {
+            <span class="badge badge--red">Overdue</span>
+          } @else if (hw.daysUntilDue === 0) {
+            <span class="badge badge--orange">Due today</span>
+          } @else if (hw.daysUntilDue <= 2) {
+            <span class="badge badge--yellow">Due soon</span>
+          }
+          <button class="btn btn--ghost btn--sm" (click)="togglePublish(hw)">
+            {{ hw.isPublished ? '⏸ Unpublish' : '▶ Publish' }}
+          </button>
+          <a [routerLink]="['/teacher/homework', hw.id, 'edit']" class="btn btn--ghost btn--sm">Edit</a>
+        </div>
+      </div>
+    }
+  </div>
+}

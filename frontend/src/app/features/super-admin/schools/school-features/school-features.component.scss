@@ -1,0 +1,74 @@
+.features-layout {
+  display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start;
+}
+
+// ── Tier panel ──────────────────────────────────────────────
+.tier-panel {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px;
+  position: sticky; top: calc(var(--header-height) + 24px);
+}
+.tier-panel__title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.tier-panel__desc  { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+
+.tier-btns { display: flex; flex-direction: column; gap: 8px; }
+.tier-btn {
+  width: 100%; text-align: left; padding: 12px 14px;
+  background: var(--bg3); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); cursor: pointer;
+  transition: all var(--transition);
+  &:hover { border-color: var(--accent); background: var(--accent-soft); }
+  &--active { border-color: var(--accent); background: var(--accent-soft); }
+  &__name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+  &__desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+}
+
+.school-meta { display: flex; flex-direction: column; gap: 10px; }
+.meta-row   { display: flex; justify-content: space-between; align-items: center; }
+.meta-label { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; }
+.meta-value { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+// ── Toggle board ────────────────────────────────────────────
+.feature-group {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px;
+  position: relative;
+  &::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--shimmer-line), transparent); }
+}
+.feature-group__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; background: var(--bg3); border-bottom: 1px solid var(--border);
+}
+.feature-group__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); }
+.feature-group__count { font-size: 12px; color: var(--accent); font-weight: 600; }
+
+.feature-list { padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+
+.feature-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 12px; border-radius: 10px; cursor: pointer;
+  transition: background var(--transition);
+  &:hover { background: var(--bg-hover); }
+  &--core { cursor: default; opacity: 0.7; }
+  &__info { display: flex; align-items: center; gap: 8px; }
+  &__key  { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+}
+
+// ── Toggle switch ───────────────────────────────────────────
+.toggle {
+  width: 38px; height: 22px; border-radius: 11px;
+  background: var(--bg4); border: 1.5px solid var(--border);
+  position: relative; transition: all 0.2s ease; flex-shrink: 0;
+
+  &--on {
+    background: var(--accent); border-color: var(--accent);
+    .toggle__thumb { transform: translateX(16px); }
+  }
+  &--disabled { opacity: 0.6; pointer-events: none; }
+}
+.toggle__thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; position: absolute; top: 2px; left: 2px;
+  transition: transform 0.2s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}

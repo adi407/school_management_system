@@ -1,0 +1,108 @@
+.login-page {
+  min-height: 100vh; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; position: relative; overflow: hidden;
+}
+
+// Ambient blobs
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+  &--blue   { width: 600px; height: 500px; top: -200px; left: -150px; background: rgba(var(--accent-rgb), 0.09); }
+  &--purple { width: 500px; height: 450px; bottom: -180px; right: -150px; background: rgba(var(--purple-rgb), 0.07); }
+}
+
+.login-card {
+  width: 100%; max-width: 420px; position: relative; z-index: 1;
+  background: var(--card-bg); backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border: 1px solid var(--border); border-radius: var(--radius-xl);
+  padding: 40px; box-shadow: var(--shadow-xl);
+  animation: fade-in 0.3s ease;
+
+  &::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  }
+
+  &__logo {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
+  }
+
+  &__title {
+    font-size: 26px; font-weight: 800; color: var(--text-primary);
+    letter-spacing: -0.6px; margin-bottom: 6px;
+  }
+
+  &__subtitle {
+    font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
+  }
+}
+
+.logo-icon {
+  width: 40px; height: 40px; background: var(--gradient); border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.4);
+}
+
+.logo-name {
+  font-size: 18px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.4px;
+}
+
+.login-form {
+  display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px;
+}
+
+.pass-wrap {
+  position: relative;
+  .field__input { padding-right: 40px; }
+}
+
+.pass-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  padding: 4px; transition: color var(--transition);
+  &:hover { color: var(--text-primary); }
+}
+
+.submit-btn {
+  width: 100%; justify-content: center; margin-top: 4px;
+}
+
+.demo-accounts {
+  border-top: 1px solid var(--border); padding-top: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+
+  &__label {
+    font-size: 11px; color: var(--text-3); text-align: center;
+    font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+}
+
+.demo-card {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 9px 12px; text-align: left; cursor: pointer;
+  background: var(--bg-secondary, rgba(255,255,255,0.04));
+  border: 1px solid var(--border); border-radius: var(--radius-md, 8px);
+  transition: border-color var(--transition), background var(--transition);
+
+  &:hover {
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.07);
+  }
+
+  &__role {
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  &__email {
+    font-size: 10.5px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+}

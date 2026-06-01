@@ -1,0 +1,102 @@
+.form-card { max-width: 760px; padding: 32px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  &.is-invalid .form-input,
+  &.is-invalid .form-select,
+  &.is-invalid .form-textarea {
+    border-color: var(--error);
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.required { color: var(--error); margin-left: 2px; }
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color .15s;
+  &:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12); }
+}
+
+.form-textarea { resize: vertical; min-height: 120px; font-family: inherit; }
+
+.field-error { color: var(--error); font-size: 12px; margin-top: 4px; display: block; }
+
+.broadcast-toggle {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: rgba(var(--accent-rgb), .04);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  transition: background .15s, border-color .15s;
+
+  &--active {
+    background: rgba(var(--accent-rgb), .09);
+    border-color: var(--accent);
+  }
+}
+
+.publish-toggle {
+  margin-bottom: 28px;
+  padding: 16px;
+  background: rgba(var(--accent-rgb), .05);
+  border-radius: 10px;
+  border: 1px solid rgba(var(--accent-rgb), .15);
+}
+
+.toggle-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.toggle-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.toggle-text { display: flex; flex-direction: column; gap: 2px; }
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  padding: 40px 0;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .form-card { padding: 20px; }
+}

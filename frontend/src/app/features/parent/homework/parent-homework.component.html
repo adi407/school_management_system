@@ -1,0 +1,78 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Parent Portal</span>
+    <h1 class="page-header__title">Homework</h1>
+    <p class="page-header__subtitle">Stay on top of your child's assignments</p>
+  </div>
+</div>
+
+<!-- Summary chips -->
+@if (!loading() && homework().length > 0) {
+  <div class="summary-chips mb-24">
+    <div class="chip chip--green">
+      <span class="chip__icon">📚</span>
+      <span>{{ upcomingCount() }} upcoming</span>
+    </div>
+    @if (overdueCount() > 0) {
+      <div class="chip chip--red">
+        <span class="chip__icon">⚠</span>
+        <span>{{ overdueCount() }} overdue</span>
+      </div>
+    }
+  </div>
+}
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <span>Loading homework…</span>
+  </div>
+}
+
+@else if (!classId && homework().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">🔗</div>
+    <h3>No student linked</h3>
+    <p>Your parent account needs to be linked to your child's profile to see homework.</p>
+    <p class="text-sm text-muted">Contact your school administrator to set this up.</p>
+  </div>
+}
+
+@else if (homework().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">🎉</div>
+    <h3>All caught up!</h3>
+    <p>No upcoming homework in the next 30 days.</p>
+  </div>
+}
+
+@else {
+  <div class="homework-cards">
+    @for (hw of homework(); track hw.id) {
+      <div class="hw-card" [ngClass]="urgencyClass(hw.daysUntilDue)">
+        <div class="hw-card__header">
+          <div class="hw-card__subject">{{ hw.subjectName ?? 'General' }}</div>
+          <div class="hw-card__class">{{ hw.className }}</div>
+        </div>
+
+        <h3 class="hw-card__title">{{ hw.title }}</h3>
+        <p class="hw-card__desc">{{ hw.description }}</p>
+
+        <div class="hw-card__footer">
+          <span class="urgency-label" [ngClass]="urgencyClass(hw.daysUntilDue)">
+            {{ urgencyLabel(hw.daysUntilDue) }}
+          </span>
+          @if (hw.estimatedMinutes) {
+            <span class="time-badge">
+              ⏱ ~{{ hw.estimatedMinutes }} min
+            </span>
+          }
+        </div>
+
+        <div class="hw-card__due">
+          Due: <strong>{{ hw.dueDate | date:'EEEE, d MMMM yyyy' }}</strong>
+        </div>
+      </div>
+    }
+  </div>
+}

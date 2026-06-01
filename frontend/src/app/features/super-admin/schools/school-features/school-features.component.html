@@ -1,0 +1,90 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">School Configuration</span>
+    <h1 class="page-header__title">Feature Flags</h1>
+    @if (school(); as s) {
+      <p class="page-header__subtitle">{{ s.name }} · {{ s.subscriptionTier }} Plan · {{ enabledCount() }} features enabled</p>
+    }
+  </div>
+  <div class="page-header__actions">
+    <a routerLink="/super-admin/schools" class="btn btn--outline">← Back</a>
+    <button class="btn btn--primary" [disabled]="saving()" (click)="save()">
+      @if (saving()) { <span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Saving... }
+      @else { Save Changes }
+    </button>
+  </div>
+</div>
+
+<div class="features-layout">
+
+  <!-- Left: Tier quick-presets -->
+  <div class="tier-panel">
+    <div class="tier-panel__title">Quick Presets</div>
+    <p class="tier-panel__desc">Apply a subscription tier preset to bulk-enable the right features.</p>
+    <div class="tier-btns">
+      @for (tier of ['FREE','BASIC','PREMIUM','ENTERPRISE']; track tier) {
+        <button class="tier-btn" [class.tier-btn--active]="school()?.subscriptionTier === tier"
+          (click)="applyTierPreset($any(tier))">
+          <div class="tier-btn__name">{{ tier }}</div>
+          <div class="tier-btn__desc">
+            @switch (tier) {
+              @case ('FREE')       { Core only }
+              @case ('BASIC')      { + Exams & Fees }
+              @case ('PREMIUM')    { + All Advanced }
+              @case ('ENTERPRISE') { Everything }
+            }
+          </div>
+        </button>
+      }
+    </div>
+
+    <div class="divider"></div>
+
+    @if (school(); as s) {
+      <div class="school-meta">
+        <div class="meta-row"><span class="meta-label">School</span><span class="meta-value">{{ s.name }}</span></div>
+        <div class="meta-row"><span class="meta-label">Code</span><span class="meta-value font-mono">{{ s.code }}</span></div>
+        <div class="meta-row"><span class="meta-label">Board</span><span class="meta-value">{{ s.board }}</span></div>
+        <div class="meta-row"><span class="meta-label">Plan</span><span class="meta-value">{{ s.subscriptionTier }}</span></div>
+        <div class="meta-row"><span class="meta-label">Expiry</span><span class="meta-value">{{ s.subscriptionExpiry ?? '—' }}</span></div>
+      </div>
+    }
+  </div>
+
+  <!-- Right: Feature toggle groups -->
+  <div class="toggle-board">
+    @if (loading()) {
+      @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton" style="height:180px; border-radius:16px; margin-bottom:16px"></div>
+      }
+    } @else {
+      @for (group of featureGroups; track group.label) {
+        <div class="feature-group">
+          <div class="feature-group__header">
+            <span class="feature-group__label">{{ group.label }}</span>
+            <span class="feature-group__count">
+              {{ enabledInGroup(group.keys) }} / {{ group.keys.length }}
+            </span>
+          </div>
+          <div class="feature-list">
+            @for (key of group.keys; track key) {
+              <div class="feature-row" [class.feature-row--core]="isCore(key)" (click)="toggle(key)">
+                <div class="feature-row__info">
+                  <span class="feature-row__key">{{ keyLabel(key) }}</span>
+                  @if (isCore(key)) {
+                    <span class="badge badge--blue" style="font-size:9px;padding:1px 7px">CORE</span>
+                  }
+                </div>
+                <div class="toggle" [class.toggle--on]="draft()[key] || isCore(key)"
+                     [class.toggle--disabled]="isCore(key)">
+                  <div class="toggle__thumb"></div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+</div>
