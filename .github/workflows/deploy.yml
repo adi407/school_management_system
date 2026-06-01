@@ -44,11 +44,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DROPLET_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Upload prod config to server
-        run: |
-          scp backend/sms-api/src/main/resources/application-prod.yml \
-            root@${{ secrets.DROPLET_HOST }}:/opt/sms/app/application-prod.yml
-
       - name: Upload JAR
         run: |
           scp backend/sms-api/target/sms-api-*.jar \
