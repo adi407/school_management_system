@@ -103,6 +103,15 @@ export const routes: Routes = [
             path: 'library',
             loadComponent: () => import('./features/admin/library/library.component').then(m => m.LibraryComponent),
           },
+          // ── Classes ───────────────────────────────────────────
+          {
+            path: 'classes',
+            loadComponent: () => import('./features/admin/classes/class-list/class-list.component').then(m => m.ClassListComponent),
+          },
+          {
+            path: 'classes/:id',
+            loadComponent: () => import('./features/admin/classes/class-detail/class-detail.component').then(m => m.ClassDetailComponent),
+          },
           // ── Homework ──────────────────────────────────────────
           {
             path: 'homework',

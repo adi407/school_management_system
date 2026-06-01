@@ -43,6 +43,7 @@ export class SidebarComponent {
       roles: ['SCHOOL_ADMIN'],
       items: [
         { label: 'Students',   route: '/admin/students',   icon: '👥' },
+        { label: 'Classes',    route: '/admin/classes',    icon: '🏫' },
         { label: 'Attendance', route: '/admin/attendance', icon: '✓' },
         { label: 'Homework',   route: '/admin/homework',   icon: '📝' },
         { label: 'Timetable',  route: '/admin/timetable',  icon: '📅' },

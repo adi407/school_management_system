@@ -38,13 +38,14 @@ export class AdminDashboardComponent implements OnInit {
 
   modules = [
     { label: 'Students',     route: '/admin/students',    icon: '👥' },
+    { label: 'Classes',      route: '/admin/classes',     icon: '🏫' },
+    { label: 'Staff',        route: '/admin/staff',       icon: '👨‍🏫' },
     { label: 'Attendance',   route: '/admin/attendance',  icon: '✓'  },
     { label: 'Homework',     route: '/admin/homework',    icon: '📝' },
     { label: 'Campus Pulse', route: '/admin/pulse',       icon: '💙' },
     { label: 'Timetable',    route: '/admin/timetable',   icon: '📅' },
     { label: 'Exams',        route: '/admin/exams',       icon: '📋' },
     { label: 'Fees',         route: '/admin/fees',        icon: '💰' },
-    { label: 'Staff',        route: '/admin/staff',       icon: '👨‍🏫' },
     { label: 'Library',      route: '/admin/library',     icon: '📚' },
     { label: 'Activities',   route: '/admin/activities',  icon: '🏆' },
   ];

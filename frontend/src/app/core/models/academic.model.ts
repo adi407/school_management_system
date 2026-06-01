@@ -45,3 +45,21 @@ export interface CreateSubjectRequest {
   type?: string;
   creditHours?: number;
 }
+
+export interface ClassSubjectDto {
+  id: string;
+  classId: string;
+  subjectId: string;
+  subjectName: string;
+  subjectCode: string;
+  subjectType: string;
+  subjectCreditHours: number | null;
+  teacherId: string | null;
+  teacherName: string | null;
+  teacherEmail: string | null;
+}
+
+export interface AssignSubjectRequest {
+  subjectId: string;
+  teacherId?: string | null;
+}

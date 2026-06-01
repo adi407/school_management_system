@@ -1,0 +1,242 @@
+@if (loading()) {
+  <div class="loading-state">Loading class…</div>
+} @else if (!cls()) {
+  <div class="empty-state">
+    <div class="empty-state__title">Class not found</div>
+    <a class="btn btn--ghost" routerLink="/admin/classes">← Back to Classes</a>
+  </div>
+} @else {
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <a class="breadcrumb" routerLink="/admin/classes">← Classes</a>
+      <h1 class="page-header__title">{{ cls()!.name }}</h1>
+      <p class="page-header__subtitle">Grade {{ cls()!.grade }} · Section {{ cls()!.section }} · {{ cls()!.studentCount }}/{{ cls()!.capacity }} students</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs mb-24">
+    <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'overview'" (click)="setTab('overview')">Overview</button>
+    <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'subjects'" (click)="setTab('subjects')">
+      Subjects <span class="tab-count">{{ subjects().length }}</span>
+    </button>
+    <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'students'" (click)="setTab('students')">
+      Students <span class="tab-count">{{ cls()!.studentCount }}</span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════ OVERVIEW TAB ═══════════════════ -->
+  @if (activeTab() === 'overview') {
+    <div class="tab-panel">
+      <div class="card detail-card">
+        <h3 class="card__section-title">Class Info</h3>
+        <form [formGroup]="overviewForm" class="form-grid" (ngSubmit)="saveOverview()">
+          <div class="form-group">
+            <label class="form-label">Display Name <span class="required">*</span></label>
+            <input class="form-input" formControlName="name" />
+            @if (of['name'].touched && of['name'].invalid) {
+              <span class="form-error">Name required</span>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Capacity <span class="required">*</span></label>
+            <input class="form-input" type="number" min="1" formControlName="capacity" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Class Teacher</label>
+            <select class="form-input" formControlName="classTeacherId">
+              <option [value]="null">— None —</option>
+              @for (t of teachers(); track t.id) {
+                <option [value]="t.id">{{ t.fullName || t.email }}</option>
+              }
+            </select>
+          </div>
+        </form>
+
+        <!-- Capacity bar -->
+        <div class="fill-bar-wrap mt-16">
+          <div class="fill-bar-label">
+            <span>Enrollment</span>
+            <span class="text-muted text-sm">{{ cls()!.studentCount }} / {{ cls()!.capacity }} ({{ fillPct() }}%)</span>
+          </div>
+          <div class="fill-bar">
+            <div class="fill-bar__inner" [style.width.%]="fillPct()"
+                 [class.fill-bar__inner--full]="fillPct() >= 100"></div>
+          </div>
+        </div>
+
+        <div class="form-actions mt-24">
+          <button class="btn btn--primary" [disabled]="saving()" (click)="saveOverview()">
+            {{ saving() ? 'Saving…' : 'Save Changes' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ═══════════════════ SUBJECTS TAB ═══════════════════ -->
+  @if (activeTab() === 'subjects') {
+    <div class="tab-panel">
+      <div class="section-header mb-16">
+        <h3 class="section-title">Assigned Subjects</h3>
+        <button class="btn btn--primary btn--sm" (click)="openAssign()"
+                [disabled]="availableSubjects().length === 0">
+          + Assign Subject
+        </button>
+      </div>
+
+      @if (subjects().length === 0) {
+        <div class="empty-state">
+          <div class="empty-state__icon">📚</div>
+          <div class="empty-state__title">No subjects assigned</div>
+          <div class="empty-state__sub">Click "Assign Subject" to add subjects to this class.</div>
+        </div>
+      } @else {
+        <div class="subject-table">
+          <div class="subject-table__head">
+            <span>Subject</span>
+            <span>Code</span>
+            <span>Type</span>
+            <span>Teacher</span>
+            <span></span>
+          </div>
+          @for (cst of subjects(); track cst.id) {
+            <div class="subject-table__row">
+              <span class="subject-name">{{ cst.subjectName }}</span>
+              <span class="text-muted text-sm">{{ cst.subjectCode }}</span>
+              <span>
+                <span class="badge badge--{{ subjectTypeBadge(cst.subjectType) }} text-xs">
+                  {{ cst.subjectType }}
+                </span>
+              </span>
+              <span class="teacher-cell">
+                @if (cst.teacherName) {
+                  <span class="teacher-avatar">{{ initials(cst.teacherName) }}</span>
+                  <span class="text-sm">{{ cst.teacherName }}</span>
+                } @else {
+                  <span class="text-muted text-sm">— Unassigned</span>
+                }
+              </span>
+              <span class="subject-actions">
+                <button class="btn btn--ghost btn--xs" (click)="openTeacher(cst)" title="Change teacher">
+                  👨‍🏫
+                </button>
+                <button class="btn btn--ghost btn--xs danger" (click)="removeSubject(cst)" title="Remove subject">
+                  🗑
+                </button>
+              </span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ═══════════════════ STUDENTS TAB ═══════════════════ -->
+  @if (activeTab() === 'students') {
+    <div class="tab-panel">
+      <div class="section-header mb-16">
+        <h3 class="section-title">Enrolled Students</h3>
+        <a class="btn btn--ghost btn--sm" routerLink="/admin/students/new">+ Add Student</a>
+      </div>
+
+      @if (students().length === 0 && cls()!.studentCount === 0) {
+        <div class="empty-state">
+          <div class="empty-state__icon">👥</div>
+          <div class="empty-state__title">No students yet</div>
+          <div class="empty-state__sub">Enrol students by creating a new student and assigning them to this class.</div>
+        </div>
+      } @else if (students().length === 0) {
+        <div class="loading-state">Loading students…</div>
+      } @else {
+        <div class="student-list">
+          @for (s of students(); track s.id) {
+            <div class="student-row">
+              <div class="student-row__avatar">{{ initials(s.firstName + ' ' + s.lastName) }}</div>
+              <div class="student-row__info">
+                <div class="student-row__name">{{ s.firstName }} {{ s.lastName }}</div>
+                <div class="student-row__meta text-muted text-xs">
+                  Roll #{{ s.rollNo || '—' }} · {{ s.gender }}
+                </div>
+              </div>
+              <a class="btn btn--ghost btn--xs" [routerLink]="['/admin/students', s.id]">View →</a>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+}
+
+<!-- ═══════════════ ASSIGN SUBJECT MODAL ═══════════════ -->
+@if (showAssignModal()) {
+  <div class="modal-backdrop" (click)="closeAssign()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">Assign Subject</h2>
+      <button class="modal__close" (click)="closeAssign()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="assignForm" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Subject <span class="required">*</span></label>
+          <select class="form-input" formControlName="subjectId">
+            <option value="">— Select subject —</option>
+            @for (s of availableSubjects(); track s.id) {
+              <option [value]="s.id">{{ s.name }} ({{ s.code }})</option>
+            }
+          </select>
+          @if (af['subjectId'].touched && af['subjectId'].invalid) {
+            <span class="form-error">Subject required</span>
+          }
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assign Teacher (optional)</label>
+          <select class="form-input" formControlName="teacherId">
+            <option [value]="null">— None —</option>
+            @for (t of teachers(); track t.id) {
+              <option [value]="t.id">{{ t.fullName || t.email }}</option>
+            }
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeAssign()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="submitAssign()">
+        {{ saving() ? 'Assigning…' : 'Assign' }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════ CHANGE TEACHER MODAL ═══════════════ -->
+@if (showTeacherModal()) {
+  <div class="modal-backdrop" (click)="closeTeacher()"></div>
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">Change Teacher — {{ editingCst()?.subjectName }}</h2>
+      <button class="modal__close" (click)="closeTeacher()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="teacherForm" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Teacher</label>
+          <select class="form-input" formControlName="teacherId">
+            <option [value]="null">— Unassigned —</option>
+            @for (t of teachers(); track t.id) {
+              <option [value]="t.id">{{ t.fullName || t.email }}</option>
+            }
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeTeacher()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="saving()" (click)="submitTeacher()">
+        {{ saving() ? 'Saving…' : 'Update Teacher' }}
+      </button>
+    </div>
+  </div>
+}

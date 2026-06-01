@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AcademicYearDto, ClassDto, SubjectDto, CreateClassRequest, CreateSubjectRequest } from '../models/academic.model';
+import { AcademicYearDto, ClassDto, SubjectDto, CreateClassRequest, CreateSubjectRequest, ClassSubjectDto, AssignSubjectRequest } from '../models/academic.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -47,5 +47,25 @@ export class AcademicService {
 
   deleteSubject(id: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/subjects/${id}`);
+  }
+
+  // ── Class Subjects ─────────────────────────────────────────────────────────
+  listClassSubjects(classId: string): Observable<ClassSubjectDto[]> {
+    return this.http.get<ClassSubjectDto[]>(`${this.base}/classes/${classId}/subjects`);
+  }
+
+  assignSubject(classId: string, req: AssignSubjectRequest): Observable<ClassSubjectDto> {
+    return this.http.post<ClassSubjectDto>(`${this.base}/classes/${classId}/subjects`, req);
+  }
+
+  updateSubjectTeacher(classId: string, cstId: string, teacherId: string | null): Observable<ClassSubjectDto> {
+    return this.http.patch<ClassSubjectDto>(
+      `${this.base}/classes/${classId}/subjects/${cstId}/teacher`,
+      { teacherId }
+    );
+  }
+
+  removeSubject(classId: string, cstId: string): Observable<void> {
+    return this.http.delete<void>(`${this.base}/classes/${classId}/subjects/${cstId}`);
   }
 }

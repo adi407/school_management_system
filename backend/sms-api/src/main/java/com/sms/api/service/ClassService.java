@@ -1,13 +1,19 @@
 package com.sms.api.service;
 
+import com.sms.api.dto.academic.AssignSubjectRequest;
 import com.sms.api.dto.academic.ClassDto;
+import com.sms.api.dto.academic.ClassSubjectDto;
 import com.sms.api.dto.academic.CreateClassRequest;
+import com.sms.api.entity.ClassSubjectTeacher;
 import com.sms.api.entity.School;
 import com.sms.api.entity.SchoolClass;
+import com.sms.api.entity.Subject;
 import com.sms.api.entity.User;
+import com.sms.api.repository.ClassSubjectTeacherRepository;
 import com.sms.api.repository.SchoolClassRepository;
 import com.sms.api.repository.SchoolRepository;
 import com.sms.api.repository.StudentRepository;
+import com.sms.api.repository.SubjectRepository;
 import com.sms.api.repository.UserRepository;
 import com.sms.core.exception.DuplicateResourceException;
 import com.sms.core.exception.ResourceNotFoundException;
@@ -25,15 +31,21 @@ public class ClassService {
     private final SchoolRepository schoolRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final SubjectRepository subjectRepository;
+    private final ClassSubjectTeacherRepository cstRepository;
 
     public ClassService(SchoolClassRepository classRepository,
                         SchoolRepository schoolRepository,
                         StudentRepository studentRepository,
-                        UserRepository userRepository) {
-        this.classRepository  = classRepository;
-        this.schoolRepository = schoolRepository;
-        this.studentRepository= studentRepository;
-        this.userRepository   = userRepository;
+                        UserRepository userRepository,
+                        SubjectRepository subjectRepository,
+                        ClassSubjectTeacherRepository cstRepository) {
+        this.classRepository   = classRepository;
+        this.schoolRepository  = schoolRepository;
+        this.studentRepository = studentRepository;
+        this.userRepository    = userRepository;
+        this.subjectRepository = subjectRepository;
+        this.cstRepository     = cstRepository;
     }
 
     @Transactional(readOnly = true)
@@ -87,6 +99,62 @@ public class ClassService {
         return toDto(classRepository.save(sc), studentRepository.countBySchoolClassId(id));
     }
 
+    // ── Subject Assignment ────────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public List<ClassSubjectDto> listSubjects(UUID schoolId, UUID classId) {
+        findOrThrow(schoolId, classId); // ensure class belongs to school
+        return cstRepository.findBySchoolIdAndClassId(schoolId, classId)
+            .stream().map(this::toCstDto).toList();
+    }
+
+    public ClassSubjectDto assignSubject(UUID schoolId, UUID classId, AssignSubjectRequest req) {
+        SchoolClass sc = findOrThrow(schoolId, classId);
+
+        Subject subject = subjectRepository.findByIdAndSchoolId(req.subjectId(), schoolId)
+            .orElseThrow(() -> new ResourceNotFoundException("Subject", req.subjectId()));
+
+        if (cstRepository.existsBySchoolIdAndSchoolClassIdAndSubjectId(schoolId, classId, req.subjectId())) {
+            throw new DuplicateResourceException("Subject '" + subject.getName() + "' is already assigned to this class");
+        }
+
+        ClassSubjectTeacher cst = new ClassSubjectTeacher();
+        cst.setSchoolId(schoolId);
+        cst.setSchoolClass(sc);
+        cst.setSubject(subject);
+
+        if (req.teacherId() != null) {
+            User teacher = userRepository.findById(req.teacherId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", req.teacherId()));
+            cst.setTeacher(teacher);
+        }
+
+        return toCstDto(cstRepository.save(cst));
+    }
+
+    public ClassSubjectDto updateSubjectTeacher(UUID schoolId, UUID classId, UUID cstId, UUID teacherId) {
+        ClassSubjectTeacher cst = cstRepository.findByIdAndSchoolId(cstId, schoolId)
+            .orElseThrow(() -> new ResourceNotFoundException("ClassSubjectTeacher", cstId));
+
+        if (teacherId != null) {
+            User teacher = userRepository.findById(teacherId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", teacherId));
+            cst.setTeacher(teacher);
+        } else {
+            cst.setTeacher(null);
+        }
+
+        return toCstDto(cstRepository.save(cst));
+    }
+
+    public void removeSubject(UUID schoolId, UUID classId, UUID cstId) {
+        ClassSubjectTeacher cst = cstRepository.findByIdAndSchoolId(cstId, schoolId)
+            .orElseThrow(() -> new ResourceNotFoundException("ClassSubjectTeacher", cstId));
+        cstRepository.delete(cst);
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
     private SchoolClass findOrThrow(UUID schoolId, UUID id) {
         return classRepository.findByIdAndSchoolId(id, schoolId)
             .orElseThrow(() -> new ResourceNotFoundException("Class", id));
@@ -97,9 +165,22 @@ public class ClassService {
         return new ClassDto(
             c.getId(), c.getSchoolId(), c.getName(), c.getGrade(), c.getSection(),
             c.getCapacity(), studentCount,
-            teacher != null ? teacher.getId() : null,
-            teacher != null ? teacher.getEmail() : null,
+            teacher != null ? teacher.getId()       : null,
+            teacher != null ? teacher.getFullName() : null,
             c.getCreatedAt()
+        );
+    }
+
+    private ClassSubjectDto toCstDto(ClassSubjectTeacher cst) {
+        Subject s = cst.getSubject();
+        User    t = cst.getTeacher();
+        return new ClassSubjectDto(
+            cst.getId(),
+            cst.getSchoolClass().getId(),
+            s.getId(), s.getName(), s.getCode(), s.getType(), s.getCreditHours(),
+            t != null ? t.getId()          : null,
+            t != null ? t.getFullName()    : null,
+            t != null ? t.getEmail()       : null
         );
     }
 }
