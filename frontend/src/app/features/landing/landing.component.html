@@ -24,572 +24,397 @@
   </nav>
 
   <!-- ── HERO ─────────────────────────────────────────────── -->
-  <section class="hero">
-    <div class="hero__bg-orbs">
-      <div class="orb orb--1"></div>
-      <div class="orb orb--2"></div>
-      <div class="orb orb--3"></div>
+  <section class="full-section hero-section reveal-section">
+    <div class="section-bg hero-bg">
+      <svg viewBox="0 0 420 340" fill="none" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FF9F0A" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#FF9F0A" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Sun glow -->
+        <circle class="sun-glow" cx="330" cy="110" r="80" fill="url(#sunGlow)"/>
+        <circle class="sun" cx="330" cy="110" r="30" fill="#FF9F0A" opacity="0.85"/>
+        <!-- School building -->
+        <rect x="100" y="130" width="200" height="130" fill="#1e1e30" rx="2"/>
+        <polygon points="85,130 210,68 335,130" fill="#28284a"/>
+        <line x1="85" y1="130" x2="335" y2="130" stroke="#3a3a5a" stroke-width="2"/>
+        <!-- Flag -->
+        <line x1="210" y1="68" x2="210" y2="38" stroke="#4a4a6a" stroke-width="2"/>
+        <rect class="flag" x="210" y="38" width="26" height="15" fill="#0A84FF" rx="1"/>
+        <!-- Windows -->
+        <rect x="130" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.7"/>
+        <rect x="175" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.45"/>
+        <rect x="245" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.7"/>
+        <rect x="290" y="155" width="30" height="36" fill="#BF5AF2" rx="3" opacity="0.5"/>
+        <line x1="145" y1="155" x2="145" y2="191" stroke="#111" stroke-width="1"/>
+        <line x1="130" y1="173" x2="160" y2="173" stroke="#111" stroke-width="1"/>
+        <!-- Door -->
+        <rect x="185" y="210" width="40" height="50" fill="#14142a" rx="4"/>
+        <circle cx="221" cy="237" r="2.5" fill="#FF9F0A"/>
+        <!-- Steps -->
+        <rect x="175" y="258" width="60" height="5" fill="#2d2d4a" rx="1"/>
+        <rect x="180" y="253" width="50" height="5" fill="#333350" rx="1"/>
+        <!-- Ground -->
+        <rect x="0" y="262" width="420" height="78" fill="#13131e" rx="0"/>
+        <!-- Path -->
+        <path d="M 210 265 Q 210 292 160 302 Q 100 312 60 302" stroke="#28283a" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <!-- Trees -->
+        <rect x="60" y="218" width="8" height="44" fill="#26263a"/>
+        <ellipse cx="64" cy="210" rx="20" ry="22" fill="#1a4428"/>
+        <rect x="345" y="228" width="8" height="34" fill="#26263a"/>
+        <ellipse cx="349" cy="220" rx="17" ry="19" fill="#1a4428"/>
+        <!-- Student walking -->
+        <g class="student-hero">
+          <rect x="42" y="222" width="16" height="22" fill="#0A84FF" rx="3"/>
+          <circle cx="50" cy="213" r="10" fill="#f4a26a"/>
+          <path d="M 40 207 Q 50 200 60 207" fill="#2d1810" stroke="none"/>
+          <rect x="57" y="224" width="10" height="14" fill="#BF5AF2" rx="2"/>
+          <rect class="leg-l" x="43" y="244" width="6" height="14" fill="#1a1a5e" rx="2"/>
+          <rect class="leg-r" x="51" y="244" width="6" height="14" fill="#1a1a5e" rx="2"/>
+        </g>
+        <!-- Stars -->
+        <circle cx="50" cy="38" r="1.5" fill="white" opacity="0.5" class="star"/>
+        <circle cx="120" cy="18" r="1" fill="white" opacity="0.35" class="star"/>
+        <circle cx="280" cy="28" r="1.5" fill="white" opacity="0.45" class="star"/>
+        <circle cx="370" cy="48" r="1" fill="white" opacity="0.3" class="star"/>
+        <circle cx="22" cy="78" r="1" fill="white" opacity="0.4" class="star"/>
+        <circle cx="400" cy="22" r="1.5" fill="white" opacity="0.25" class="star"/>
+      </svg>
     </div>
+    <div class="section-overlay section-overlay--hero"></div>
 
-    <div class="hero__content">
-      <div class="hero__text">
-        <div class="eyebrow-pill reveal">✦ A day in the life of a student</div>
-        <h1 class="hero__title reveal">
-          Every moment<br/>at school,<br/>
-          <span class="gradient-text">beautifully managed.</span>
-        </h1>
-        <p class="hero__sub reveal">
-          Follow Arjun through his school day — and see how School Manager
-          is woven into every step, from morning roll call to the last bell.
-        </p>
-        <div class="hero__cta reveal">
-          <a routerLink="/login" class="btn-hero btn-hero--primary">
-            Get Started
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-          <a href="#story" class="btn-hero btn-hero--ghost">See the story ↓</a>
-        </div>
-      </div>
-
-      <!-- Hero illustration: school building at sunrise -->
-      <div class="hero__visual reveal">
-        <svg class="hero-svg" viewBox="0 0 420 340" fill="none">
-          <!-- Sky gradient -->
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="340" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#1a1a2e"/>
-              <stop offset="100%" stop-color="#16213e"/>
-            </linearGradient>
-            <linearGradient id="sunGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#FF9F0A" stop-opacity="0.9"/>
-              <stop offset="100%" stop-color="#FF453A" stop-opacity="0"/>
-            </linearGradient>
-            <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#FF9F0A" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="#FF9F0A" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-
-          <!-- Ground -->
-          <rect x="0" y="260" width="420" height="80" fill="#1e1e2a" rx="0"/>
-          <rect x="0" y="258" width="420" height="6" fill="#2a2a3a"/>
-
-          <!-- Sun glow -->
-          <circle class="sun-glow" cx="330" cy="120" r="70" fill="url(#sunGlow)"/>
-          <!-- Sun -->
-          <circle class="sun" cx="330" cy="120" r="28" fill="#FF9F0A" opacity="0.9"/>
-
-          <!-- School building main -->
-          <rect x="100" y="130" width="200" height="130" fill="#22223a" rx="2"/>
-          <!-- Roof / pediment -->
-          <polygon points="85,130 210,70 335,130" fill="#2d2d4a"/>
-          <!-- Roof line detail -->
-          <line x1="85" y1="130" x2="335" y2="130" stroke="#3d3d5a" stroke-width="2"/>
-
-          <!-- Flag pole -->
-          <line x1="210" y1="70" x2="210" y2="40" stroke="#4a4a6a" stroke-width="2"/>
-          <rect class="flag" x="210" y="40" width="24" height="14" fill="#0A84FF" rx="1"/>
-
-          <!-- Windows row 1 -->
-          <rect x="130" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.7"/>
-          <rect x="175" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.5"/>
-          <rect x="245" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.7"/>
-          <rect x="290" y="155" width="30" height="36" fill="#BF5AF2" rx="3" opacity="0.5"/>
-
-          <!-- Windows cross lines -->
-          <line x1="145" y1="155" x2="145" y2="191" stroke="#111" stroke-width="1"/>
-          <line x1="130" y1="173" x2="160" y2="173" stroke="#111" stroke-width="1"/>
-
-          <!-- Door -->
-          <rect x="185" y="210" width="40" height="50" fill="#1a1a2e" rx="4"/>
-          <circle cx="221" cy="237" r="2.5" fill="#FF9F0A"/>
-
-          <!-- Steps -->
-          <rect x="175" y="258" width="60" height="5" fill="#2d2d4a" rx="1"/>
-          <rect x="180" y="253" width="50" height="5" fill="#333350" rx="1"/>
-
-          <!-- Path from building -->
-          <path d="M 210 263 Q 210 290 160 300 Q 100 310 60 300" stroke="#2d2d4a" stroke-width="8" stroke-linecap="round" fill="none"/>
-
-          <!-- Trees -->
-          <rect x="60" y="218" width="8" height="42" fill="#2d2d40"/>
-          <ellipse cx="64" cy="210" rx="18" ry="22" fill="#1e4d2f"/>
-          <rect x="345" y="228" width="8" height="32" fill="#2d2d40"/>
-          <ellipse cx="349" cy="220" rx="16" ry="18" fill="#1e4d2f"/>
-
-          <!-- Student (Arjun) walking toward school -->
-          <g class="student-hero" transform="translate(50, 238)">
-            <!-- Body -->
-            <rect x="-8" y="-30" width="16" height="22" fill="#0A84FF" rx="3"/>
-            <!-- Head -->
-            <circle cx="0" cy="-38" r="10" fill="#f4a26a"/>
-            <!-- Hair -->
-            <path d="M -10 -44 Q 0 -52 10 -44" fill="#2d1810" stroke="none"/>
-            <!-- Bag -->
-            <rect x="7" y="-28" width="10" height="14" fill="#BF5AF2" rx="2"/>
-            <!-- Legs walking -->
-            <rect class="leg-l" x="-7" y="-8" width="6" height="16" fill="#1a1a5e" rx="2" transform-origin="0 -8"/>
-            <rect class="leg-r" x="1" y="-8" width="6" height="16" fill="#1a1a5e" rx="2" transform-origin="0 -8"/>
-          </g>
-
-          <!-- Stars -->
-          <circle cx="50" cy="40" r="1.5" fill="white" opacity="0.6" class="star"/>
-          <circle cx="120" cy="20" r="1" fill="white" opacity="0.4" class="star"/>
-          <circle cx="280" cy="30" r="1.5" fill="white" opacity="0.5" class="star"/>
-          <circle cx="370" cy="50" r="1" fill="white" opacity="0.3" class="star"/>
-          <circle cx="20" cy="80" r="1" fill="white" opacity="0.5" class="star"/>
-        </svg>
+    <div class="hero-content">
+      <div class="eyebrow-pill stagger-child">✦ A day in the life of a student</div>
+      <h1 class="display-title stagger-child">
+        Every moment<br/>at school,<br/>
+        <span class="gradient-text">beautifully managed.</span>
+      </h1>
+      <p class="display-sub stagger-child">
+        Follow Arjun through his school day — and see how School Manager
+        is woven into every step, from morning roll call to the last bell.
+      </p>
+      <div class="hero-cta stagger-child">
+        <a routerLink="/login" class="btn-primary">
+          Get Started
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a href="#story" class="btn-ghost">See the story ↓</a>
       </div>
     </div>
 
-    <!-- Scroll hint -->
     <div class="scroll-hint">
-      <div class="scroll-hint__arrow"></div>
+      <div class="scroll-hint__line"></div>
       <span>Scroll to follow Arjun's day</span>
     </div>
   </section>
 
-  <!-- ── STORY TIMELINE ─────────────────────────────────────── -->
-  <div class="story-timeline" id="story">
+  <!-- ── STORY ─────────────────────────────────────────────── -->
+  <div id="story">
 
-    <!-- Track line -->
-    <div class="timeline-track"></div>
+    <!-- ── SCENE 1: Morning arrival / Attendance ─────────── -->
+    <section class="full-section story-section scene--gate reveal-section" id="scene-1">
+      <div class="section-bg">
+        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
+          <!-- School gate -->
+          <rect x="80" y="80" width="12" height="100" fill="#3a3a5a" rx="3"/>
+          <rect x="208" y="80" width="12" height="100" fill="#3a3a5a" rx="3"/>
+          <path d="M 80 80 Q 150 38 220 80" stroke="#0A84FF" stroke-width="3" fill="none"/>
+          <rect x="110" y="54" width="80" height="22" fill="#0A84FF" rx="4"/>
+          <text x="150" y="69" text-anchor="middle" fill="white" font-size="8" font-weight="700">SCHOOL GATE</text>
+          <rect x="102" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
+          <rect x="118" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
+          <rect x="176" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
+          <rect x="192" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
+          <!-- Student at gate -->
+          <g transform="translate(60, 145)">
+            <circle cx="0" cy="-40" r="12" fill="#f4a26a"/>
+            <path d="M -12 -48 Q 0 -57 12 -48" fill="#2d1810"/>
+            <rect x="-10" y="-28" width="20" height="25" fill="#0A84FF" rx="3"/>
+            <rect x="9" y="-26" width="12" height="16" fill="#BF5AF2" rx="2"/>
+            <rect x="-9" y="-3" width="8" height="18" fill="#1a1a5e" rx="2"/>
+            <rect x="1" y="-3" width="8" height="18" fill="#1a1a5e" rx="2"/>
+          </g>
+          <!-- NFC tap point -->
+          <circle class="tap-pulse" cx="95" cy="140" r="14" fill="#30D158" opacity="0.2"/>
+          <circle cx="95" cy="140" r="9" fill="#30D158" opacity="0.9"/>
+          <text x="95" y="144" text-anchor="middle" fill="white" font-size="8">✓</text>
+          <circle class="wave" cx="95" cy="140" r="20" stroke="#30D158" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <circle class="wave wave--2" cx="95" cy="140" r="30" stroke="#30D158" stroke-width="1" fill="none" opacity="0.35"/>
+          <!-- Ground -->
+          <rect x="0" y="185" width="300" height="75" fill="#12121e" rx="0"/>
+          <!-- Morning glow on horizon -->
+          <rect x="0" y="183" width="300" height="6" fill="#1e1e30"/>
+          <ellipse cx="150" cy="183" rx="120" ry="20" fill="#0A84FF" opacity="0.06"/>
+        </svg>
+      </div>
+      <div class="section-overlay scene--gate__overlay"></div>
 
-    <!-- ── SCENE 1: Morning arrival / Attendance ─────────────── -->
-    <div class="story-scene reveal" id="scene-1">
-      <div class="scene__time-badge">7:45 AM</div>
-      <div class="scene__inner scene__inner--ltr">
-        <div class="scene__illustration">
-          <svg viewBox="0 0 300 260" fill="none">
-            <defs>
-              <linearGradient id="gateGrad" x1="0" y1="0" x2="300" y2="260" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#0A84FF" stop-opacity="0.1"/>
-                <stop offset="100%" stop-color="#BF5AF2" stop-opacity="0.05"/>
-              </linearGradient>
-            </defs>
-            <rect width="300" height="260" rx="20" fill="url(#gateGrad)"/>
-
-            <!-- School gate -->
-            <rect x="80" y="80" width="12" height="100" fill="#3a3a5a" rx="3"/>
-            <rect x="208" y="80" width="12" height="100" fill="#3a3a5a" rx="3"/>
-            <!-- Gate top arch -->
-            <path d="M 80 80 Q 150 40 220 80" stroke="#0A84FF" stroke-width="3" fill="none"/>
-            <!-- Gate name plate -->
-            <rect x="110" y="55" width="80" height="22" fill="#0A84FF" rx="4"/>
-            <text x="150" y="70" text-anchor="middle" fill="white" font-size="8" font-weight="700">SCHOOL GATE</text>
-            <!-- Gate bars -->
-            <rect x="102" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-            <rect x="118" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-            <rect x="176" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-            <rect x="192" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-
-            <!-- Student Arjun at gate -->
-            <g transform="translate(60, 145)">
-              <circle cx="0" cy="-40" r="12" fill="#f4a26a"/>
-              <path d="M -12 -48 Q 0 -57 12 -48" fill="#2d1810"/>
-              <rect x="-10" y="-28" width="20" height="25" fill="#0A84FF" rx="3"/>
-              <rect x="9" y="-26" width="12" height="16" fill="#BF5AF2" rx="2"/>
-              <rect x="-9" y="-3" width="8" height="18" fill="#1a1a5e" rx="2"/>
-              <rect x="1" y="-3" width="8" height="18" fill="#1a1a5e" rx="2"/>
-            </g>
-
-            <!-- NFC/Tap point on gate -->
-            <circle class="tap-pulse" cx="95" cy="140" r="14" fill="#30D158" opacity="0.2"/>
-            <circle cx="95" cy="140" r="9" fill="#30D158" opacity="0.9"/>
-            <text x="95" y="144" text-anchor="middle" fill="white" font-size="8">✓</text>
-
-            <!-- Wifi/signal waves from tap point -->
-            <circle class="wave" cx="95" cy="140" r="18" stroke="#30D158" stroke-width="1.5" fill="none" opacity="0.6"/>
-            <circle class="wave wave--2" cx="95" cy="140" r="26" stroke="#30D158" stroke-width="1" fill="none" opacity="0.4"/>
-
-            <!-- Ground -->
-            <rect x="0" y="185" width="300" height="15" fill="#1e1e2a" rx="0"/>
-            <text x="150" y="230" text-anchor="middle" fill="#636366" font-size="11">Morning arrival at school</text>
-          </svg>
-        </div>
-
-        <div class="scene__content">
-          <div class="scene__step-label">Step 1 · Attendance</div>
-          <h2 class="scene__title">Arjun walks through the gate.</h2>
-          <p class="scene__desc">
-            As soon as he steps in, School Manager marks his attendance automatically.
-            No register, no queue — the moment logged to the millisecond.
-          </p>
-          <div class="phone-mockup">
-            <div class="phone-mockup__screen">
-              <div class="pm-header">
-                <span class="pm-dot pm-dot--green"></span>
-                <span class="pm-title">Attendance</span>
-              </div>
-              <div class="pm-row pm-row--success">
-                <span>Arjun Sharma</span>
-                <span class="pm-badge pm-badge--green">Present ✓</span>
-              </div>
-              <div class="pm-row">
-                <span>Class 9-A</span>
-                <span class="pm-time">7:45 AM</span>
-              </div>
-              <div class="pm-divider"></div>
-              <div class="pm-stat-row">
-                <div class="pm-stat"><div class="pm-stat-val">42</div><div class="pm-stat-lbl">Present</div></div>
-                <div class="pm-stat"><div class="pm-stat-val pm-stat-val--red">3</div><div class="pm-stat-lbl">Absent</div></div>
-              </div>
-            </div>
-          </div>
+      <div class="section-content">
+        <div class="time-badge stagger-child">7:45 AM</div>
+        <div class="step-label stagger-child">Step 01 · Attendance</div>
+        <h2 class="scene-headline stagger-child">Arjun walks<br/>through the gate.</h2>
+        <p class="scene-desc stagger-child">
+          The moment he steps in, School Manager marks his attendance —
+          no queue, no register, logged to the millisecond.
+        </p>
+        <div class="feature-pill stagger-child">
+          <span class="feature-pill__dot"></span>
+          Attendance Module · Live
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ── SCENE 2: Classroom / Timetable ────────────────────── -->
-    <div class="story-scene reveal" id="scene-2">
-      <div class="scene__time-badge">8:30 AM</div>
-      <div class="scene__inner scene__inner--rtl">
-        <div class="scene__content">
-          <div class="scene__step-label">Step 2 · Timetable & Homework</div>
-          <h2 class="scene__title">Class begins. Teacher assigns homework.</h2>
-          <p class="scene__desc">
-            Ms. Priya opens the homework module and assigns Chapter 5 to Class 9-A.
-            Arjun's app buzzes instantly — due date, subject, all details right there.
-          </p>
-          <div class="phone-mockup">
-            <div class="phone-mockup__screen">
-              <div class="pm-header">
-                <span>📝</span>
-                <span class="pm-title">Homework</span>
-              </div>
-              <div class="pm-hw-card">
-                <div class="pm-hw-subject">Mathematics</div>
-                <div class="pm-hw-title">Chapter 5 — Trigonometry</div>
-                <div class="pm-hw-meta">
-                  <span class="pm-badge pm-badge--blue">Due: Tomorrow</span>
-                </div>
-              </div>
-              <div class="pm-today-schedule">
-                <div class="pm-schedule-label">Today's Schedule</div>
-                <div class="pm-slot pm-slot--active">8:30 · Mathematics</div>
-                <div class="pm-slot">10:00 · Science</div>
-                <div class="pm-slot">11:30 · English</div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- ── SCENE 2: Classroom / Homework ─────────────────── -->
+    <section class="full-section story-section scene--class reveal-section" id="scene-2">
+      <div class="section-bg">
+        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
+          <!-- Chalkboard -->
+          <rect x="50" y="35" width="200" height="125" fill="#1a3a2a" rx="6"/>
+          <rect x="55" y="40" width="190" height="115" fill="#1e4d35" rx="4"/>
+          <!-- Chalk lines -->
+          <text x="90" y="72" fill="rgba(255,255,255,0.8)" font-size="11" font-family="monospace">sin²θ + cos²θ = 1</text>
+          <text x="90" y="89" fill="rgba(255,255,255,0.6)" font-size="9">Chapter 5 · Trigonometry</text>
+          <line x1="80" y1="100" x2="170" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="80" y1="112" x2="150" y2="112" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Chalk tray -->
+          <rect x="50" y="158" width="200" height="8" fill="#22223a" rx="2"/>
+          <!-- Teacher -->
+          <g transform="translate(242, 145)">
+            <circle cx="0" cy="-22" r="12" fill="#c8a882"/>
+            <path d="M -12 -29 Q 0 -38 12 -29" fill="#5c3317"/>
+            <rect x="-13" y="-12" width="26" height="28" fill="#BF5AF2" rx="3"/>
+          </g>
+          <line x1="228" y1="118" x2="175" y2="74" stroke="#8B7355" stroke-width="2" stroke-linecap="round"/>
+          <!-- Desks -->
+          <rect x="55" y="192" width="52" height="32" fill="#22223a" rx="4"/>
+          <rect x="122" y="192" width="52" height="32" fill="#22223a" rx="4"/>
+          <rect x="188" y="192" width="52" height="32" fill="#22223a" rx="4"/>
+          <!-- Student heads -->
+          <circle cx="81" cy="185" r="11" fill="#f4a26a"/>
+          <circle cx="148" cy="185" r="11" fill="#c8a882"/>
+          <circle cx="214" cy="185" r="11" fill="#e8b89a"/>
+          <!-- Homework notification glow -->
+          <rect class="phone-glow" x="62" y="199" width="20" height="12" fill="#0A84FF" rx="2" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="section-overlay scene--class__overlay"></div>
 
-        <div class="scene__illustration">
-          <svg viewBox="0 0 300 260" fill="none">
-            <rect width="300" height="260" rx="20" fill="rgba(10,132,255,0.06)"/>
-
-            <!-- Chalkboard -->
-            <rect x="50" y="40" width="200" height="120" fill="#1a3a2a" rx="6"/>
-            <rect x="55" y="45" width="190" height="110" fill="#1e4d35" rx="4"/>
-            <!-- Chalk writing -->
-            <line x1="80" y1="75" x2="170" y2="75" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="80" y1="90" x2="145" y2="90" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="80" y1="105" x2="160" y2="105" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-            <!-- Math formula -->
-            <text x="90" y="73" fill="rgba(255,255,255,0.8)" font-size="10" font-family="monospace">sin²θ + cos²θ = 1</text>
-            <text x="90" y="89" fill="rgba(255,255,255,0.6)" font-size="9">Chapter 5 · Trigonometry</text>
-            <!-- Chalk tray -->
-            <rect x="50" y="158" width="200" height="8" fill="#2d2d3a" rx="2"/>
-
-            <!-- Teacher -->
-            <g transform="translate(240, 148)">
-              <circle cx="0" cy="-22" r="11" fill="#c8a882"/>
-              <path d="M -11 -28 Q 0 -35 11 -28" fill="#5c3317"/>
-              <rect x="-12" y="-12" width="24" height="26" fill="#BF5AF2" rx="3"/>
-            </g>
-
-            <!-- Pointer stick -->
-            <line x1="228" y1="120" x2="175" y2="74" stroke="#8B7355" stroke-width="2" stroke-linecap="round"/>
-
-            <!-- Desks & students -->
-            <rect x="60" y="195" width="50" height="30" fill="#2d2d4a" rx="4"/>
-            <rect x="125" y="195" width="50" height="30" fill="#2d2d4a" rx="4"/>
-            <rect x="190" y="195" width="50" height="30" fill="#2d2d4a" rx="4"/>
-            <!-- Student heads -->
-            <circle cx="85" cy="188" r="10" fill="#f4a26a"/>
-            <circle cx="150" cy="188" r="10" fill="#c8a882"/>
-            <circle cx="215" cy="188" r="10" fill="#e8b89a"/>
-            <!-- Phone glow on Arjun's desk -->
-            <rect class="phone-glow" x="65" y="200" width="18" height="10" fill="#0A84FF" rx="2" opacity="0.8"/>
-          </svg>
+      <div class="section-content section-content--right">
+        <div class="time-badge stagger-child">8:30 AM</div>
+        <div class="step-label stagger-child">Step 02 · Timetable & Homework</div>
+        <h2 class="scene-headline stagger-child">Class begins.<br/>Homework assigned<br/>instantly.</h2>
+        <p class="scene-desc stagger-child">
+          Ms. Priya assigns Chapter 5 to Class 9-A. Arjun's phone buzzes —
+          due date, subject, all details right there.
+        </p>
+        <div class="feature-pill stagger-child">
+          <span class="feature-pill__dot"></span>
+          Homework Module · Live
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ── SCENE 3: Exam ──────────────────────────────────────── -->
-    <div class="story-scene reveal" id="scene-3">
-      <div class="scene__time-badge">2:00 PM</div>
-      <div class="scene__inner scene__inner--ltr">
-        <div class="scene__illustration">
-          <svg viewBox="0 0 300 260" fill="none">
-            <rect width="300" height="260" rx="20" fill="rgba(191,90,242,0.06)"/>
+    <!-- ── SCENE 3: Exam ────────────────────────────────── -->
+    <section class="full-section story-section scene--exam reveal-section" id="scene-3">
+      <div class="section-bg">
+        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
+          <!-- Exam hall -->
+          <rect x="30" y="55" width="240" height="165" fill="#16162a" rx="8"/>
+          <!-- Desks -->
+          <rect x="50" y="75" width="60" height="42" fill="#20203a" rx="3"/>
+          <rect x="130" y="75" width="60" height="42" fill="#20203a" rx="3"/>
+          <rect x="210" y="75" width="60" height="42" fill="#20203a" rx="3"/>
+          <rect x="50" y="135" width="60" height="42" fill="#20203a" rx="3"/>
+          <rect x="130" y="135" width="60" height="42" fill="#20203a" rx="3"/>
+          <rect x="210" y="135" width="60" height="42" fill="#20203a" rx="3"/>
+          <!-- Answer papers -->
+          <rect x="55" y="79" width="50" height="34" fill="#282842" rx="2"/>
+          <rect x="135" y="79" width="50" height="34" fill="#282842" rx="2"/>
+          <rect x="215" y="79" width="50" height="34" fill="#282842" rx="2"/>
+          <rect x="55" y="139" width="50" height="34" fill="#282842" rx="2"/>
+          <rect x="135" y="139" width="50" height="34" fill="#282842" rx="2"/>
+          <rect x="215" y="139" width="50" height="34" fill="#282842" rx="2"/>
+          <!-- Students writing -->
+          <circle cx="80" cy="71" r="10" fill="#f4a26a"/>
+          <circle cx="160" cy="71" r="10" fill="#c8a882"/>
+          <circle cx="240" cy="71" r="10" fill="#e8b89a"/>
+          <circle cx="80" cy="131" r="10" fill="#c8a882"/>
+          <circle cx="160" cy="131" r="10" fill="#f4a26a"/>
+          <circle cx="240" cy="131" r="10" fill="#e8b89a"/>
+          <!-- Arjun's writing lines (animated) -->
+          <g class="writing">
+            <line x1="63" y1="88" x2="97" y2="88" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="63" y1="96" x2="90" y2="96" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="63" y1="104" x2="94" y2="104" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+          <!-- Clock -->
+          <circle cx="150" cy="34" r="20" fill="#20203a" stroke="#0A84FF" stroke-width="1.5"/>
+          <line x1="150" y1="22" x2="150" y2="34" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="150" y1="34" x2="159" y2="40" stroke="#FF9F0A" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="section-overlay scene--exam__overlay"></div>
 
-            <!-- Exam hall rows -->
-            <rect x="30" y="60" width="240" height="160" fill="#1a1a2e" rx="8"/>
-
-            <!-- Desks in exam hall -->
-            <rect x="50" y="80" width="60" height="40" fill="#22223a" rx="3"/>
-            <rect x="130" y="80" width="60" height="40" fill="#22223a" rx="3"/>
-            <rect x="210" y="80" width="60" height="40" fill="#22223a" rx="3"/>
-            <rect x="50" y="140" width="60" height="40" fill="#22223a" rx="3"/>
-            <rect x="130" y="140" width="60" height="40" fill="#22223a" rx="3"/>
-            <rect x="210" y="140" width="60" height="40" fill="#22223a" rx="3"/>
-
-            <!-- Papers on desks -->
-            <rect x="55" y="84" width="50" height="32" fill="#2a2a4a" rx="2"/>
-            <rect x="135" y="84" width="50" height="32" fill="#2a2a4a" rx="2"/>
-            <rect x="215" y="84" width="50" height="32" fill="#2a2a4a" rx="2"/>
-            <rect x="55" y="144" width="50" height="32" fill="#2a2a4a" rx="2"/>
-            <rect x="135" y="144" width="50" height="32" fill="#2a2a4a" rx="2"/>
-            <rect x="215" y="144" width="50" height="32" fill="#2a2a4a" rx="2"/>
-
-            <!-- Students -->
-            <circle cx="80" cy="76" r="9" fill="#f4a26a"/>
-            <circle cx="160" cy="76" r="9" fill="#c8a882"/>
-            <circle cx="240" cy="76" r="9" fill="#e8b89a"/>
-            <circle cx="80" cy="136" r="9" fill="#c8a882"/>
-            <circle cx="160" cy="136" r="9" fill="#f4a26a"/>
-            <circle cx="240" cy="136" r="9" fill="#e8b89a"/>
-
-            <!-- Pen/writing animation on Arjun's paper (front left) -->
-            <g class="writing">
-              <line x1="65" y1="92" x2="95" y2="92" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="65" y1="98" x2="88" y2="98" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="65" y1="104" x2="92" y2="104" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
-            </g>
-
-            <!-- Timer clock -->
-            <circle cx="150" cy="40" r="18" fill="#22223a" stroke="#0A84FF" stroke-width="1.5"/>
-            <line x1="150" y1="28" x2="150" y2="40" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <line x1="150" y1="40" x2="158" y2="45" stroke="#FF9F0A" stroke-width="2" stroke-linecap="round"/>
-            <text x="150" y="240" text-anchor="middle" fill="#636366" font-size="11">Mathematics Exam · 2 hrs</text>
-          </svg>
-        </div>
-
-        <div class="scene__content">
-          <div class="scene__step-label">Step 3 · Exam Management</div>
-          <h2 class="scene__title">Exam day. Results published instantly.</h2>
-          <p class="scene__desc">
-            Once the teacher uploads marks, School Manager calculates grades,
-            ranks and subject-wise performance — visible to Arjun and his parents
-            the moment it's published.
-          </p>
-          <div class="phone-mockup">
-            <div class="phone-mockup__screen">
-              <div class="pm-header">
-                <span>📋</span>
-                <span class="pm-title">Results</span>
-              </div>
-              <div class="pm-result-card">
-                <div class="pm-result-name">Arjun Sharma · 9-A</div>
-                <div class="pm-result-score">87<span>/100</span></div>
-                <div class="pm-result-grade pm-result-grade--a">Grade A</div>
-              </div>
-              <div class="pm-subject-list">
-                <div class="pm-subj-row"><span>Mathematics</span><span class="pm-subj-mark">87</span></div>
-                <div class="pm-subj-row"><span>Science</span><span class="pm-subj-mark">91</span></div>
-                <div class="pm-subj-row"><span>English</span><span class="pm-subj-mark">79</span></div>
-              </div>
-            </div>
-          </div>
+      <div class="section-content">
+        <div class="time-badge stagger-child">2:00 PM</div>
+        <div class="step-label stagger-child">Step 03 · Exam Management</div>
+        <h2 class="scene-headline stagger-child">Exam day.<br/>Results published<br/>instantly.</h2>
+        <p class="scene-desc stagger-child">
+          Once the teacher uploads marks, grades, ranks and subject-wise
+          performance are live — visible to Arjun and his parents the moment
+          it's published.
+        </p>
+        <div class="feature-pill stagger-child">
+          <span class="feature-pill__dot"></span>
+          Exam &amp; Results Module · Live
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ── SCENE 4: Parent notification ──────────────────────── -->
-    <div class="story-scene reveal" id="scene-4">
-      <div class="scene__time-badge">4:00 PM</div>
-      <div class="scene__inner scene__inner--rtl">
-        <div class="scene__content">
-          <div class="scene__step-label">Step 4 · Parent Portal</div>
-          <h2 class="scene__title">Mum gets the notification at work.</h2>
-          <p class="scene__desc">
-            Arjun's mother is at the office when her phone pings.
-            She checks the Parent Portal — attendance, today's homework,
-            exam results, fee dues — all in one scroll.
-          </p>
-          <div class="phone-mockup">
-            <div class="phone-mockup__screen">
-              <div class="pm-header">
-                <span>👩‍👦</span>
-                <span class="pm-title">Parent Portal</span>
-              </div>
-              <div class="pm-notif pm-notif--success">
-                <div class="pm-notif-icon">📊</div>
-                <div>
-                  <div class="pm-notif-title">Results Published</div>
-                  <div class="pm-notif-sub">Arjun scored 87/100 in Maths</div>
-                </div>
-              </div>
-              <div class="pm-notif pm-notif--info">
-                <div class="pm-notif-icon">✓</div>
-                <div>
-                  <div class="pm-notif-title">Attendance</div>
-                  <div class="pm-notif-sub">Present today · 96% this month</div>
-                </div>
-              </div>
-              <div class="pm-notif pm-notif--warn">
-                <div class="pm-notif-icon">💰</div>
-                <div>
-                  <div class="pm-notif-title">Fee Reminder</div>
-                  <div class="pm-notif-sub">₹4,200 due on 5th June</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- ── SCENE 4: Parent notification ─────────────────── -->
+    <section class="full-section story-section scene--parent reveal-section" id="scene-4">
+      <div class="section-bg">
+        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
+          <!-- Window with city -->
+          <rect x="35" y="25" width="90" height="80" fill="#14213d" rx="4" stroke="#2d2d4a" stroke-width="1"/>
+          <rect x="40" y="30" width="38" height="70" fill="#0d1b2a"/>
+          <rect x="80" y="30" width="40" height="70" fill="#0d1b2a"/>
+          <!-- City silhouette in window -->
+          <rect x="45" y="58" width="12" height="42" fill="#1a1a3a"/>
+          <rect x="59" y="48" width="14" height="52" fill="#22223a"/>
+          <rect x="84" y="63" width="12" height="37" fill="#1a1a3a"/>
+          <rect x="98" y="53" width="14" height="47" fill="#22223a"/>
+          <!-- Office desk -->
+          <rect x="35" y="165" width="230" height="55" fill="#1e1e30" rx="6"/>
+          <!-- Laptop -->
+          <rect x="95" y="100" width="140" height="88" fill="#22223a" rx="4"/>
+          <rect x="95" y="100" width="140" height="78" fill="#181830" rx="4"/>
+          <rect x="72" y="185" width="185" height="8" fill="#2d2d4a" rx="2"/>
+          <!-- Screen content -->
+          <rect x="103" y="108" width="124" height="62" fill="#1a1a35" rx="3"/>
+          <rect x="108" y="113" width="75" height="5" fill="#0A84FF" rx="2"/>
+          <rect x="108" y="122" width="110" height="3" fill="#2d2d5a" rx="1"/>
+          <rect x="108" y="130" width="90" height="3" fill="#2d2d5a" rx="1"/>
+          <rect x="108" y="138" width="100" height="3" fill="#2d2d5a" rx="1"/>
+          <rect x="108" y="146" width="65" height="5" fill="#30D158" rx="2"/>
+          <!-- Mother figure -->
+          <g transform="translate(52, 158)">
+            <circle cx="0" cy="-22" r="15" fill="#c8a882"/>
+            <path d="M -15 -30 Q 0 -40 15 -30" fill="#8B4513"/>
+            <rect x="-17" y="-8" width="34" height="32" fill="#BF5AF2" rx="4"/>
+          </g>
+          <!-- Notification phone -->
+          <g class="parent-phone">
+            <rect x="66" y="97" width="30" height="52" fill="#14142a" rx="5"/>
+            <rect x="69" y="100" width="24" height="46" fill="#0A84FF" rx="3" opacity="0.18"/>
+            <rect x="71" y="102" width="18" height="7" fill="#30D158" rx="2" opacity="0.9"/>
+            <circle class="notif-pulse" cx="91" cy="100" r="6" fill="#FF9F0A"/>
+            <text x="91" y="104" text-anchor="middle" fill="white" font-size="6" font-weight="700">!</text>
+          </g>
+          <!-- Office plant -->
+          <rect x="248" y="140" width="8" height="26" fill="#26263a"/>
+          <ellipse cx="252" cy="133" rx="15" ry="17" fill="#1a4428"/>
+        </svg>
+      </div>
+      <div class="section-overlay scene--parent__overlay"></div>
 
-        <div class="scene__illustration">
-          <svg viewBox="0 0 300 260" fill="none">
-            <rect width="300" height="260" rx="20" fill="rgba(48,209,88,0.06)"/>
-
-            <!-- Office desk -->
-            <rect x="40" y="160" width="220" height="60" fill="#22223a" rx="6"/>
-            <!-- Laptop -->
-            <rect x="100" y="100" width="130" height="85" fill="#2d2d4a" rx="4"/>
-            <rect x="100" y="100" width="130" height="75" fill="#1a1a3a" rx="4"/>
-            <rect x="80" y="183" width="170" height="8" fill="#3a3a5a" rx="2"/>
-            <!-- Screen content -->
-            <rect x="110" y="108" width="110" height="60" fill="#1e1e35" rx="3"/>
-            <rect x="115" y="113" width="70" height="4" fill="#0A84FF" rx="2"/>
-            <rect x="115" y="122" width="100" height="3" fill="#2d2d5a" rx="1"/>
-            <rect x="115" y="130" width="85" height="3" fill="#2d2d5a" rx="1"/>
-            <rect x="115" y="138" width="95" height="3" fill="#2d2d5a" rx="1"/>
-            <rect x="115" y="146" width="60" height="4" fill="#30D158" rx="2"/>
-
-            <!-- Mother figure at desk -->
-            <g transform="translate(55, 155)">
-              <circle cx="0" cy="-20" r="14" fill="#c8a882"/>
-              <path d="M -14 -28 Q 0 -37 14 -28" fill="#8B4513"/>
-              <rect x="-16" y="-6" width="32" height="30" fill="#BF5AF2" rx="4"/>
-            </g>
-
-            <!-- Phone with notification in her hand -->
-            <g class="parent-phone" transform="translate(80, 118)">
-              <rect x="-14" y="-24" width="28" height="48" fill="#1a1a2e" rx="5"/>
-              <rect x="-11" y="-21" width="22" height="42" fill="#0A84FF" rx="3" opacity="0.2"/>
-              <rect x="-8" y="-19" width="16" height="6" fill="#30D158" rx="2" opacity="0.9"/>
-              <circle class="notif-pulse" cx="11" cy="-21" r="5" fill="#FF9F0A"/>
-              <text x="11" y="-18" text-anchor="middle" fill="white" font-size="6">!</text>
-            </g>
-
-            <!-- Office plants -->
-            <rect x="250" y="140" width="8" height="22" fill="#2d2d40"/>
-            <ellipse cx="254" cy="134" rx="14" ry="16" fill="#1e4d2f"/>
-
-            <!-- Window with city view -->
-            <rect x="40" y="30" width="80" height="70" fill="#16213e" rx="4" stroke="#2d2d4a" stroke-width="1"/>
-            <rect x="45" y="35" width="35" height="60" fill="#0d1b2a"/>
-            <rect x="82" y="35" width="33" height="60" fill="#0d1b2a"/>
-            <!-- City buildings in window -->
-            <rect x="50" y="60" width="10" height="35" fill="#1a1a3a"/>
-            <rect x="62" y="50" width="12" height="45" fill="#22223a"/>
-            <rect x="86" y="65" width="10" height="30" fill="#1a1a3a"/>
-            <rect x="98" y="55" width="12" height="40" fill="#22223a"/>
-          </svg>
+      <div class="section-content section-content--right">
+        <div class="time-badge stagger-child">4:00 PM</div>
+        <div class="step-label stagger-child">Step 04 · Parent Portal</div>
+        <h2 class="scene-headline stagger-child">Mum gets<br/>the notification<br/>at work.</h2>
+        <p class="scene-desc stagger-child">
+          Attendance, homework, results, fee dues — all in one scroll
+          on the Parent Portal. No calls to the school office, ever.
+        </p>
+        <div class="feature-pill stagger-child">
+          <span class="feature-pill__dot"></span>
+          Parent Portal · Live
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ── SCENE 5: Heading home / Fee paid ──────────────────── -->
-    <div class="story-scene reveal" id="scene-5">
-      <div class="scene__time-badge">5:00 PM</div>
-      <div class="scene__inner scene__inner--ltr">
-        <div class="scene__illustration">
-          <svg viewBox="0 0 300 260" fill="none">
-            <rect width="300" height="260" rx="20" fill="rgba(255,159,10,0.06)"/>
+    <!-- ── SCENE 5: Heading home / Fee paid ─────────────── -->
+    <section class="full-section story-section scene--home reveal-section" id="scene-5">
+      <div class="section-bg">
+        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
+          <!-- Setting sun -->
+          <circle cx="150" cy="68" r="55" fill="#FF9F0A" opacity="0.10"/>
+          <circle cx="150" cy="68" r="36" fill="#FF9F0A" opacity="0.20"/>
+          <circle cx="150" cy="68" r="22" fill="#FF9F0A" opacity="0.65"/>
+          <!-- Sky rays -->
+          <line x1="150" y1="35" x2="150" y2="20" stroke="#FF9F0A" stroke-width="1" opacity="0.3"/>
+          <line x1="180" y1="44" x2="190" y2="32" stroke="#FF9F0A" stroke-width="1" opacity="0.3"/>
+          <line x1="120" y1="44" x2="110" y2="32" stroke="#FF9F0A" stroke-width="1" opacity="0.3"/>
+          <!-- Ground / horizon -->
+          <rect x="0" y="188" width="300" height="72" fill="#12120e"/>
+          <rect x="0" y="186" width="300" height="6" fill="#1e1c14"/>
+          <!-- Road -->
+          <rect x="105" y="188" width="90" height="72" fill="#181814"/>
+          <rect x="148" y="197" width="5" height="18" fill="#FF9F0A" opacity="0.45"/>
+          <rect x="148" y="228" width="5" height="18" fill="#FF9F0A" opacity="0.45"/>
+          <!-- Houses -->
+          <rect x="28" y="142" width="62" height="48" fill="#1e1e28" rx="2"/>
+          <polygon points="18,142 59,112 100,142" fill="#28283a"/>
+          <rect x="48" y="158" width="18" height="32" fill="#12121e" rx="2"/>
+          <rect x="33" y="150" width="16" height="16" fill="#0A84FF" rx="2" opacity="0.45"/>
+          <rect x="71" y="150" width="16" height="16" fill="#FF9F0A" rx="2" opacity="0.4"/>
+          <rect x="210" y="152" width="58" height="38" fill="#1e1e28" rx="2"/>
+          <polygon points="202,152 239,126 276,152" fill="#28283a"/>
+          <rect x="228" y="162" width="16" height="28" fill="#12121e" rx="2"/>
+          <!-- Arjun walking home -->
+          <g class="student-home">
+            <circle cx="170" cy="137" r="14" fill="#f4a26a"/>
+            <path d="M 156 129 Q 170 120 184 129" fill="#2d1810"/>
+            <rect x="158" y="151" width="24" height="28" fill="#0A84FF" rx="4"/>
+            <rect x="181" y="153" width="14" height="18" fill="#BF5AF2" rx="3"/>
+            <rect class="leg-walk-l" x="159" y="179" width="10" height="20" fill="#1a1a5e" rx="3"/>
+            <rect class="leg-walk-r" x="171" y="179" width="10" height="20" fill="#1a1a5e" rx="3"/>
+            <!-- Phone in hand showing green tick -->
+            <rect x="146" y="158" width="12" height="18" fill="#14142a" rx="2"/>
+            <rect x="148" y="160" width="8" height="14" fill="#30D158" rx="1" opacity="0.85"/>
+          </g>
+          <!-- Fee receipt floating -->
+          <g class="receipt-float">
+            <rect x="56" y="118" width="74" height="58" fill="#1e1e2a" rx="7" stroke="#30D158" stroke-width="1.5"/>
+            <text x="93" y="135" text-anchor="middle" fill="#30D158" font-size="8" font-weight="700">FEE PAID ✓</text>
+            <line x1="68" y1="143" x2="118" y2="143" stroke="#2d2d3a" stroke-width="1"/>
+            <text x="93" y="154" text-anchor="middle" fill="#636366" font-size="7">₹4,200 · UPI</text>
+            <text x="93" y="165" text-anchor="middle" fill="#636366" font-size="7">5 Jun 2026</text>
+          </g>
+        </svg>
+      </div>
+      <div class="section-overlay scene--home__overlay"></div>
 
-            <!-- Setting sun -->
-            <circle cx="150" cy="70" r="45" fill="#FF9F0A" opacity="0.15"/>
-            <circle cx="150" cy="70" r="30" fill="#FF9F0A" opacity="0.25"/>
-            <circle cx="150" cy="70" r="20" fill="#FF9F0A" opacity="0.7"/>
-
-            <!-- Horizon / ground -->
-            <rect x="0" y="185" width="300" height="75" fill="#1a1a2e"/>
-            <rect x="0" y="183" width="300" height="6" fill="#22223a"/>
-
-            <!-- Road -->
-            <rect x="100" y="185" width="100" height="75" fill="#1e1e35"/>
-            <rect x="147" y="195" width="6" height="20" fill="#FF9F0A" opacity="0.5"/>
-            <rect x="147" y="225" width="6" height="20" fill="#FF9F0A" opacity="0.5"/>
-
-            <!-- Home silhouette (far) -->
-            <rect x="30" y="140" width="60" height="45" fill="#22223a" rx="2"/>
-            <polygon points="20,140 60,110 100,140" fill="#2d2d4a"/>
-            <rect x="50" y="155" width="16" height="30" fill="#1a1a2e" rx="2"/>
-            <rect x="35" y="148" width="14" height="14" fill="#0A84FF" rx="2" opacity="0.5"/>
-            <rect x="71" y="148" width="14" height="14" fill="#FF9F0A" rx="2" opacity="0.4"/>
-
-            <!-- Home 2 (far right) -->
-            <rect x="210" y="148" width="55" height="37" fill="#22223a" rx="2"/>
-            <polygon points="202,148 237,122 272,148" fill="#2d2d4a"/>
-            <rect x="226" y="158" width="14" height="27" fill="#1a1a2e" rx="2"/>
-
-            <!-- Arjun walking home (bigger, toward viewer) -->
-            <g class="student-home" transform="translate(170, 178)">
-              <circle cx="0" cy="-44" r="14" fill="#f4a26a"/>
-              <path d="M -14 -52 Q 0 -62 14 -52" fill="#2d1810"/>
-              <rect x="-12" y="-30" width="24" height="28" fill="#0A84FF" rx="4"/>
-              <rect x="11" y="-28" width="14" height="18" fill="#BF5AF2" rx="3"/>
-              <rect class="leg-walk-l" x="-11" y="-2" width="10" height="20" fill="#1a1a5e" rx="3" transform-origin="0 -2"/>
-              <rect class="leg-walk-r" x="1" y="-2" width="10" height="20" fill="#1a1a5e" rx="3" transform-origin="0 -2"/>
-              <!-- Phone in hand -->
-              <rect x="-18" y="-20" width="10" height="16" fill="#1a1a2e" rx="2"/>
-              <rect x="-16" y="-18" width="6" height="12" fill="#30D158" rx="1" opacity="0.8"/>
-            </g>
-
-            <!-- Receipt/check floating from phone -->
-            <g class="receipt-float">
-              <rect x="60" y="120" width="70" height="55" fill="#22223a" rx="6" stroke="#30D158" stroke-width="1.5"/>
-              <text x="95" y="138" text-anchor="middle" fill="#30D158" font-size="8" font-weight="700">FEE PAID ✓</text>
-              <line x1="72" y1="145" x2="118" y2="145" stroke="#2d2d4a" stroke-width="1"/>
-              <text x="95" y="157" text-anchor="middle" fill="#636366" font-size="7">₹4,200 · Online</text>
-              <text x="95" y="168" text-anchor="middle" fill="#636366" font-size="7">5 Jun 2026</text>
-            </g>
-
-            <text x="150" y="250" text-anchor="middle" fill="#636366" font-size="11">Heading home — all sorted</text>
-          </svg>
-        </div>
-
-        <div class="scene__content">
-          <div class="scene__step-label">Step 5 · Fee Management</div>
-          <h2 class="scene__title">School's done. Fees are paid. All good.</h2>
-          <p class="scene__desc">
-            Arjun's mother paid the term fee in 30 seconds from the Parent Portal.
-            Receipt generated, balance updated, no queue at the school office — ever.
-          </p>
-          <div class="phone-mockup">
-            <div class="phone-mockup__screen">
-              <div class="pm-header">
-                <span>💰</span>
-                <span class="pm-title">Fee Receipt</span>
-              </div>
-              <div class="pm-fee-success">
-                <div class="pm-fee-icon">✓</div>
-                <div class="pm-fee-amount">₹4,200</div>
-                <div class="pm-fee-label">Payment Successful</div>
-              </div>
-              <div class="pm-divider"></div>
-              <div class="pm-subj-row"><span>Student</span><span>Arjun Sharma</span></div>
-              <div class="pm-subj-row"><span>Term</span><span>June 2026</span></div>
-              <div class="pm-subj-row"><span>Method</span><span>UPI ✓</span></div>
-            </div>
-          </div>
+      <div class="section-content">
+        <div class="time-badge stagger-child">5:00 PM</div>
+        <div class="step-label stagger-child">Step 05 · Fee Management</div>
+        <h2 class="scene-headline stagger-child">School's done.<br/>Fees are paid.<br/>All good.</h2>
+        <p class="scene-desc stagger-child">
+          Arjun's mother paid the term fee in 30 seconds from the Parent Portal.
+          Receipt generated. No queue at the office — ever.
+        </p>
+        <div class="feature-pill stagger-child">
+          <span class="feature-pill__dot"></span>
+          Fee Management · Live
         </div>
       </div>
-    </div>
+    </section>
 
-  </div><!-- end story-timeline -->
+  </div><!-- /#story -->
 
   <!-- ── CTA ───────────────────────────────────────────────── -->
-  <section class="cta-section reveal">
-    <div class="cta-glow"></div>
+  <section class="full-section cta-section reveal-section">
+    <div class="cta-orb cta-orb--1"></div>
+    <div class="cta-orb cta-orb--2"></div>
     <div class="cta-content">
-      <div class="cta-icon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+      <div class="cta-logo stagger-child">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
           <defs>
             <linearGradient id="ctaG" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#0A84FF"/><stop offset="100%" stop-color="#BF5AF2"/>
+              <stop offset="0%" stop-color="#0A84FF"/>
+              <stop offset="100%" stop-color="#BF5AF2"/>
             </linearGradient>
           </defs>
           <rect width="24" height="24" rx="7" fill="url(#ctaG)"/>
@@ -599,11 +424,14 @@
           <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
         </svg>
       </div>
-      <h2 class="cta-title">Arjun's school runs on School Manager.<br/>Does yours?</h2>
-      <p class="cta-sub">
+      <h2 class="cta-headline stagger-child">
+        Arjun's school<br/>runs on School Manager.<br/>
+        <span class="gradient-text">Does yours?</span>
+      </h2>
+      <p class="cta-sub stagger-child">
         One platform. Every stakeholder. Every moment of the school day — managed.
       </p>
-      <a routerLink="/login" class="btn-hero btn-hero--primary btn-hero--lg">
+      <a routerLink="/login" class="btn-primary btn-primary--lg stagger-child">
         Sign In to School Manager
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
       </a>

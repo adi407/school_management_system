@@ -29,6 +29,12 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
+      // Hero animates in immediately on load
+      requestAnimationFrame(() => {
+        document.querySelector('.hero-section')?.classList.add('is-visible');
+      });
+
+      // Story sections animate when 25% in view
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach(entry => {
@@ -37,9 +43,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
             }
           });
         },
-        { threshold: 0.15 }
+        { threshold: 0.22 }
       );
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      document.querySelectorAll('.reveal-section:not(.hero-section)').forEach(el => observer.observe(el));
     });
   }
 }
