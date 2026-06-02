@@ -20,11 +20,16 @@ public interface SchoolRepository extends JpaRepository<School, UUID> {
 
     Page<School> findAllByIsActive(boolean isActive, Pageable pageable);
 
-    @Query("SELECT s FROM School s WHERE " +
+    @Query(value = "SELECT * FROM schools s WHERE " +
            "(:search IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
-           "(:tier IS NULL OR s.subscriptionTier = :tier) AND " +
-           "(:isActive IS NULL OR s.isActive = :isActive)")
-    Page<School> searchSchools(String search, SubscriptionTier tier, Boolean isActive, Pageable pageable);
+           "(:tier IS NULL OR s.subscription_tier = :tier) AND " +
+           "(:isActive IS NULL OR s.is_active = :isActive)",
+           countQuery = "SELECT COUNT(*) FROM schools s WHERE " +
+           "(:search IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
+           "(:tier IS NULL OR s.subscription_tier = :tier) AND " +
+           "(:isActive IS NULL OR s.is_active = :isActive)",
+           nativeQuery = true)
+    Page<School> searchSchoolsNative(String search, String tier, Boolean isActive, Pageable pageable);
 
     @Query("SELECT s FROM School s WHERE s.subscriptionExpiry < :date AND s.isActive = true")
     List<School> findExpiringSoon(LocalDate date);

@@ -48,12 +48,8 @@ public class SchoolService {
     }
 
     public Page<SchoolDto> listSchools(String search, String tier, Boolean isActive, Pageable pageable) {
-        return schoolRepository.searchSchools(
-            search,
-            tier != null ? com.sms.core.enums.SubscriptionTier.valueOf(tier) : null,
-            isActive,
-            pageable
-        ).map(this::toDto);
+        return schoolRepository.searchSchoolsNative(search, tier, isActive, pageable)
+            .map(this::toDto);
     }
 
     public SchoolDto getSchool(UUID id) {
