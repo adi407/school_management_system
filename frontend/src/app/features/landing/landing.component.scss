@@ -95,6 +95,8 @@ $overlay-mid:    rgba(12,12,18,0.55);
   overflow: hidden;
   display: flex;
   align-items: center;
+  // Establish stacking context so overflow: hidden clips absolutely-positioned children
+  isolation: isolate;
 }
 
 // ── Section background (SVG container) ──────────────────────
@@ -105,11 +107,13 @@ $overlay-mid:    rgba(12,12,18,0.55);
   width: 62%;
   height: 116%;
   pointer-events: none;
+  // overflow:hidden prevents SVG content from contributing to parent scroll-width
+  overflow: hidden;
 
   svg {
     width: 100%;
     height: 100%;
-    overflow: visible;
+    overflow: hidden;
   }
 }
 
@@ -544,26 +548,30 @@ $overlay-mid:    rgba(12,12,18,0.55);
 }
 
 // ── Responsive ────────────────────────────────────────────────
+
+// ── Tablet (≤900px): SVG visible on right, text on left ──────
 @media (max-width: 900px) {
+  // flip left-side SVGs back to right on tablet
+  .scene--class .section-bg,
+  .scene--parent .section-bg {
+    left: auto;
+    right: -5%;
+  }
+
   .section-bg {
-    width: 80%;
-    opacity: 0.5;
-    right: -10%;
+    right: -5%;
+    width: 68%;
+    opacity: 0.65;
   }
 
   .section-content,
   .section-content--right {
     margin-left: 0;
-    padding: 0 5vw;
-    max-width: 100%;
+    padding: 0 40px;
+    max-width: 55%;
   }
 
-  .scene--class .section-bg,
-  .scene--parent .section-bg {
-    left: auto;
-    right: -10%;
-  }
-
+  // Overlay: solid dark on left where text is, gradually reveals SVG on right
   .section-overlay,
   .scene--gate__overlay,
   .scene--class__overlay,
@@ -571,20 +579,130 @@ $overlay-mid:    rgba(12,12,18,0.55);
   .scene--parent__overlay,
   .scene--home__overlay {
     background: linear-gradient(
-      to bottom,
-      rgba(12,12,18,0.95) 0%,
-      rgba(12,12,18,0.9) 100%
+      to right,
+      rgba(12,12,18,1)    0%,
+      rgba(12,12,18,0.95) 32%,
+      rgba(12,12,18,0.70) 55%,
+      rgba(12,12,18,0.28) 78%,
+      rgba(12,12,18,0.08) 100%
     ) !important;
   }
 }
 
-@media (max-width: 600px) {
+// ── Mobile (≤640px): Stack — SVG top half, text bottom half ──
+@media (max-width: 640px) {
   .nav { padding: 0 20px; }
-  .display-title { letter-spacing: -1.5px; }
-  .scene-headline { letter-spacing: -1.5px; }
-  .cta-headline { letter-spacing: -1.5px; }
-  .hero-content { padding: 0 0 0 5vw; }
-  .scroll-hint { left: 5vw; }
-  .section-bg { opacity: 0.35; }
+
+  // Section: column flow, text pushed to the bottom half via padding-top
+  .full-section {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    // Illustration occupies top ~46vh. Content starts at 46vh.
+    padding-top: 46vh;
+    padding-bottom: 40px;
+    box-sizing: border-box;
+  }
+
+  // SVG illustration: fills top of section from below nav → 46vh
+  .section-bg {
+    position: absolute;
+    top: 58px; // clear fixed nav
+    left: 0;
+    right: 0;
+    height: calc(46vh - 58px);
+    width: 100%;
+    bottom: auto;
+    overflow: hidden;
+    opacity: 0.78;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+
+  // Reset left-side SVG positioning back to normal on mobile
+  .scene--class .section-bg,
+  .scene--parent .section-bg {
+    left: 0;
+    right: 0;
+    bottom: auto;
+  }
+
+  // Overlay: opaque at bottom where text lives, fades out upward
+  .section-overlay,
+  .scene--gate__overlay,
+  .scene--class__overlay,
+  .scene--exam__overlay,
+  .scene--parent__overlay,
+  .scene--home__overlay {
+    background: linear-gradient(
+      to top,
+      rgba(12,12,18,1)    0%,
+      rgba(12,12,18,0.98) 42%,
+      rgba(12,12,18,0.70) 58%,
+      rgba(12,12,18,0.20) 78%,
+      transparent         100%
+    ) !important;
+  }
+
+  // Hero: give more vertical space for illustration (it has more elements)
+  .hero-section {
+    padding-top: 44vh;
+  }
+  .hero-bg {
+    height: calc(44vh - 58px);
+    opacity: 0.72;
+  }
+  .section-overlay--hero {
+    background: linear-gradient(
+      to top,
+      rgba(12,12,18,1)    0%,
+      rgba(12,12,18,0.98) 44%,
+      rgba(12,12,18,0.60) 62%,
+      transparent         88%
+    ) !important;
+  }
+
+  .hero-content {
+    padding: 0 20px;
+    width: 100%;
+    max-width: 100%;
+    gap: 16px;
+  }
+
+  .section-content,
+  .section-content--right {
+    margin-left: 0;
+    padding: 0 20px;
+    max-width: 100%;
+    gap: 12px;
+  }
+
+  .display-title   { font-size: 36px; letter-spacing: -1.5px; line-height: 1.1; }
+  .scene-headline  { font-size: 34px; letter-spacing: -1.5px; line-height: 1.1; }
+  .cta-headline    { font-size: 32px; letter-spacing: -1.2px; line-height: 1.12; }
+  .display-sub     { font-size: 14px; }
+  .scene-desc      { font-size: 14px; }
+
+  .scroll-hint { left: 20px; bottom: 14px; }
+
+  // CTA section: same stacked layout
+  .cta-section {
+    padding-top: 120px;
+    padding-bottom: 56px;
+    justify-content: center;
+    .cta-content {
+      align-items: flex-start;
+      text-align: left;
+      padding: 0 20px;
+    }
+  }
+
+  // Orbs too wide for mobile — hide them (background is dark enough)
+  .cta-orb { display: none; }
+
   .footer { padding: 22px 20px; }
 }

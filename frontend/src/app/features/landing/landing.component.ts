@@ -34,7 +34,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
         document.querySelector('.hero-section')?.classList.add('is-visible');
       });
 
-      // Story sections animate when 25% in view
+      // Story sections animate when entering view (low threshold for large 100vh sections)
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach(entry => {
@@ -43,7 +43,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
             }
           });
         },
-        { threshold: 0.22 }
+        { threshold: 0.08, rootMargin: '0px 0px -60px 0px' }
       );
       document.querySelectorAll('.reveal-section:not(.hero-section)').forEach(el => observer.observe(el));
     });
