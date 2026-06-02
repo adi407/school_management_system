@@ -59,9 +59,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
-            "http://localhost:*",      // Any local dev port (4200, 4201, etc.)
+            "http://localhost:*",
             "http://127.0.0.1:*",
-            "https://*.sms.example.com"
+            "https://schoolmanager.live",
+            "https://*.schoolmanager.live"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
