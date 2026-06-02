@@ -39,11 +39,19 @@ export class SidebarComponent {
       ],
     },
     {
+      label: 'Setup',
+      roles: ['SCHOOL_ADMIN'],
+      items: [
+        { label: 'Academic Years', route: '/admin/academic-years', icon: '🗓' },
+        { label: 'Subjects',       route: '/admin/subjects',       icon: '📚' },
+        { label: 'Classes',        route: '/admin/classes',        icon: '🏫' },
+      ],
+    },
+    {
       label: 'Academic',
       roles: ['SCHOOL_ADMIN'],
       items: [
         { label: 'Students',   route: '/admin/students',   icon: '👥' },
-        { label: 'Classes',    route: '/admin/classes',    icon: '🏫' },
         { label: 'Attendance', route: '/admin/attendance', icon: '✓' },
         { label: 'Homework',   route: '/admin/homework',   icon: '📝' },
         { label: 'Timetable',  route: '/admin/timetable',  icon: '📅' },

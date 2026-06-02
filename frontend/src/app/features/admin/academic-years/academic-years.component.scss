@@ -1,0 +1,64 @@
+.year-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 700px;
+}
+
+.year-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  gap: 16px;
+
+  &--current {
+    border-left: 4px solid var(--accent, #2563eb);
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+  }
+
+  &__dates {
+    margin-top: 4px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+}
+
+.ml-8  { margin-left: 8px; }
+.mt-16 { margin-top: 16px; }
+
+.form-check { gap: 6px; }
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent, #2563eb);
+    cursor: pointer;
+  }
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 2px 0 0 24px;
+}

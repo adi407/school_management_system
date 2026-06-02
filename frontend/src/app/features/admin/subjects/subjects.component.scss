@@ -1,0 +1,64 @@
+.subject-table {
+  padding: 0;
+  overflow: hidden;
+
+  &__head,
+  &__row {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1.2fr 1fr 100px;
+    gap: 12px;
+    align-items: center;
+    padding: 11px 20px;
+  }
+
+  &__head {
+    background: var(--bg-secondary, #f8fafc);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  &__row {
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: var(--bg-hover, #f1f5f9); }
+  }
+
+  &__empty {
+    padding: 32px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+}
+
+.subject-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.subject-code {
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary, #f1f5f9);
+  padding: 2px 8px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+
+  .danger { color: var(--error, #ef4444); }
+}
+
+.mt-16 { margin-top: 16px; }

@@ -63,3 +63,10 @@ export interface AssignSubjectRequest {
   subjectId: string;
   teacherId?: string | null;
 }
+
+export interface CreateAcademicYearRequest {
+  name: string;
+  startDate: string;
+  endDate: string;
+  isCurrent: boolean;
+}

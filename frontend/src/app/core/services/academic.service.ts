@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AcademicYearDto, ClassDto, SubjectDto, CreateClassRequest, CreateSubjectRequest, ClassSubjectDto, AssignSubjectRequest } from '../models/academic.model';
+import { AcademicYearDto, ClassDto, SubjectDto, CreateClassRequest, CreateSubjectRequest, ClassSubjectDto, AssignSubjectRequest, CreateAcademicYearRequest } from '../models/academic.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -13,6 +13,14 @@ export class AcademicService {
   // ── Academic Years ─────────────────────────────────────────────────────────
   listYears(): Observable<AcademicYearDto[]> {
     return this.http.get<AcademicYearDto[]>(`${this.base}/academic-years`);
+  }
+
+  createYear(req: CreateAcademicYearRequest): Observable<AcademicYearDto> {
+    return this.http.post<AcademicYearDto>(`${this.base}/academic-years`, req);
+  }
+
+  updateYear(id: string, req: CreateAcademicYearRequest): Observable<AcademicYearDto> {
+    return this.http.put<AcademicYearDto>(`${this.base}/academic-years/${id}`, req);
   }
 
   // ── Classes ────────────────────────────────────────────────────────────────
