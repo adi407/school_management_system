@@ -29,7 +29,8 @@ export class SchoolFeaturesComponent implements OnInit {
   saving   = signal(false);
 
   // local draft of toggle states
-  draft    = signal<Record<string, boolean>>({});
+  draft         = signal<Record<string, boolean>>({});
+  appliedPreset = signal<string | null>(null);
 
   featureGroups = FEATURE_GROUPS;
   coreKeys = CORE_KEYS;
@@ -64,6 +65,7 @@ export class SchoolFeaturesComponent implements OnInit {
     const d: Record<string, boolean> = {};
     Object.keys(this.flags()).forEach(k => (d[k] = enabled.has(k as FeatureKey)));
     this.draft.set(d);
+    this.appliedPreset.set(tier);
   }
 
   save() {

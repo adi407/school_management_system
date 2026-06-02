@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LoadingService } from '../../core/services/loading.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'sms-header',
@@ -31,6 +32,15 @@ import { LoadingService } from '../../core/services/loading.service';
           <span>{{ schoolDomain() }}</span>
         </div>
       }
+
+      <!-- Theme toggle -->
+      <button class="header__icon-btn" (click)="theme.toggle()" [title]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+        @if (theme.isDark()) {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        } @else {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        }
+      </button>
 
       <!-- Role badge -->
       <div class="header__role-badge">{{ user()?.role?.replace('_', ' ') }}</div>
@@ -91,6 +101,13 @@ import { LoadingService } from '../../core/services/loading.service';
       display: flex; align-items: center; justify-content: center;
       font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
     }
+    .header__icon-btn {
+      width: 30px; height: 30px; border-radius: 8px; background: transparent;
+      border: 1px solid var(--border); color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition); flex-shrink: 0;
+      &:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-strong); }
+    }
   `],
 })
 export class HeaderComponent {
@@ -98,6 +115,7 @@ export class HeaderComponent {
   @Input()  sidebarCollapsed = false;
   auth    = inject(AuthService);
   loading = inject(LoadingService);
+  theme   = inject(ThemeService);
   user    = this.auth.user;
 
   schoolDomain(): string {

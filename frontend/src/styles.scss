@@ -167,6 +167,7 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
     border: 1px solid rgba(var(--green-rgb),.20);
     &:hover { background: var(--success); color: #07111C; border-color: var(--success); }
   }
+  &--xs  { height: 24px; padding: 0 8px;  font-size: 11px; border-radius: 6px; }
   &--sm  { height: 28px; padding: 0 12px; font-size: 12px; border-radius: 7px; }
   &--lg  { height: 42px; padding: 0 24px; font-size: 14px; border-radius: var(--radius-md); }
   &:disabled { opacity: .40; cursor: not-allowed; transform: none !important; filter: none !important; box-shadow: none !important; }
@@ -336,7 +337,8 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
 }
 
 // ── Modal / Overlay ─────────────────────────────────────────
-.overlay {
+.overlay,
+.modal-backdrop {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   backdrop-filter: blur(4px); z-index: 300;
   display: flex; align-items: center; justify-content: center;
@@ -344,12 +346,47 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
 .modal {
   background: var(--bg2); border: 1px solid var(--border-strong);
   border-radius: var(--radius-xl); padding: 28px;
-  width: min(580px, 95vw); box-shadow: var(--shadow-xl);
-  animation: slide-up 0.24s ease;
+  width: min(580px, 95vw); max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-xl); animation: slide-up 0.24s ease;
   &__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
   &__title  { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+  &__body   { display: flex; flex-direction: column; gap: 16px; }
   &__footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+  &__close  {
+    width: 28px; height: 28px; border-radius: 8px; border: none;
+    background: var(--input-bg); color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    transition: all var(--transition);
+    &:hover { background: var(--bg-hover); color: var(--text-primary); }
+  }
 }
+
+// ── Form fields (flat naming used in components) ──────────────
+.form-grid  { display: flex; flex-direction: column; gap: 16px; }
+.form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.form-hint  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.form-error { font-size: 11px; color: var(--error); margin-top: 2px; }
+.required   { color: var(--error); margin-left: 2px; }
+
+.form-input {
+  background: var(--input-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text-primary);
+  font-family: var(--font); font-size: 13px; width: 100%; outline: none;
+  transition: border-color var(--transition), background var(--transition);
+  padding: 9px 12px;
+  &::placeholder { color: var(--text-muted); }
+  &:focus { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.06); }
+}
+select.form-input, select.form-input:not([size]) {
+  appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23636366' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 30px;
+  option { background: var(--bg2); color: var(--text-primary); padding: 6px; }
+}
+textarea.form-input { resize: vertical; min-height: 80px; }
 
 // ── Utilities ───────────────────────────────────────────────
 .text-accent    { color: var(--accent); }
@@ -408,6 +445,38 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
   .bottom-grid { grid-template-columns: 1fr; }
 }
 
+// ── Misc states ──────────────────────────────────────────────
+.loading-state {
+  padding: 48px 24px; text-align: center;
+  color: var(--text-muted); font-size: 14px;
+}
+.filter-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.search-wrap {
+  position: relative; flex: 1; min-width: 200px; max-width: 360px;
+}
+.search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+.search-input {
+  width: 100%; padding: 8px 12px 8px 32px;
+  background: var(--input-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text-primary);
+  font-family: var(--font); font-size: 13px; outline: none;
+  transition: border-color var(--transition);
+  &::placeholder { color: var(--text-muted); }
+  &:focus { border-color: var(--accent); }
+}
+
+// ── empty / loading state helpers ───────────────────────────
+.empty-state {
+  &__icon  { font-size: 48px; margin-bottom: 8px; }
+  &__title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  &__sub   { font-size: 13px; color: var(--text-muted); max-width: 320px; margin: 0 auto; }
+}
+
 // ── Scrollable table hint on small screens ───────────────────
 @media (max-width: 640px) {
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -416,5 +485,69 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
     position: fixed !important; bottom: 0 !important; top: auto !important;
     transform: none !important; max-height: 90vh;
   }
-  .modal-overlay, .overlay { align-items: flex-end; }
+  .modal-overlay, .overlay, .modal-backdrop { align-items: flex-end; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── LIGHT THEME ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+html.theme-light {
+  --bg:        #F7F8FA;
+  --bg2:       #FFFFFF;
+  --bg3:       #F0F2F5;
+  --bg4:       #E8EAED;
+  --bg-hover:  rgba(0,0,0,0.04);
+  --surface:   rgba(255,255,255,0.85);
+  --surface-2: rgba(255,255,255,0.95);
+  --surface-3: rgba(245,246,250,0.98);
+  --glass:     rgba(255,255,255,0.70);
+  --nav-bg:    rgba(255,255,255,0.90);
+  --card-bg:   rgba(255,255,255,0.90);
+  --card-hover:rgba(247,248,252,0.98);
+  --input-bg:  rgba(0,0,0,0.045);
+
+  --border:        rgba(0,0,0,0.09);
+  --border-strong: rgba(0,0,0,0.16);
+  --border-2:      rgba(0,0,0,0.12);
+
+  --text-primary:   #1C1C28;
+  --text-secondary: #44445A;
+  --text-muted:     #9090A8;
+  --text-1: #1C1C28;
+  --text-2: #44445A;
+  --text-3: #9090A8;
+
+  --shimmer-line: rgba(0,0,0,0.05);
+
+  --shadow:     0 1px 3px rgba(0,0,0,0.09), 0 4px 16px rgba(0,0,0,0.05);
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.13), 0 4px 12px rgba(0,0,0,0.07);
+  --shadow-xl:  0 24px 64px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.09);
+  --shadow-card: 0 0 0 1px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.07);
+
+  body { background: var(--bg); color: var(--text-secondary); }
+
+  // Keep accent colours vivid on light bg
+  --accent-soft: rgba(10,132,255,0.10);
+
+  // Scrollbar on light
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); }
+
+  // Select arrow dark version
+  select.form-input, select.field__select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239090A8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    option { background: #FFFFFF; color: #1C1C28; }
+  }
+
+  // Card shimmer on light
+  .card::before, .feature-group::before { background: linear-gradient(90deg, transparent, rgba(0,0,0,0.04), transparent); }
+
+  // Badge adjustments
+  .badge--green  { background: rgba(48,209,88,.10);  }
+  .badge--red    { background: rgba(255,69,58,.10);   }
+  .badge--yellow { background: rgba(255,159,10,.10);  }
+  .badge--blue   { background: rgba(10,132,255,.10);  }
+  .badge--purple { background: rgba(191,90,242,.10);  }
 }

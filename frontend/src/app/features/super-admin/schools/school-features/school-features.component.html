@@ -23,7 +23,8 @@
     <p class="tier-panel__desc">Apply a subscription tier preset to bulk-enable the right features.</p>
     <div class="tier-btns">
       @for (tier of ['FREE','BASIC','PREMIUM','ENTERPRISE']; track tier) {
-        <button class="tier-btn" [class.tier-btn--active]="school()?.subscriptionTier === tier"
+        <button class="tier-btn"
+          [class.tier-btn--active]="appliedPreset() === tier || (!appliedPreset() && school()?.subscriptionTier === tier)"
           (click)="applyTierPreset($any(tier))">
           <div class="tier-btn__name">{{ tier }}</div>
           <div class="tier-btn__desc">
