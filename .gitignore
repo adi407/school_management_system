@@ -20,6 +20,17 @@ frontend/*.js.map
 *.sln
 *.sw?
 
+# ── Eclipse ──────────────────────────────────────────────────
+**/.metadata/
+**/.classpath
+**/.project
+**/.factorypath
+**/.settings/
+**/target/
+
+# ── Temp scripts ─────────────────────────────────────────────
+update-service.sh
+
 # ── Environment / Secrets ────────────────────────────────────
 .env
 .env.*
