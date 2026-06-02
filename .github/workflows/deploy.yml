@@ -59,20 +59,27 @@ jobs:
         run: |
           ssh root@${{ secrets.DROPLET_HOST }} bash << 'ENDSSH'
             pkill -9 -f current.jar || true
-            sleep 3
+            sleep 5
+            > /opt/sms/app/app.log
             nohup java -Xms256m -Xmx512m -jar /opt/sms/app/current.jar \
               --spring.profiles.active=prod \
               --spring.config.additional-location=file:/opt/sms/app/application-prod.yml \
               > /opt/sms/app/app.log 2>&1 &
             echo "Started PID $!"
-            sleep 90
-            if grep -q "Started SmsApplication" /opt/sms/app/app.log; then
-              echo "Backend is running"
-            else
-              echo "Backend failed to start — last 50 log lines:"
-              tail -50 /opt/sms/app/app.log
-              exit 1
-            fi
+            for i in $(seq 1 24); do
+              sleep 10
+              if grep -q "Started SmsApplication" /opt/sms/app/app.log; then
+                echo "Backend is running after ${i}0s"
+                break
+              fi
+              if grep -q "APPLICATION FAILED TO START" /opt/sms/app/app.log; then
+                echo "Backend failed to start:"
+                tail -40 /opt/sms/app/app.log
+                exit 1
+              fi
+              echo "Waiting... (${i}0s)"
+            done
+            grep -q "Started SmsApplication" /opt/sms/app/app.log || { tail -40 /opt/sms/app/app.log; exit 1; }
             nginx -s reload
             echo "Nginx reloaded"
           ENDSSH
