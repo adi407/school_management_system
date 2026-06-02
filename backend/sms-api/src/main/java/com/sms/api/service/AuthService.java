@@ -158,9 +158,8 @@ public class AuthService {
         rt.setExpiresAt(Instant.now().plusMillis(jwtService.getRefreshExpiryMs()));
         refreshTokenRepository.save(rt);
 
-        String fullName = user.getSchool() != null
-            ? user.getEmail() // fallback — Staff/Student entities have names
-            : "Super Admin";
+        String fullName   = user.getSchool() != null ? user.getEmail() : "Super Admin";
+        String schoolName = user.getSchool() != null ? user.getSchool().getName() : null;
 
         return new AuthResponse(
             accessToken,
@@ -172,7 +171,8 @@ public class AuthService {
                 fullName,
                 user.getRole(),
                 user.getProfilePhotoUrl(),
-                features.stream().map(Enum::name).toList()
+                features.stream().map(Enum::name).toList(),
+                schoolName
             )
         );
     }

@@ -18,6 +18,7 @@ public record AuthResponse(
         String fullName,
         Role role,
         String profilePhotoUrl,
-        List<String> enabledFeatures
+        List<String> enabledFeatures,
+        String schoolName
     ) {}
 }

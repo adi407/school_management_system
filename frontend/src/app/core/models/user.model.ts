@@ -28,6 +28,7 @@ export interface UserInfo {
   role: Role;
   profilePhotoUrl: string | null;
   enabledFeatures: string[];
+  schoolName: string | null;
 }
 
 export interface AuthResponse {

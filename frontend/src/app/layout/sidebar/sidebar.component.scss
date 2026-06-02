@@ -17,7 +17,7 @@
 
   &--collapsed {
     width: var(--sidebar-collapsed);
-    .logo-text, .nav-item__label, .nav-group-label, .user-details, .logout-btn { display: none; }
+    .logo-text-block, .logo-text, .logo-school, .nav-item__label, .nav-group-label, .user-details, .logout-btn { display: none; }
     .nav-item { justify-content: center; padding: 9px 0; margin: 1px 6px; }
     .sidebar__logo { justify-content: center; }
     .sidebar__user { justify-content: center; padding: 12px 0; }
@@ -52,9 +52,21 @@
   box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.35);
 }
 
+.logo-text-block {
+  display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0;
+}
+
 .logo-text {
-  font-size: 16px; font-weight: 800; color: var(--text-primary);
-  letter-spacing: -0.5px; flex: 1;
+  font-size: 15px; font-weight: 800; color: var(--text-primary);
+  letter-spacing: -0.4px; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.logo-school {
+  font-size: 10px; font-weight: 600; color: var(--accent);
+  letter-spacing: 0.2px; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0.85;
 }
 
 .collapse-btn {
