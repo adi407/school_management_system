@@ -57,27 +57,32 @@ jobs:
 
       - name: Restart & Verify
         run: |
-          ssh root@${{ secrets.DROPLET_HOST }} "
-            systemctl restart sms
-            echo 'Waiting for startup...'
-            sleep 15
-            if systemctl is-active --quiet sms; then
-              echo '✅ Backend is running'
+          ssh root@${{ secrets.DROPLET_HOST }} bash << 'ENDSSH'
+            pkill -9 -f current.jar || true
+            sleep 3
+            nohup java -Xms256m -Xmx512m -jar /opt/sms/app/current.jar \
+              --spring.profiles.active=prod \
+              --spring.config.additional-location=file:/opt/sms/app/application-prod.yml \
+              > /opt/sms/app/app.log 2>&1 &
+            echo "Started PID $!"
+            sleep 90
+            if grep -q "Started SmsApplication" /opt/sms/app/app.log; then
+              echo "Backend is running"
             else
-              echo '❌ Backend failed to start — last 50 log lines:'
+              echo "Backend failed to start — last 50 log lines:"
               tail -50 /opt/sms/app/app.log
               exit 1
             fi
-            systemctl reload nginx
-            echo '✅ Nginx reloaded'
-          "
+            nginx -s reload
+            echo "Nginx reloaded"
+          ENDSSH
 
       - name: Health Check
         run: |
           sleep 10
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://schoolmanager.live/api/actuator/health)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://schoolmanager.live/api/v1/actuator/health)
           if [ "$STATUS" = "200" ]; then
-            echo "✅ LIVE at https://schoolmanager.live (HTTP $STATUS)"
+            echo "LIVE at https://schoolmanager.live (HTTP $STATUS)"
           else
-            echo "⚠️ Health check returned HTTP $STATUS — check /opt/sms/app/app.log"
+            echo "Health check returned HTTP $STATUS — check /opt/sms/app/app.log"
           fi
