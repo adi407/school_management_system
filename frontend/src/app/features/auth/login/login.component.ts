@@ -62,12 +62,10 @@ export class LoginComponent {
   }
 
   readonly demoAccounts: { label: string; email: string; role: string }[] = [
-    { label: 'Super Admin',   email: 'superadmin@educloud.in',       role: 'SUPER_ADMIN'  },
-    { label: 'School Admin',  email: 'admin@greenfield.edu.in',      role: 'SCHOOL_ADMIN' },
-    { label: 'Teacher',       email: 'teacher@greenfield.edu.in',    role: 'TEACHER'      },
-    { label: 'Student',       email: 'student@greenfield.edu.in',    role: 'STUDENT'      },
-    { label: 'Parent',        email: 'parent@greenfield.edu.in',     role: 'PARENT'       },
-    { label: 'Accountant',    email: 'accountant@greenfield.edu.in', role: 'ACCOUNTANT'   },
+    { label: 'Super Admin',  email: 'superadmin@educloud.com',       role: 'SUPER_ADMIN'  },
+    { label: 'School Admin', email: 'admin@schoolmanager.live',      role: 'SCHOOL_ADMIN' },
+    { label: 'Teacher',      email: 'priya.sharma@demo.school',      role: 'TEACHER'      },
+    { label: 'Student',      email: 'student@demo.school',           role: 'STUDENT'      },
   ];
 
   fillDemo(email: string) {
