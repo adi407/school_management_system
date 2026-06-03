@@ -69,14 +69,17 @@ export class SidebarComponent {
       label: 'Finance',
       roles: ['SCHOOL_ADMIN', 'ACCOUNTANT'],
       items: [
-        { label: 'Fees', route: '/admin/fees', icon: '💰' },
+        { label: 'Fees',       route: '/admin/fees',       icon: '💰' },
+        { label: 'Payroll',    route: '/admin/payroll',    icon: '💼' },
+        { label: 'P&L Report', route: '/admin/finance/pl', icon: '📊' },
       ],
     },
     {
       label: 'HR & Staff',
-      roles: ['SCHOOL_ADMIN'],
+      roles: ['SCHOOL_ADMIN', 'ACCOUNTANT'],
       items: [
-        { label: 'Staff', route: '/admin/staff', icon: '👨‍🏫' },
+        { label: 'Staff',            route: '/admin/staff',            icon: '👨‍🏫' },
+        { label: 'Staff Attendance', route: '/admin/staff-attendance', icon: '✓'  },
       ],
     },
     {

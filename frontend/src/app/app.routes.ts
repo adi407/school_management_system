@@ -143,6 +143,19 @@ export const routes: Routes = [
             path: 'announcements',
             loadComponent: () => import('./features/admin/announcements/announcements.component').then(m => m.AnnouncementsComponent),
           },
+          // ── Payroll & Finance ─────────────────────────────────────────
+          {
+            path: 'payroll',
+            loadComponent: () => import('./features/admin/payroll/payroll.component').then(m => m.PayrollComponent),
+          },
+          {
+            path: 'finance/pl',
+            loadComponent: () => import('./features/admin/finance-pl/finance-pl.component').then(m => m.FinancePlComponent),
+          },
+          {
+            path: 'staff-attendance',
+            loadComponent: () => import('./features/admin/staff-attendance/staff-attendance.component').then(m => m.StaffAttendanceComponent),
+          },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
       },

@@ -1,0 +1,588 @@
+<!-- ── Page Header ──────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">HR & Finance</span>
+    <h1 class="page-header__title">Payroll</h1>
+    <p class="page-header__subtitle">Process salaries, manage structures, and log expenses</p>
+  </div>
+  <div class="page-header__actions">
+    @if (activeTab() === 'runs') {
+      <button class="btn btn--primary" (click)="openRunModal()">▶ Run Payroll</button>
+    } @else if (activeTab() === 'structures') {
+      <button class="btn btn--primary" (click)="openStructModal()">+ Add Structure</button>
+    } @else {
+      <button class="btn btn--primary" (click)="openExpenseModal()">+ Log Expense</button>
+    }
+  </div>
+</div>
+
+<!-- ── KPI Row ───────────────────────────────────────────────────────────────── -->
+<div class="grid-3 mb-24">
+  <div class="stat-card stat-card--green">
+    <div class="stat-card__icon" style="background:rgba(var(--green-rgb),.12);color:var(--success)">₹</div>
+    <div class="stat-card__label">Total Paid Out (PAID runs)</div>
+    <div class="stat-card__value">₹{{ (totalNetPayout() / 100000).toFixed(2) }}L</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__icon" style="background:rgba(var(--accent-rgb),.12);color:var(--accent)">📋</div>
+    <div class="stat-card__label">Total Runs</div>
+    <div class="stat-card__value">{{ runs().length }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__icon" style="background:rgba(255,193,7,.12);color:#f59e0b">⏳</div>
+    <div class="stat-card__label">Pending Approval</div>
+    <div class="stat-card__value">{{ draftRuns() }}</div>
+  </div>
+</div>
+
+<!-- ── Tabs ──────────────────────────────────────────────────────────────────── -->
+<div class="tab-bar mb-24">
+  <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'runs'"       (click)="setTab('runs')">Payroll Runs</button>
+  <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'structures'" (click)="setTab('structures')">Salary Structures</button>
+  <button class="tab-btn" [class.tab-btn--active]="activeTab() === 'expenses'"   (click)="setTab('expenses')">Expenses</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     TAB 1 — PAYROLL RUNS
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (activeTab() === 'runs') {
+  @if (loading()) {
+    <div class="empty-state"><div class="spinner"></div></div>
+  } @else if (runs().length === 0) {
+    <div class="empty-state">
+      <div class="empty-state__icon">💼</div>
+      <div class="empty-state__title">No payroll runs yet</div>
+      <div class="empty-state__sub">Click "Run Payroll" to process your first month's salaries.</div>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Working Days</th>
+            <th>Payslips</th>
+            <th class="text-right">Gross</th>
+            <th class="text-right">Deductions</th>
+            <th class="text-right">Net Payout</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (run of runs(); track run.id) {
+            <tr>
+              <td>
+                <span class="fw-600">{{ monthLabel(run.runMonth) }} {{ run.runYear }}</span>
+              </td>
+              <td>{{ run.totalWorkingDays }}</td>
+              <td>{{ run.payslipCount }}</td>
+              <td class="text-right">₹{{ run.totalGross | number:'1.0-0' }}</td>
+              <td class="text-right text-muted">
+                ₹{{ (run.totalPfEmployee + run.totalEsiEmployee + run.totalProfessionalTax + run.totalTds + run.totalLopDeduction) | number:'1.0-0' }}
+              </td>
+              <td class="text-right fw-600 text-success">₹{{ run.totalNetPayout | number:'1.0-0' }}</td>
+              <td><span class="badge" [class]="statusClass(run.status)">{{ run.status }}</span></td>
+              <td>
+                <div class="action-row">
+                  <button class="btn btn--xs btn--outline" (click)="openPayslips(run)">Payslips</button>
+                  @if (run.status === 'DRAFT') {
+                    <button class="btn btn--xs btn--success" (click)="approveRun(run)">Approve</button>
+                  }
+                  @if (run.status === 'APPROVED') {
+                    <button class="btn btn--xs btn--primary" (click)="markPaid(run)">Mark Paid</button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     TAB 2 — SALARY STRUCTURES
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (activeTab() === 'structures') {
+  @if (structures().length === 0) {
+    <div class="empty-state">
+      <div class="empty-state__icon">📄</div>
+      <div class="empty-state__title">No salary structures defined</div>
+      <div class="empty-state__sub">Add a salary structure for each staff member before running payroll.</div>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Staff</th>
+            <th>Role</th>
+            <th class="text-right">Basic</th>
+            <th class="text-right">HRA</th>
+            <th class="text-right">Other</th>
+            <th class="text-right">Gross</th>
+            <th>PF</th>
+            <th>Tax Regime</th>
+            <th>Effective From</th>
+            <th>Active</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of structures(); track s.id) {
+            <tr [class.row-inactive]="!s.isActive">
+              <td>
+                <div class="fw-600">{{ s.staffName }}</div>
+                <div class="text-muted text-sm">{{ s.staffEmail }}</div>
+              </td>
+              <td><span class="badge badge--default">{{ s.staffRole | titlecase }}</span></td>
+              <td class="text-right">₹{{ s.basicSalary | number:'1.0-0' }}</td>
+              <td class="text-right text-muted">₹{{ s.hraAmount | number:'1.0-0' }}</td>
+              <td class="text-right text-muted">₹{{ (s.daAmount + s.taAmount + s.medicalAllowance + s.otherAllowances) | number:'1.0-0' }}</td>
+              <td class="text-right fw-600">₹{{ s.grossSalary | number:'1.0-0' }}</td>
+              <td>
+                @if (s.pfEnrolled) {
+                  <span class="badge badge--success">Enrolled</span>
+                } @else {
+                  <span class="badge badge--default">No</span>
+                }
+              </td>
+              <td>
+                <span class="badge" [class]="s.taxRegime === 'NEW' ? 'badge--info' : 'badge--warning'">{{ s.taxRegime }}</span>
+              </td>
+              <td>{{ s.effectiveFrom | date:'dd MMM yyyy' }}</td>
+              <td>
+                @if (s.isActive) {
+                  <span class="badge badge--success">Active</span>
+                } @else {
+                  <span class="badge badge--default">Closed</span>
+                }
+              </td>
+              <td>
+                <button class="btn btn--xs btn--outline" (click)="openStructModal(s)">Edit</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     TAB 3 — EXPENSES
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (activeTab() === 'expenses') {
+  <!-- Date range filter -->
+  <div class="filter-bar mb-16">
+    <div class="filter-bar__group">
+      <label class="filter-label">From</label>
+      <input type="date" class="form-control form-control--sm" [value]="expenseFrom()"
+             (change)="expenseFrom.set($any($event.target).value); onExpenseDateChange()" />
+    </div>
+    <div class="filter-bar__group">
+      <label class="filter-label">To</label>
+      <input type="date" class="form-control form-control--sm" [value]="expenseTo()"
+             (change)="expenseTo.set($any($event.target).value); onExpenseDateChange()" />
+    </div>
+    <div class="filter-bar__total">
+      Total: <strong>₹{{ totalExpenses() | number:'1.0-0' }}</strong>
+    </div>
+  </div>
+
+  @if (expenses().length === 0) {
+    <div class="empty-state">
+      <div class="empty-state__icon">🧾</div>
+      <div class="empty-state__title">No expenses in this period</div>
+      <div class="empty-state__sub">Log operational expenses like rent, electricity, and maintenance here.</div>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Reference</th>
+            <th class="text-right">Amount</th>
+            <th>Logged by</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of expenses(); track e.id) {
+            <tr>
+              <td>{{ e.expenseDate | date:'dd MMM yyyy' }}</td>
+              <td><span class="badge badge--default">{{ catLabel(e.category) }}</span></td>
+              <td>{{ e.description }}</td>
+              <td class="text-muted">{{ e.referenceNo || '—' }}</td>
+              <td class="text-right fw-600">₹{{ e.amount | number:'1.2-2' }}</td>
+              <td class="text-muted">{{ e.enteredByName || '—' }}</td>
+              <td>
+                <div class="action-row">
+                  <button class="btn btn--xs btn--outline" (click)="openExpenseModal(e)">Edit</button>
+                  <button class="btn btn--xs btn--danger-ghost" (click)="deleteExpense(e.id)">Delete</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL — TRIGGER PAYROLL RUN
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (showRunModal()) {
+  <div class="modal-backdrop" (click)="closeRunModal()"></div>
+  <div class="modal modal--md">
+    <div class="modal__header">
+      <h2 class="modal__title">Run Payroll</h2>
+      <button class="modal__close" (click)="closeRunModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <p class="text-muted mb-16">
+        This will pull attendance data for the month, compute LOP deductions, and generate payslips for all active salary structures.
+      </p>
+      <form [formGroup]="runForm" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Month <span class="required">*</span></label>
+          <select class="form-control" formControlName="month">
+            @for (m of months; track $index) {
+              <option [value]="$index + 1">{{ m }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year <span class="required">*</span></label>
+          <select class="form-control" formControlName="year">
+            @for (y of years; track y) {
+              <option [value]="y">{{ y }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Working Days in Month <span class="required">*</span></label>
+          <input type="number" class="form-control" formControlName="totalWorkingDays" min="1" max="31" />
+          <p class="form-hint">Days the school was open (excluding holidays). Used for LOP calculation.</p>
+        </div>
+        <div class="form-group form-group--full">
+          <label class="form-label">Notes (optional)</label>
+          <textarea class="form-control" formControlName="notes" rows="2" placeholder="e.g. includes festival bonus"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeRunModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="submitRun()" [disabled]="saving()">
+        {{ saving() ? 'Processing…' : '▶ Run Payroll' }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL — SALARY STRUCTURE
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (showStructModal()) {
+  <div class="modal-backdrop" (click)="closeStructModal()"></div>
+  <div class="modal modal--lg">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ editStructId() ? 'Edit' : 'New' }} Salary Structure</h2>
+      <button class="modal__close" (click)="closeStructModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="structForm">
+
+        <!-- Staff -->
+        <div class="form-section">
+          <div class="form-section__title">Staff Member</div>
+          <div class="form-group">
+            <label class="form-label">Staff <span class="required">*</span></label>
+            <select class="form-control" formControlName="staffId" [disabled]="!!editStructId()">
+              <option value="">— Select staff —</option>
+              @for (s of staffList(); track s.id) {
+                <option [value]="s.id">{{ s.firstName }} {{ s.lastName }} ({{ s.email }})</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Salary Components -->
+        <div class="form-section">
+          <div class="form-section__title">Salary Components (Monthly ₹)</div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">Basic <span class="required">*</span></label>
+              <input type="number" class="form-control" formControlName="basicSalary" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">HRA</label>
+              <input type="number" class="form-control" formControlName="hraAmount" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">DA</label>
+              <input type="number" class="form-control" formControlName="daAmount" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Travel Allowance</label>
+              <input type="number" class="form-control" formControlName="taAmount" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Medical Allowance</label>
+              <input type="number" class="form-control" formControlName="medicalAllowance" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Other Allowances</label>
+              <input type="number" class="form-control" formControlName="otherAllowances" min="0" step="100" />
+            </div>
+          </div>
+          <div class="gross-preview">
+            Gross (computed): <strong>₹{{ grossPreview() | number:'1.0-0' }}</strong>
+            @if (grossPreview() <= 21000) {
+              <span class="badge badge--info ml-8">ESI applicable</span>
+            }
+          </div>
+        </div>
+
+        <!-- PF Settings -->
+        <div class="form-section">
+          <div class="form-section__title">Provident Fund</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label checkbox-label">
+                <input type="checkbox" formControlName="pfEnrolled" /> &nbsp; Enrolled in EPF
+              </label>
+              <p class="form-hint">12% of basic (employee + employer) up to wage ceiling</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">PF Wage Ceiling (₹)</label>
+              <input type="number" class="form-control" formControlName="pfWageCeiling" min="0" />
+              <p class="form-hint">Statutory default: ₹15,000. Max EPF = ₹1,800/month.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax & Declarations -->
+        <div class="form-section">
+          <div class="form-section__title">Tax Regime & Declarations</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Tax Regime</label>
+              <select class="form-control" formControlName="taxRegime">
+                <option value="NEW">New Regime (FY 2024-25 default)</option>
+                <option value="OLD">Old Regime (80C, HRA deductions)</option>
+              </select>
+            </div>
+          </div>
+          @if (sf['taxRegime'].value === 'OLD') {
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label">80C Declared (Annual ₹)</label>
+                <input type="number" class="form-control" formControlName="declared80c" min="0" max="150000" />
+                <p class="form-hint">Max ₹1,50,000</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">HRA Exemption (Annual ₹)</label>
+                <input type="number" class="form-control" formControlName="declaredHraExemption" min="0" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Other Exemptions (Annual ₹)</label>
+                <input type="number" class="form-control" formControlName="declaredOtherExemptions" min="0" />
+                <p class="form-hint">NPS, insurance, LTA, etc.</p>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Effective Period -->
+        <div class="form-section">
+          <div class="form-section__title">Effective Period</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Effective From <span class="required">*</span></label>
+              <input type="date" class="form-control" formControlName="effectiveFrom" />
+              <p class="form-hint">If a previous structure exists, it will be automatically closed the day before.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Effective To (optional)</label>
+              <input type="date" class="form-control" formControlName="effectiveTo" />
+              <p class="form-hint">Leave blank for an open-ended structure.</p>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeStructModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="submitStruct()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : (editStructId() ? 'Update Structure' : 'Create Structure') }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL — LOG EXPENSE
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (showExpenseModal()) {
+  <div class="modal-backdrop" (click)="closeExpenseModal()"></div>
+  <div class="modal modal--md">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ editExpenseId() ? 'Edit' : 'Log' }} Expense</h2>
+      <button class="modal__close" (click)="closeExpenseModal()">✕</button>
+    </div>
+    <div class="modal__body">
+      <form [formGroup]="expenseForm" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Category <span class="required">*</span></label>
+          <select class="form-control" formControlName="category">
+            @for (c of expCats; track c) {
+              <option [value]="c">{{ catLabel(c) }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date <span class="required">*</span></label>
+          <input type="date" class="form-control" formControlName="expenseDate" />
+        </div>
+        <div class="form-group form-group--full">
+          <label class="form-label">Description <span class="required">*</span></label>
+          <input type="text" class="form-control" formControlName="description" placeholder="e.g. July electricity bill" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount (₹) <span class="required">*</span></label>
+          <input type="number" class="form-control" formControlName="amount" min="0.01" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reference No.</label>
+          <input type="text" class="form-control" formControlName="referenceNo" placeholder="Invoice / receipt no." />
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeExpenseModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="submitExpense()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : (editExpenseId() ? 'Update' : 'Log Expense') }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SLIDE PANEL — PAYSLIPS
+═══════════════════════════════════════════════════════════════════════════ -->
+@if (showSlipPanel()) {
+  <div class="side-panel-backdrop" (click)="closeSlipPanel()"></div>
+  <div class="side-panel">
+    <div class="side-panel__header">
+      <div>
+        <h3 class="side-panel__title">
+          Payslips — {{ selectedRun() ? monthLabel(selectedRun()!.runMonth) + ' ' + selectedRun()!.runYear : '' }}
+        </h3>
+        @if (selectedRun()) {
+          <span class="badge ml-8" [class]="statusClass(selectedRun()!.status)">{{ selectedRun()!.status }}</span>
+        }
+      </div>
+      <button class="modal__close" (click)="closeSlipPanel()">✕</button>
+    </div>
+
+    @if (loadingSlips()) {
+      <div class="side-panel__body"><div class="spinner"></div></div>
+    } @else if (payslips().length === 0) {
+      <div class="side-panel__body">
+        <div class="empty-state"><div class="empty-state__title">No payslips found</div></div>
+      </div>
+    } @else {
+      <div class="side-panel__body">
+        <!-- Run summary -->
+        @if (selectedRun()) {
+          <div class="run-summary-grid">
+            <div class="run-summary-item">
+              <span class="run-summary-item__label">Total Gross</span>
+              <span class="run-summary-item__value">₹{{ selectedRun()!.totalGross | number:'1.0-0' }}</span>
+            </div>
+            <div class="run-summary-item">
+              <span class="run-summary-item__label">LOP Deducted</span>
+              <span class="run-summary-item__value text-warning">₹{{ selectedRun()!.totalLopDeduction | number:'1.0-0' }}</span>
+            </div>
+            <div class="run-summary-item">
+              <span class="run-summary-item__label">PF (Employee)</span>
+              <span class="run-summary-item__value text-muted">₹{{ selectedRun()!.totalPfEmployee | number:'1.0-0' }}</span>
+            </div>
+            <div class="run-summary-item">
+              <span class="run-summary-item__label">ESI (Employee)</span>
+              <span class="run-summary-item__value text-muted">₹{{ selectedRun()!.totalEsiEmployee | number:'1.0-0' }}</span>
+            </div>
+            <div class="run-summary-item">
+              <span class="run-summary-item__label">Prof. Tax</span>
+              <span class="run-summary-item__value text-muted">₹{{ selectedRun()!.totalProfessionalTax | number:'1.0-0' }}</span>
+            </div>
+            <div class="run-summary-item">
+              <span class="run-summary-item__label">TDS</span>
+              <span class="run-summary-item__value text-muted">₹{{ selectedRun()!.totalTds | number:'1.0-0' }}</span>
+            </div>
+            <div class="run-summary-item run-summary-item--highlight">
+              <span class="run-summary-item__label">Net Payout</span>
+              <span class="run-summary-item__value text-success fw-700">₹{{ selectedRun()!.totalNetPayout | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        }
+
+        <!-- Per-staff payslip rows -->
+        <div class="slip-list">
+          @for (slip of payslips(); track slip.id) {
+            <details class="slip-card">
+              <summary class="slip-card__summary">
+                <div class="slip-card__name">
+                  <span class="fw-600">{{ slip.staffName }}</span>
+                  <span class="text-muted text-sm ml-8">{{ slip.staffRole }}</span>
+                </div>
+                <div class="slip-card__net">
+                  <span class="text-muted text-sm mr-8">LOP: {{ slip.lopDays }}d</span>
+                  <span class="fw-700 text-success">₹{{ slip.netSalary | number:'1.0-0' }}</span>
+                </div>
+              </summary>
+              <div class="slip-card__body">
+                <div class="slip-breakdown">
+                  <div class="slip-breakdown__col">
+                    <div class="slip-breakdown__heading">Earnings</div>
+                    <div class="slip-line"><span>Basic</span><span>₹{{ slip.basicSalary | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>HRA</span><span>₹{{ slip.hraAmount | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>DA</span><span>₹{{ slip.daAmount | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>TA</span><span>₹{{ slip.taAmount | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>Medical</span><span>₹{{ slip.medicalAllowance | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>Other</span><span>₹{{ slip.otherAllowances | number:'1.0-0' }}</span></div>
+                    <div class="slip-line slip-line--total"><span>Gross</span><span>₹{{ slip.grossSalary | number:'1.0-0' }}</span></div>
+                    <div class="slip-line text-warning"><span>LOP ({{ slip.lopDays }} days)</span><span>-₹{{ slip.lopDeduction | number:'1.0-0' }}</span></div>
+                    <div class="slip-line slip-line--total"><span>Effective Gross</span><span>₹{{ slip.effectiveGross | number:'1.0-0' }}</span></div>
+                  </div>
+                  <div class="slip-breakdown__col">
+                    <div class="slip-breakdown__heading">Deductions</div>
+                    <div class="slip-line"><span>PF (Employee)</span><span>₹{{ slip.pfEmployee | number:'1.0-0' }}</span></div>
+                    <div class="slip-line text-muted"><span>PF (Employer)</span><span>₹{{ slip.pfEmployer | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>ESI (Employee)</span><span>₹{{ slip.esiEmployee | number:'1.0-0' }}</span></div>
+                    <div class="slip-line text-muted"><span>ESI (Employer)</span><span>₹{{ slip.esiEmployer | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>Professional Tax</span><span>₹{{ slip.professionalTax | number:'1.0-0' }}</span></div>
+                    <div class="slip-line"><span>TDS</span><span>₹{{ slip.tds | number:'1.0-0' }}</span></div>
+                    <div class="slip-line slip-line--total"><span>Total Deductions</span><span>₹{{ slip.totalDeductions | number:'1.0-0' }}</span></div>
+                    <div class="slip-line slip-line--net"><span>Net Salary</span><span class="text-success fw-700">₹{{ slip.netSalary | number:'1.0-0' }}</span></div>
+                  </div>
+                </div>
+                <div class="slip-attendance-badge">
+                  Present: {{ slip.presentDays }} / {{ slip.totalWorkingDays }} days
+                </div>
+              </div>
+            </details>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

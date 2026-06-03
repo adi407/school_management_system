@@ -1,0 +1,141 @@
+.mb-24 { margin-bottom: 24px; }
+.fw-600 { font-weight: 600; }
+.text-muted { color: var(--text-muted); }
+.text-sm { font-size: 0.78rem; }
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+.att-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  &__date { display: flex; flex-direction: column; gap: 4px; }
+
+  &__quick {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.filter-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+// ── KPI Strip ─────────────────────────────────────────────────────────────────
+.att-kpi {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  &__item {
+    flex: 1;
+    min-width: 110px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    text-align: center;
+
+    &--present { background: rgba(var(--green-rgb), 0.07); border-color: rgba(var(--green-rgb), 0.22); }
+    &--absent  { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.2); }
+    &--half    { background: rgba(245,158,11,0.07); border-color: rgba(245,158,11,0.22); }
+  }
+
+  &__count {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+// ── Status buttons ────────────────────────────────────────────────────────────
+.status-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.status-btn {
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+  min-width: 28px;
+
+  &:hover { border-color: var(--accent); color: var(--accent); }
+
+  &--present, &--present.status-btn--active {
+    background: rgba(var(--green-rgb), 0.12);
+    border-color: var(--success);
+    color: var(--success);
+  }
+  &--absent, &--absent.status-btn--active {
+    background: rgba(239,68,68,0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+  &--half, &--half.status-btn--active {
+    background: rgba(245,158,11,0.12);
+    border-color: #f59e0b;
+    color: #f59e0b;
+  }
+  &--leave, &--leave.status-btn--active {
+    background: rgba(var(--purple-rgb), 0.1);
+    border-color: var(--purple, #8b5cf6);
+    color: var(--purple, #8b5cf6);
+  }
+  &--holiday, &--holiday.status-btn--active {
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+// ── Remarks input ─────────────────────────────────────────────────────────────
+.remarks-input {
+  max-width: 200px;
+  font-size: 0.82rem;
+}
+
+// ── Save footer ───────────────────────────────────────────────────────────────
+.save-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+// ── Spinner ───────────────────────────────────────────────────────────────────
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 60px auto;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

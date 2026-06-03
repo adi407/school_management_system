@@ -1,0 +1,184 @@
+<!-- ── Header ─────────────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">Finance</span>
+    <h1 class="page-header__title">Profit & Loss</h1>
+    <p class="page-header__subtitle">School revenue vs payroll & operational costs</p>
+  </div>
+</div>
+
+<!-- ── Period Selector ────────────────────────────────────────────────────────── -->
+<div class="period-bar mb-28">
+  <div class="period-bar__group">
+    <label class="period-bar__label">Year</label>
+    <select class="form-control form-control--sm" [(ngModel)]="year">
+      @for (y of years; track y) { <option [value]="y">{{ y }}</option> }
+    </select>
+  </div>
+  <div class="period-bar__group">
+    <label class="period-bar__label">From</label>
+    <select class="form-control form-control--sm" [(ngModel)]="fromMonth">
+      @for (m of months; track $index) { <option [value]="$index + 1">{{ m }}</option> }
+    </select>
+  </div>
+  <div class="period-bar__group">
+    <label class="period-bar__label">To</label>
+    <select class="form-control form-control--sm" [(ngModel)]="toMonth">
+      @for (m of months; track $index) { <option [value]="$index + 1">{{ m }}</option> }
+    </select>
+  </div>
+  <button class="btn btn--primary" (click)="load()" [disabled]="loading()">
+    {{ loading() ? 'Loading…' : 'Generate Report' }}
+  </button>
+</div>
+
+<!-- ── No data ───────────────────────────────────────────────────────────────── -->
+@if (loading()) {
+  <div class="empty-state"><div class="spinner"></div></div>
+}
+
+@if (!loading() && report()) {
+  <!-- ── Period Banner ────────────────────────────────────────────────────────── -->
+  <div class="period-banner mb-24">
+    <span class="period-banner__label">Report for</span>
+    <span class="period-banner__period">{{ periodLabel() }}</span>
+  </div>
+
+  <!-- ── Top KPI Cards ────────────────────────────────────────────────────────── -->
+  <div class="kpi-grid mb-28">
+    <div class="kpi-card kpi-card--revenue">
+      <div class="kpi-card__label">Total Revenue</div>
+      <div class="kpi-card__value">₹{{ report()!.totalRevenue | number:'1.0-0' }}</div>
+      <div class="kpi-card__sub">Fee: ₹{{ report()!.totalFeeCollected | number:'1.0-0' }}</div>
+    </div>
+    <div class="kpi-card kpi-card--expense">
+      <div class="kpi-card__label">Total Expenses</div>
+      <div class="kpi-card__value">₹{{ report()!.totalExpenses | number:'1.0-0' }}</div>
+      <div class="kpi-card__sub">Payroll + Operational</div>
+    </div>
+    <div class="kpi-card" [class]="report()!.netProfit >= 0 ? 'kpi-card--profit' : 'kpi-card--loss'">
+      <div class="kpi-card__label">Net {{ report()!.netProfit >= 0 ? 'Profit' : 'Loss' }}</div>
+      <div class="kpi-card__value" [class]="profitClass()">
+        {{ report()!.netProfit >= 0 ? '+' : '' }}₹{{ report()!.netProfit | number:'1.0-0' }}
+      </div>
+      <div class="kpi-card__sub">Margin: {{ report()!.netProfitMarginPct | number:'1.1-1' }}%</div>
+    </div>
+  </div>
+
+  <!-- ── Revenue vs Expense Bar ─────────────────────────────────────────────── -->
+  <div class="pl-card mb-24">
+    <h3 class="pl-card__title">Revenue vs Expenses</h3>
+    <div class="ratio-bar-wrap">
+      <div class="ratio-bar">
+        <div class="ratio-bar__revenue" [style.width.%]="100"></div>
+      </div>
+      <div class="ratio-bar-legend">
+        <span class="ratio-bar-legend__dot ratio-bar-legend__dot--revenue"></span>
+        Revenue ₹{{ report()!.totalRevenue | number:'1.0-0' }}
+      </div>
+    </div>
+    <div class="ratio-bar-wrap">
+      <div class="ratio-bar">
+        <div class="ratio-bar__expense" [style.width.%]="expenseBarW()"></div>
+      </div>
+      <div class="ratio-bar-legend">
+        <span class="ratio-bar-legend__dot ratio-bar-legend__dot--expense"></span>
+        Expenses ₹{{ report()!.totalExpenses | number:'1.0-0' }}
+        ({{ report()!.totalRevenue > 0 ? ((report()!.totalExpenses / report()!.totalRevenue) * 100 | number:'1.0-0') : 0 }}%)
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Split: Revenue breakdown + Payroll breakdown ─────────────────────── -->
+  <div class="two-col mb-24">
+
+    <!-- Revenue -->
+    <div class="pl-card">
+      <h3 class="pl-card__title">📥 Revenue</h3>
+      <table class="pl-table">
+        <tr>
+          <td>Student Fees Collected</td>
+          <td class="pl-table__amt">₹{{ report()!.totalFeeCollected | number:'1.0-0' }}</td>
+        </tr>
+        <tr class="pl-table__other">
+          <td>Other Income</td>
+          <td class="pl-table__amt">₹{{ report()!.otherIncome | number:'1.0-0' }}</td>
+        </tr>
+        <tr class="pl-table__total">
+          <td>Total Revenue</td>
+          <td class="pl-table__amt">₹{{ report()!.totalRevenue | number:'1.0-0' }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Payroll cost -->
+    <div class="pl-card">
+      <h3 class="pl-card__title">💼 Payroll Cost</h3>
+      <table class="pl-table">
+        <tr>
+          <td>Net Salaries Disbursed</td>
+          <td class="pl-table__amt">₹{{ report()!.totalSalaryPayout | number:'1.0-0' }}</td>
+        </tr>
+        <tr>
+          <td>Employer PF Contribution</td>
+          <td class="pl-table__amt">₹{{ report()!.totalEmployerPf | number:'1.0-0' }}</td>
+        </tr>
+        <tr>
+          <td>Employer ESI Contribution</td>
+          <td class="pl-table__amt">₹{{ report()!.totalEmployerEsi | number:'1.0-0' }}</td>
+        </tr>
+        <tr class="pl-table__total">
+          <td>Total Payroll Cost</td>
+          <td class="pl-table__amt">₹{{ report()!.totalPayrollCost | number:'1.0-0' }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Operational Expense Breakdown ─────────────────────────────────────── -->
+  <div class="pl-card mb-24">
+    <h3 class="pl-card__title">🧾 Operational Expenses Breakdown</h3>
+
+    @if (report()!.expenseBreakdown.length === 0) {
+      <p class="text-muted">No operational expenses logged for this period.</p>
+    } @else {
+      <div class="expense-bars">
+        @for (item of report()!.expenseBreakdown; track item.category) {
+          <div class="exp-row">
+            <div class="exp-row__label">{{ catLabel(item.category) }}</div>
+            <div class="exp-row__bar-wrap">
+              <div class="exp-row__bar" [style.width.%]="expenseBarPct(item.amount)"></div>
+            </div>
+            <div class="exp-row__amt">₹{{ item.amount | number:'1.0-0' }}</div>
+          </div>
+        }
+        <div class="exp-total">
+          <span>Total Operational</span>
+          <span>₹{{ report()!.totalOperationalExpenses | number:'1.0-0' }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ── Bottom line ───────────────────────────────────────────────────────── -->
+  <div class="pl-card pl-card--summary">
+    <div class="summary-line"><span>Total Revenue</span><span class="text-profit">₹{{ report()!.totalRevenue | number:'1.0-0' }}</span></div>
+    <div class="summary-line summary-line--deduct"><span>Payroll Cost</span><span>- ₹{{ report()!.totalPayrollCost | number:'1.0-0' }}</span></div>
+    <div class="summary-line summary-line--deduct"><span>Operational Expenses</span><span>- ₹{{ report()!.totalOperationalExpenses | number:'1.0-0' }}</span></div>
+    <div class="summary-divider"></div>
+    <div class="summary-line summary-line--result" [class]="profitClass()">
+      <span>{{ report()!.netProfit >= 0 ? 'Net Profit' : 'Net Loss' }}</span>
+      <span>{{ report()!.netProfit >= 0 ? '+' : '' }}₹{{ report()!.netProfit | number:'1.0-0' }}</span>
+    </div>
+    <div class="summary-margin" [class]="profitClass()">
+      Profit Margin: {{ report()!.netProfitMarginPct | number:'1.1-1' }}%
+    </div>
+  </div>
+}
+
+@if (!loading() && !report()) {
+  <div class="empty-state">
+    <div class="empty-state__icon">📊</div>
+    <div class="empty-state__title">Select a period and generate the report</div>
+  </div>
+}

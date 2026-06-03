@@ -1,0 +1,111 @@
+<div class="page-header">
+  <div>
+    <span class="page-header__tag">HR</span>
+    <h1 class="page-header__title">Staff Attendance</h1>
+    <p class="page-header__subtitle">Daily presence records — used for LOP deductions in payroll</p>
+  </div>
+  <div class="page-header__actions">
+    <button class="btn btn--primary" (click)="submit()" [disabled]="saving() || rows().length === 0">
+      {{ saving() ? 'Saving…' : '✓ Save Attendance' }}
+    </button>
+  </div>
+</div>
+
+<!-- ── Date Picker + Quick Mark ───────────────────────────────────────────────── -->
+<div class="att-toolbar mb-24">
+  <div class="att-toolbar__date">
+    <label class="filter-label">Date</label>
+    <input type="date" class="form-control" [ngModel]="selectedDate()"
+           (ngModelChange)="selectedDate.set($event); onDateChange()" />
+  </div>
+  <div class="att-toolbar__quick">
+    <span class="filter-label">Mark All:</span>
+    @for (s of statuses; track s) {
+      <button class="status-btn" [class]="statusClass(s)" (click)="markAll(s)">{{ statusLabel(s) }}</button>
+    }
+  </div>
+</div>
+
+<!-- ── KPI Strip ──────────────────────────────────────────────────────────────── -->
+<div class="att-kpi mb-24">
+  <div class="att-kpi__item att-kpi__item--present">
+    <span class="att-kpi__count">{{ presentCount() }}</span>
+    <span class="att-kpi__label">Present</span>
+  </div>
+  <div class="att-kpi__item att-kpi__item--absent">
+    <span class="att-kpi__count">{{ absentCount() }}</span>
+    <span class="att-kpi__label">Absent</span>
+  </div>
+  <div class="att-kpi__item att-kpi__item--half">
+    <span class="att-kpi__count">{{ halfDayCount() }}</span>
+    <span class="att-kpi__label">Half Day</span>
+  </div>
+  <div class="att-kpi__item">
+    <span class="att-kpi__count">{{ rows().length }}</span>
+    <span class="att-kpi__label">Total Staff</span>
+  </div>
+</div>
+
+<!-- ── Attendance Table ───────────────────────────────────────────────────────── -->
+@if (loading()) {
+  <div class="empty-state"><div class="spinner"></div></div>
+} @else if (rows().length === 0) {
+  <div class="empty-state">
+    <div class="empty-state__icon">👥</div>
+    <div class="empty-state__title">No staff found</div>
+    <div class="empty-state__sub">Add staff members to begin marking attendance.</div>
+  </div>
+} @else {
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Staff Member</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.staffId; let i = $index) {
+          <tr>
+            <td>
+              <div class="fw-600">{{ row.staffName }}</div>
+              <div class="text-muted text-sm">{{ row.staffEmail }}</div>
+            </td>
+            <td>
+              <span class="badge badge--default">{{ row.staffRole | slice:0:12 }}</span>
+            </td>
+            <td>
+              <div class="status-toggle">
+                @for (s of statuses; track s) {
+                  <button
+                    class="status-btn"
+                    [class]="row.status === s ? statusClass(s) + ' status-btn--active' : ''"
+                    (click)="updateStatus(i, s)"
+                    [title]="s"
+                  >{{ statusLabel(s) }}</button>
+                }
+              </div>
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control form-control--sm remarks-input"
+                placeholder="Optional remark…"
+                [ngModel]="row.remarks"
+                (ngModelChange)="updateRemarks(i, $event)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="save-footer">
+    <button class="btn btn--primary" (click)="submit()" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : '✓ Save Attendance for ' + selectedDate() }}
+    </button>
+  </div>
+}
