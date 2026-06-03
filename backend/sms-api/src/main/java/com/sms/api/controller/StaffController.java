@@ -4,7 +4,9 @@ import com.sms.api.dto.staff.CreateStaffRequest;
 import com.sms.api.dto.staff.StaffDto;
 import com.sms.api.dto.staff.UpdateStaffRequest;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.StaffService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/staff")
 @PreAuthorize("isAuthenticated()")
+@RequiresModule(value = StaffModule.HR, permission = "HR__MANAGE_STAFF")
 @Tag(name = "Staff", description = "Staff management for school administrators")
 public class StaffController {
 
@@ -31,7 +34,6 @@ public class StaffController {
 
     @GetMapping
     @Operation(summary = "List all staff members for the school")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN')")
     public ResponseEntity<List<StaffDto>> list(
         @AuthenticationPrincipal UserPrincipal principal
     ) {
@@ -40,7 +42,6 @@ public class StaffController {
 
     @PostMapping
     @Operation(summary = "Create a new staff member account")
-    @PreAuthorize("hasRole('SCHOOL_ADMIN')")
     public ResponseEntity<StaffDto> create(
         @Valid @RequestBody CreateStaffRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -51,18 +52,16 @@ public class StaffController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update staff member details or status")
-    @PreAuthorize("hasRole('SCHOOL_ADMIN')")
     public ResponseEntity<StaffDto> update(
         @PathVariable UUID id,
-        @RequestBody UpdateStaffRequest request,
+        @Valid @RequestBody UpdateStaffRequest request,
         @AuthenticationPrincipal UserPrincipal principal
     ) {
         return ResponseEntity.ok(staffService.updateStaff(principal.schoolId(), id, request));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deactivate a staff member")
-    @PreAuthorize("hasRole('SCHOOL_ADMIN')")
+    @Operation(summary = "Deactivate a staff member (soft-delete — sets isActive = false)")
     public ResponseEntity<Void> deactivate(
         @PathVariable UUID id,
         @AuthenticationPrincipal UserPrincipal principal

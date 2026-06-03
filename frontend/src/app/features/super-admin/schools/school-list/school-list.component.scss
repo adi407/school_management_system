@@ -13,10 +13,10 @@
   width: 100%; padding: 8px 12px 8px 32px;
   background: var(--input-bg); border: 1px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text-primary);
-  font-family: var(--font); font-size: 13px; outline: none;
+  font-family: var(--font); font-size: 13px;
   transition: border-color var(--transition);
   &::placeholder { color: var(--text-muted); }
-  &:focus { border-color: var(--accent); background: var(--accent-soft); }
+  &:focus { border-color: var(--accent); background: var(--accent-soft); outline: 2px solid var(--accent); outline-offset: 0; }
 }
 
 .filter-select { width: 140px; padding: 8px 28px 8px 10px; }
@@ -29,6 +29,25 @@
 }
 
 .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 2px; }
+
+.row-actions {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 4px 12px; border-radius: 6px; border: none; cursor: pointer;
+  font-size: 12px; font-weight: 600; font-family: var(--font);
+  transition: all var(--transition); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+
+  &--ghost    { background: var(--input-bg); color: var(--text-secondary); border: 1px solid var(--border); &:hover { border-color: var(--accent); color: var(--accent); } }
+  &--features { background: rgba(var(--accent-rgb), .10); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .22);
+                &:hover { background: var(--accent); color: #fff; } }
+  &--approve  { background: rgba(var(--green-rgb), .10); color: var(--success); border: 1px solid rgba(var(--green-rgb), .22);
+                &:hover { background: var(--success); color: #07111C; } }
+  &--reject   { background: rgba(var(--red-rgb), .10);   color: var(--error);   border: 1px solid rgba(var(--red-rgb), .22);
+                &:hover { background: var(--error);   color: #fff; } }
+  &:disabled  { opacity: .45; cursor: not-allowed; }
+}
 
 .pagination {
   display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px;

@@ -83,6 +83,51 @@
   --header-height:     52px;
 }
 
+// ── Accessibility: Skip link ────────────────────────────────
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  z-index: 9999;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+
+  &:focus {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+}
+
+// ── Accessibility: Screen reader only ──────────────────────
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ── Accessibility: Global focus ring ───────────────────────
+// Browsers that support :focus-visible get a keyboard-only ring.
+// All others (older) get a visible ring too (safe fallback).
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 // ── Reset ──────────────────────────────────────────────────
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; height: 100%; font-size: 14px; }
@@ -139,7 +184,7 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
   font-family: var(--font);
   transition: all var(--transition);
   white-space: nowrap; text-decoration: none;
-  letter-spacing: -0.1px; outline: none;
+  letter-spacing: -0.1px;
 
   &--primary, &--secondary {
     background: var(--accent); color: #fff;
@@ -281,11 +326,11 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
   &__input, &__select, &__textarea {
     background: var(--input-bg); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text-primary);
-    font-family: var(--font); font-size: 13px; width: 100%; outline: none;
+    font-family: var(--font); font-size: 13px; width: 100%;
     transition: border-color var(--transition), background var(--transition);
     padding: 9px 12px;
     &::placeholder { color: var(--text-muted); }
-    &:focus { border-color: var(--accent); background: var(--accent-soft); }
+    &:focus { border-color: var(--accent); background: var(--accent-soft); outline: 2px solid var(--accent); outline-offset: 0; }
   }
   &__select {
     appearance: none; cursor: pointer;
@@ -314,6 +359,10 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
   animation: skeleton-pulse 1.5s ease infinite;
   border-radius: 6px;
 }
+
+// ── Accessibility: focus for nav links and interactive rows ─
+.nav-item:focus-visible,
+.table-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 // ── Toast ───────────────────────────────────────────────────
 .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 400; display: flex; flex-direction: column; gap: 8px; }
@@ -368,9 +417,27 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
   }
 }
 
+// Modal size variants
+.modal--sm  { width: min(400px, 95vw); }
+.modal--md  { width: min(600px, 95vw); }
+.modal--lg  { width: min(800px, 95vw); }
+.modal--xl  { width: min(1000px, 95vw); }
+
 @keyframes modal-in {
   from { opacity: 0; transform: translate(-50%, calc(-50% + 14px)); }
   to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+// ── Accessibility: Reduced motion ───────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .skeleton { animation: none; background: var(--bg3); }
+  .spinner  { animation-duration: 1.2s !important; }
 }
 
 // ── Form fields (flat naming used in components) ──────────────
@@ -385,11 +452,11 @@ code, pre { font-family: var(--font-mono); font-size: 12px; }
 .form-input {
   background: var(--input-bg); border: 1px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text-primary);
-  font-family: var(--font); font-size: 13px; width: 100%; outline: none;
+  font-family: var(--font); font-size: 13px; width: 100%;
   transition: border-color var(--transition), background var(--transition);
   padding: 9px 12px;
   &::placeholder { color: var(--text-muted); }
-  &:focus { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.06); }
+  &:focus { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.06); outline: 2px solid var(--accent); outline-offset: 0; }
 }
 select.form-input, select.form-input:not([size]) {
   appearance: none; cursor: pointer;
@@ -476,10 +543,10 @@ textarea.form-input { resize: vertical; min-height: 80px; }
   width: 100%; padding: 8px 12px 8px 32px;
   background: var(--input-bg); border: 1px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text-primary);
-  font-family: var(--font); font-size: 13px; outline: none;
+  font-family: var(--font); font-size: 13px;
   transition: border-color var(--transition);
   &::placeholder { color: var(--text-muted); }
-  &:focus { border-color: var(--accent); }
+  &:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 0; }
 }
 
 // ── empty / loading state helpers ───────────────────────────

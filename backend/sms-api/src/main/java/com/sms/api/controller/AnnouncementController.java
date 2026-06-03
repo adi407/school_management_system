@@ -3,7 +3,9 @@ package com.sms.api.controller;
 import com.sms.api.dto.announcement.AnnouncementDto;
 import com.sms.api.dto.announcement.CreateAnnouncementRequest;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.AnnouncementService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,7 +49,7 @@ public class AnnouncementController {
 
     @PostMapping
     @Operation(summary = "Create a new announcement")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','TEACHER')")
+    @RequiresModule(value = StaffModule.ANNOUNCEMENTS, permission = "ANNOUNCEMENTS__POST")
     public ResponseEntity<AnnouncementDto> create(
         @Valid @RequestBody CreateAnnouncementRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -58,7 +60,7 @@ public class AnnouncementController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an announcement")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','TEACHER')")
+    @RequiresModule(value = StaffModule.ANNOUNCEMENTS, permission = "ANNOUNCEMENTS__POST")
     public ResponseEntity<AnnouncementDto> update(
         @PathVariable UUID id,
         @Valid @RequestBody CreateAnnouncementRequest request,

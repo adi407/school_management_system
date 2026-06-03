@@ -1,31 +1,36 @@
 <div class="page-header">
   <div>
-    <span class="page-header__tag">Super Admin</span>
+    <span class="page-header__tag" aria-hidden="true">Super Admin</span>
     <h1 class="page-header__title">Schools</h1>
     <p class="page-header__subtitle">{{ totalElements() }} schools registered on the platform</p>
   </div>
   <div class="page-header__actions">
     <a routerLink="/super-admin/schools/new" class="btn btn--primary">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Enroll School
     </a>
   </div>
 </div>
 
 <!-- Filters -->
-<div class="filters">
+<div class="filters" role="search" aria-label="Filter schools">
   <div class="search-wrap">
-    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input class="search-input" type="text" placeholder="Search schools..." [(ngModel)]="search" (input)="onSearch()" />
+    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <label for="school-search" class="sr-only">Search schools</label>
+    <input id="school-search" class="search-input" type="search" placeholder="Search schools…"
+           [(ngModel)]="search" (input)="onSearch()"
+           aria-label="Search schools by name, code or email" />
   </div>
-  <select class="filter-select" [(ngModel)]="tier" (change)="onSearch()">
+  <label for="tier-filter" class="sr-only">Filter by subscription tier</label>
+  <select id="tier-filter" class="filter-select" [(ngModel)]="tier" (change)="onSearch()" aria-label="Filter by subscription tier">
     <option value="">All Tiers</option>
     <option value="FREE">Free</option>
     <option value="BASIC">Basic</option>
     <option value="PREMIUM">Premium</option>
     <option value="ENTERPRISE">Enterprise</option>
   </select>
-  <select class="filter-select" [(ngModel)]="isActive" (change)="onSearch()">
+  <label for="status-filter" class="sr-only">Filter by status</label>
+  <select id="status-filter" class="filter-select" [(ngModel)]="isActive" (change)="onSearch()" aria-label="Filter by school status">
     <option value="">All Status</option>
     <option value="true">Active</option>
     <option value="false">Suspended</option>
@@ -33,32 +38,33 @@
 </div>
 
 <!-- Table -->
-<div class="table-wrap">
-  <table class="data-table">
+<div class="table-wrap" [attr.aria-busy]="loading()">
+  <table class="data-table" aria-label="Schools list">
+    <caption class="sr-only">List of schools on the platform. Use row actions to manage features or change status.</caption>
     <thead>
       <tr>
-        <th>School</th>
-        <th>Code</th>
-        <th>Board</th>
-        <th>Tier</th>
-        <th>Expires</th>
-        <th>Students</th>
-        <th>Staff</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th scope="col">School</th>
+        <th scope="col">Code</th>
+        <th scope="col">Board</th>
+        <th scope="col">Tier</th>
+        <th scope="col">Expires</th>
+        <th scope="col">Students</th>
+        <th scope="col">Staff</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody aria-live="polite">
       @if (loading()) {
         @for (i of [1,2,3,4,5,6,7,8]; track i) {
-          <tr class="table-row">
+          <tr class="table-row" aria-hidden="true">
             <td colspan="9"><div class="skeleton" style="height:16px"></div></td>
           </tr>
         }
       } @else if (schools().length === 0) {
         <tr><td colspan="9">
           <div class="empty-state">
-            <div class="empty-state__icon">🏫</div>
+            <div class="empty-state__icon" aria-hidden="true">🏫</div>
             <h3>No schools found</h3>
             <p>Try adjusting your search or filters.</p>
           </div>
@@ -68,7 +74,7 @@
           <tr class="table-row">
             <td>
               <div class="school-cell">
-                <div class="school-avatar">{{ school.name[0] }}</div>
+                <div class="school-avatar" aria-hidden="true">{{ school.name[0] }}</div>
                 <div>
                   <div class="fw-600" style="color:var(--text-primary)">{{ school.name }}</div>
                   <div class="text-xs text-muted">{{ school.email ?? '—' }}</div>
@@ -80,24 +86,31 @@
             <td><span class="badge badge--{{ tierColor(school.subscriptionTier) }}">{{ school.subscriptionTier }}</span></td>
             <td class="text-sm text-muted">
               @if (school.subscriptionExpiry) {
-                {{ school.subscriptionExpiry | date:'dd MMM yyyy' }}
+                <time [attr.datetime]="school.subscriptionExpiry">{{ school.subscriptionExpiry | date:'dd MMM yyyy' }}</time>
               } @else { — }
             </td>
             <td class="text-sm">{{ school.studentCount | number }}</td>
             <td class="text-sm">{{ school.staffCount | number }}</td>
             <td>
-              <span class="badge badge--{{ school.isActive ? 'green' : 'red' }}">
-                <span class="dot" [style.background]="school.isActive ? 'var(--success)' : 'var(--error)'"></span>
+              <span class="badge badge--{{ school.isActive ? 'green' : 'red' }}"
+                    [attr.aria-label]="school.name + ' is ' + (school.isActive ? 'active' : 'suspended')">
+                <span class="dot" aria-hidden="true" [style.background]="school.isActive ? 'var(--success)' : 'var(--error)'"></span>
                 {{ school.isActive ? 'Active' : 'Suspended' }}
               </span>
             </td>
             <td>
               <div class="row-actions">
-                <a [routerLink]="['/super-admin/schools', school.id, 'features']" class="action-btn action-btn--ghost">Features</a>
+                <a [routerLink]="['/super-admin/schools', school.id, 'features']"
+                   class="action-btn action-btn--features"
+                   [attr.aria-label]="'Manage features for ' + school.name">
+                  ⚙ Manage Features
+                </a>
                 <button class="action-btn"
                   [class.action-btn--approve]="!school.isActive"
                   [class.action-btn--reject]="school.isActive"
                   [disabled]="actionLoading() === school.id"
+                  [attr.aria-label]="(school.isActive ? 'Suspend ' : 'Activate ') + school.name"
+                  [attr.aria-busy]="actionLoading() === school.id"
                   (click)="toggleStatus(school)">
                   {{ school.isActive ? 'Suspend' : 'Activate' }}
                 </button>
@@ -112,9 +125,17 @@
 
 <!-- Pagination -->
 @if (totalPages > 1) {
-  <div class="pagination">
-    <button class="btn btn--outline btn--sm" [disabled]="page === 0" (click)="prevPage()">← Prev</button>
-    <span class="text-sm text-muted">Page {{ page + 1 }} of {{ totalPages }}</span>
-    <button class="btn btn--outline btn--sm" [disabled]="page >= totalPages - 1" (click)="nextPage()">Next →</button>
-  </div>
+  <nav class="pagination" aria-label="School list pagination">
+    <button class="btn btn--outline btn--sm"
+            [disabled]="page === 0"
+            aria-label="Go to previous page"
+            (click)="prevPage()">← Prev</button>
+    <span class="text-sm text-muted" aria-live="polite" aria-atomic="true">
+      Page {{ page + 1 }} of {{ totalPages }}
+    </span>
+    <button class="btn btn--outline btn--sm"
+            [disabled]="page >= totalPages - 1"
+            aria-label="Go to next page"
+            (click)="nextPage()">Next →</button>
+  </nav>
 }

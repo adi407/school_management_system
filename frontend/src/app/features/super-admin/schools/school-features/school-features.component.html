@@ -1,17 +1,28 @@
 <div class="page-header">
   <div>
-    <span class="page-header__tag">School Configuration</span>
-    <h1 class="page-header__title">Feature Flags</h1>
+    <span class="page-header__tag" aria-hidden="true">School Configuration</span>
+    <h1 class="page-header__title">Manage Features</h1>
     @if (school(); as s) {
       <p class="page-header__subtitle">{{ s.name }} · {{ s.subscriptionTier }} Plan · {{ enabledCount() }} features enabled</p>
     }
   </div>
   <div class="page-header__actions">
-    <a routerLink="/super-admin/schools" class="btn btn--outline">← Back</a>
-    <button class="btn btn--primary" [disabled]="saving()" (click)="save()">
-      @if (saving()) { <span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Saving... }
+    <a routerLink="/super-admin/schools" class="btn btn--outline">← Back to Schools</a>
+    <button class="btn btn--primary" [disabled]="saving()" (click)="save()"
+            [attr.aria-busy]="saving()">
+      @if (saving()) { <span class="spinner" style="width:14px;height:14px;border-width:2px" aria-hidden="true"></span> Saving… }
       @else { Save Changes }
     </button>
+  </div>
+</div>
+
+<!-- Manual feature assignment explainer -->
+<div class="features-info-banner" role="note">
+  <span aria-hidden="true">💡</span>
+  <div>
+    <strong>Manual feature control</strong> — Toggle individual features on or off regardless of the school's subscription tier.
+    Use the Quick Presets on the left to bulk-apply a tier's default feature set, then fine-tune individual toggles.
+    Changes only take effect after clicking <strong>Save Changes</strong>.
   </div>
 </div>
 
@@ -69,17 +80,23 @@
           </div>
           <div class="feature-list">
             @for (key of group.keys; track key) {
-              <div class="feature-row" [class.feature-row--core]="isCore(key)" (click)="toggle(key)">
+              <div class="feature-row" [class.feature-row--core]="isCore(key)">
                 <div class="feature-row__info">
                   <span class="feature-row__key">{{ keyLabel(key) }}</span>
                   @if (isCore(key)) {
                     <span class="badge badge--blue" style="font-size:9px;padding:1px 7px">CORE</span>
                   }
                 </div>
-                <div class="toggle" [class.toggle--on]="draft()[key] || isCore(key)"
-                     [class.toggle--disabled]="isCore(key)">
+                <button
+                  class="toggle"
+                  [class.toggle--on]="draft()[key] || isCore(key)"
+                  [class.toggle--disabled]="isCore(key)"
+                  [attr.disabled]="isCore(key) ? true : null"
+                  [attr.aria-pressed]="draft()[key] || isCore(key)"
+                  [attr.aria-label]="keyLabel(key) + ' feature ' + ((draft()[key] || isCore(key)) ? 'enabled' : 'disabled')"
+                  (click)="toggle(key)">
                   <div class="toggle__thumb"></div>
-                </div>
+                </button>
               </div>
             }
           </div>

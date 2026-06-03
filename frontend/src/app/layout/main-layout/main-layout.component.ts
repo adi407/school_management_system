@@ -9,9 +9,14 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, HeaderComponent, ToastComponent],
   template: `
+    <!-- Skip to main content (WCAG 2.4.1) -->
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <!-- Mobile overlay backdrop -->
     @if (mobileOpen()) {
-      <div class="sidebar-overlay" (click)="mobileOpen.set(false)"></div>
+      <div class="sidebar-overlay"
+           role="presentation"
+           (click)="mobileOpen.set(false)"></div>
     }
     <sms-sidebar
       [collapsed]="sidebarCollapsed()"
@@ -23,10 +28,12 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
       <sms-header
         (toggleSidebar)="onToggleSidebar()"
         [sidebarCollapsed]="sidebarCollapsed()" />
-      <main class="main-content">
+      <main id="main-content" class="main-content" tabindex="-1">
         <router-outlet />
       </main>
     </div>
+    <!-- aria-live region for toast announcements -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="toast-announcer"></div>
     <sms-toast />
   `,
   styles: [`
