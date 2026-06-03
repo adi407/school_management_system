@@ -3,7 +3,9 @@ package com.sms.api.controller;
 import com.sms.api.dto.payroll.CreateExpenseRequest;
 import com.sms.api.dto.payroll.ExpenseEntryDto;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.ExpenseService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,6 +23,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/expenses")
 @PreAuthorize("isAuthenticated()")
+@RequiresModule(value = StaffModule.ACCOUNTING, permission = "ACCOUNTING__LOG_EXPENSES")
 @Tag(name = "Expenses", description = "Manage non-payroll operational expenses for P&L reporting")
 public class ExpenseController {
 
@@ -32,7 +35,6 @@ public class ExpenseController {
 
     @PostMapping
     @Operation(summary = "Log a new operational expense (rent, electricity, etc.)")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<ExpenseEntryDto> create(
         @Valid @RequestBody CreateExpenseRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -43,7 +45,6 @@ public class ExpenseController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an expense entry")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<ExpenseEntryDto> update(
         @PathVariable UUID id,
         @Valid @RequestBody CreateExpenseRequest request,
@@ -54,7 +55,6 @@ public class ExpenseController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an expense entry")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<Void> delete(
         @PathVariable UUID id,
         @AuthenticationPrincipal UserPrincipal principal
@@ -65,7 +65,6 @@ public class ExpenseController {
 
     @GetMapping
     @Operation(summary = "List expenses for the school in a date range")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<List<ExpenseEntryDto>> list(
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,

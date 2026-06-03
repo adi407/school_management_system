@@ -14,6 +14,7 @@ import com.sms.core.enums.FeatureKey;
 import com.sms.core.enums.Role;
 import com.sms.core.exception.DuplicateResourceException;
 import com.sms.core.exception.ResourceNotFoundException;
+import org.springframework.context.annotation.Lazy;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,19 +33,22 @@ public class SchoolService {
     private final FeatureFlagRepository featureFlagRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
+    private final ModuleAssignmentService moduleAssignmentService;
 
     public SchoolService(
         SchoolRepository schoolRepository,
         UserRepository userRepository,
         FeatureFlagRepository featureFlagRepository,
         PasswordEncoder passwordEncoder,
-        EntityManager entityManager
+        EntityManager entityManager,
+        @Lazy ModuleAssignmentService moduleAssignmentService
     ) {
-        this.schoolRepository = schoolRepository;
-        this.userRepository   = userRepository;
+        this.schoolRepository      = schoolRepository;
+        this.userRepository        = userRepository;
         this.featureFlagRepository = featureFlagRepository;
-        this.passwordEncoder  = passwordEncoder;
-        this.entityManager    = entityManager;
+        this.passwordEncoder       = passwordEncoder;
+        this.entityManager         = entityManager;
+        this.moduleAssignmentService = moduleAssignmentService;
     }
 
     public Page<SchoolDto> listSchools(String search, String tier, Boolean isActive, Pageable pageable) {
@@ -88,7 +92,10 @@ public class SchoolService {
         admin.setEmail(req.adminEmail());
         admin.setPasswordHash(passwordEncoder.encode(req.adminPassword()));
         admin.setRole(Role.SCHOOL_ADMIN);
-        userRepository.save(admin);
+        admin = userRepository.save(admin);
+
+        // Auto-assign ALL modules to the founding admin (full access, null sub-permissions)
+        moduleAssignmentService.assignAllModules(school.getId(), admin.getId());
 
         // Seed feature flags per subscription tier
         final School savedSchool = school;

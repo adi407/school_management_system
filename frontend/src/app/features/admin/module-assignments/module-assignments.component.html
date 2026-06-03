@@ -1,0 +1,131 @@
+<div class="ma-layout">
+
+  <!-- ── Left panel: staff list ──────────────────────────────────────────── -->
+  <aside class="ma-staff-panel">
+    <div class="ma-panel-header">
+      <h3>Staff Members</h3>
+      <input
+        class="ma-search"
+        type="text"
+        placeholder="Search staff…"
+        [value]="searchQuery()"
+        (input)="updateSearch($any($event.target).value)"
+      />
+    </div>
+
+    <div class="ma-staff-list" *ngIf="!loadingStaff(); else staffSkeleton">
+      <button
+        *ngFor="let staff of filteredStaff()"
+        class="ma-staff-item"
+        [class.active]="selectedStaff()?.id === staff.id"
+        (click)="selectStaff(staff)"
+      >
+        <div class="ma-staff-avatar">{{ staffDisplayName(staff)[0] }}</div>
+        <div class="ma-staff-info">
+          <span class="ma-staff-name">{{ staffDisplayName(staff) }}</span>
+          <span class="ma-staff-role">{{ staff.role }}</span>
+        </div>
+      </button>
+
+      <p class="ma-empty" *ngIf="filteredStaff().length === 0">
+        No staff members found.
+      </p>
+    </div>
+
+    <ng-template #staffSkeleton>
+      <div class="ma-skeleton" *ngFor="let i of [1,2,3,4,5]"></div>
+    </ng-template>
+  </aside>
+
+  <!-- ── Right panel: module cards ───────────────────────────────────────── -->
+  <main class="ma-modules-panel">
+    <!-- Empty state -->
+    <div class="ma-no-selection" *ngIf="!selectedStaff()">
+      <div class="ma-no-selection-icon">⚙️</div>
+      <h3>Select a staff member</h3>
+      <p>Choose a person from the left to manage their module access.</p>
+    </div>
+
+    <ng-container *ngIf="selectedStaff() as staff">
+      <div class="ma-modules-header">
+        <div>
+          <h2>{{ staffDisplayName(staff) }}</h2>
+          <p class="ma-subtitle">{{ staff.email }} · {{ staff.role }}</p>
+        </div>
+        <div class="ma-legend">
+          <span class="badge badge-on">Active</span>
+          <span class="badge badge-off">Not assigned</span>
+        </div>
+      </div>
+
+      <!-- Loading overlay -->
+      <div class="ma-modules-loading" *ngIf="loadingModules()">
+        Loading assignments…
+      </div>
+
+      <div class="ma-modules-grid" *ngIf="!loadingModules()">
+        <div
+          *ngFor="let mod of allModules"
+          class="ma-module-card"
+          [class.assigned]="isModuleAssigned(mod)"
+          [class.saving]="saving() === mod"
+        >
+          <!-- Card header: toggle -->
+          <div class="ma-card-header">
+            <span class="ma-card-icon">{{ moduleIcons[mod] }}</span>
+            <div class="ma-card-title-area">
+              <span class="ma-card-title">{{ moduleLabels[mod] }}</span>
+              <span class="ma-access-badge" *ngIf="isModuleAssigned(mod)">
+                {{ isFullAccess(mod) ? 'Full access' : 'Restricted' }}
+              </span>
+            </div>
+            <div class="ma-card-actions">
+              <!-- Sub-permissions expand button (only when assigned & has sub-perms) -->
+              <button
+                *ngIf="isModuleAssigned(mod) && subPermissionsFor(mod).length > 0"
+                class="btn-icon"
+                [title]="expandedModule() === mod ? 'Collapse' : 'Edit permissions'"
+                (click)="toggleExpanded(mod)"
+              >{{ expandedModule() === mod ? '▲' : '▼' }}</button>
+
+              <!-- Toggle switch -->
+              <button
+                class="toggle-btn"
+                [class.on]="isModuleAssigned(mod)"
+                [disabled]="saving() === mod"
+                (click)="toggleModule(mod)"
+              >
+                {{ saving() === mod ? '…' : (isModuleAssigned(mod) ? 'ON' : 'OFF') }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Sub-permissions panel (expandable) -->
+          <div class="ma-sub-perms" *ngIf="expandedModule() === mod && isModuleAssigned(mod)">
+            <div class="ma-sub-perms-header">
+              <span>Permissions</span>
+              <button class="btn-link" (click)="grantFullAccess(mod)">Grant full access</button>
+            </div>
+            <label
+              *ngFor="let perm of subPermissionsFor(mod)"
+              class="ma-perm-row"
+            >
+              <input
+                type="checkbox"
+                [checked]="isPermissionGranted(mod, perm)"
+                [disabled]="saving() === mod"
+                (change)="toggleSubPermission(mod, perm)"
+              />
+              <span>{{ formatPermLabel(perm) }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer hint when no modules assigned -->
+      <div class="ma-zero-warn" *ngIf="!loadingModules() && activeAssignments().size === 0">
+        ⚠️ This staff member has no modules assigned. They can log in but will see an empty dashboard.
+      </div>
+    </ng-container>
+  </main>
+</div>

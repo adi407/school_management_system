@@ -3,7 +3,9 @@ package com.sms.api.controller;
 import com.sms.api.dto.payroll.CreateSalaryStructureRequest;
 import com.sms.api.dto.payroll.SalaryStructureDto;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.SalaryStructureService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,7 +33,7 @@ public class SalaryStructureController {
 
     @PostMapping
     @Operation(summary = "Create a new salary structure for a staff member")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__MANAGE_SALARY_STRUCTURES")
     public ResponseEntity<SalaryStructureDto> create(
         @Valid @RequestBody CreateSalaryStructureRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -42,7 +44,7 @@ public class SalaryStructureController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update salary structure (creates a new revision, closes old one)")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__MANAGE_SALARY_STRUCTURES")
     public ResponseEntity<SalaryStructureDto> update(
         @PathVariable UUID id,
         @Valid @RequestBody CreateSalaryStructureRequest request,
@@ -53,7 +55,7 @@ public class SalaryStructureController {
 
     @GetMapping
     @Operation(summary = "List all salary structures for the school")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__MANAGE_SALARY_STRUCTURES")
     public ResponseEntity<List<SalaryStructureDto>> listAll(
         @AuthenticationPrincipal UserPrincipal principal
     ) {
@@ -62,7 +64,7 @@ public class SalaryStructureController {
 
     @GetMapping("/staff/{staffId}")
     @Operation(summary = "List salary structure history for a staff member")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__MANAGE_SALARY_STRUCTURES")
     public ResponseEntity<List<SalaryStructureDto>> listForStaff(
         @PathVariable UUID staffId,
         @AuthenticationPrincipal UserPrincipal principal
@@ -71,12 +73,11 @@ public class SalaryStructureController {
     }
 
     /**
-     * Staff member submits their own investment declarations to reduce TDS.
-     * Any staff role can update declarations on their own structure.
+     * Self-service: any staff member can update investment declarations on their own structure.
+     * No @RequiresModule — just being authenticated is enough.
      */
     @PatchMapping("/{id}/declarations")
     @Operation(summary = "Update investment declarations (80C, HRA, other) for a salary structure")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT','TEACHER','LIBRARIAN','TRANSPORT_MANAGER','HOSTEL_WARDEN')")
     public ResponseEntity<SalaryStructureDto> updateDeclarations(
         @PathVariable UUID id,
         @RequestParam(required = false) BigDecimal declared80c,

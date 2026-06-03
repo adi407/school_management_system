@@ -4,7 +4,9 @@ import com.sms.api.dto.attendance.AttendanceRecordDto;
 import com.sms.api.dto.attendance.AttendanceSummaryDto;
 import com.sms.api.dto.attendance.MarkAttendanceRequest;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.AttendanceService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,7 +36,7 @@ public class AttendanceController {
 
     @PostMapping("/mark")
     @Operation(summary = "Mark attendance for an entire class on a date")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','TEACHER')")
+    @RequiresModule(value = StaffModule.TEACHING, permission = "TEACHING__MARK_ATTENDANCE")
     public ResponseEntity<List<AttendanceRecordDto>> mark(
         @Valid @RequestBody MarkAttendanceRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -47,7 +49,7 @@ public class AttendanceController {
 
     @GetMapping("/class/{classId}")
     @Operation(summary = "Get attendance roll for a class on a specific date")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','TEACHER')")
+    @RequiresModule(value = StaffModule.TEACHING, permission = "TEACHING__MARK_ATTENDANCE")
     public ResponseEntity<List<AttendanceRecordDto>> getClassRoll(
         @PathVariable UUID classId,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,

@@ -156,6 +156,11 @@ export const routes: Routes = [
             path: 'staff-attendance',
             loadComponent: () => import('./features/admin/staff-attendance/staff-attendance.component').then(m => m.StaffAttendanceComponent),
           },
+          // ── Module Assignments ─────────────────────────────────────────
+          {
+            path: 'module-assignments',
+            loadComponent: () => import('./features/admin/module-assignments/module-assignments.component').then(m => m.ModuleAssignmentsComponent),
+          },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
       },

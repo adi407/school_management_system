@@ -20,6 +20,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     long countBySchoolIdAndIsActive(UUID schoolId, boolean isActive);
 
+    /** Tenant-safe lookup — used by ModuleAssignmentService */
+    Optional<User> findByIdAndSchoolId(UUID id, UUID schoolId);
+
     /** Count staff roles (non-SUPER_ADMIN, non-STUDENT, non-PARENT) */
     @org.springframework.data.jpa.repository.Query(
         "SELECT COUNT(u) FROM User u WHERE u.school.id = :schoolId " +

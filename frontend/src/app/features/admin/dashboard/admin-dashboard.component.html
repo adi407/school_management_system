@@ -12,6 +12,15 @@
   </div>
 </div>
 
+<!-- Module assignment banner (shown to admins who have no modules yet) -->
+@if (auth.myModules().length === 0 && auth.role() === 'SCHOOL_ADMIN') {
+  <div class="module-warn-banner">
+    ⚠️&nbsp;<strong>No modules assigned to your account yet.</strong>
+    You have full access as the founding admin, but your sidebar may appear empty.
+    <a routerLink="/admin/module-assignments">Assign modules to staff →</a>
+  </div>
+}
+
 @if (loading()) {
   <div class="loading-state text-muted text-sm" style="padding:40px 0;text-align:center">Loading dashboard…</div>
 } @else {

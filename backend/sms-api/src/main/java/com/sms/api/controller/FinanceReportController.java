@@ -2,7 +2,9 @@ package com.sms.api.controller;
 
 import com.sms.api.dto.payroll.ProfitLossReportDto;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.FinanceReportService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/finance/reports")
 @PreAuthorize("isAuthenticated()")
+@RequiresModule(value = StaffModule.ACCOUNTING, permission = "ACCOUNTING__VIEW_REPORTS")
 @Tag(name = "Finance Reports", description = "P&L and financial reporting for school administrators")
 public class FinanceReportController {
 
@@ -28,7 +31,6 @@ public class FinanceReportController {
      */
     @GetMapping("/pl")
     @Operation(summary = "Generate Profit & Loss report for a month range within a year")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<ProfitLossReportDto> getProfitLoss(
         @RequestParam int year,
         @RequestParam(defaultValue = "1")  int fromMonth,

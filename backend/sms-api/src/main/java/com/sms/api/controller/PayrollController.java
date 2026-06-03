@@ -4,7 +4,9 @@ import com.sms.api.dto.payroll.PayrollRunDto;
 import com.sms.api.dto.payroll.PayslipDto;
 import com.sms.api.dto.payroll.TriggerPayrollRequest;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.PayrollService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -33,7 +35,7 @@ public class PayrollController {
 
     @PostMapping("/runs")
     @Operation(summary = "Trigger a new payroll run — automatically pulls attendance & computes deductions")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__RUN_PAYROLL")
     public ResponseEntity<PayrollRunDto> trigger(
         @Valid @RequestBody TriggerPayrollRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -44,7 +46,7 @@ public class PayrollController {
 
     @GetMapping("/runs")
     @Operation(summary = "List all payroll runs for the school (newest first)")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(StaffModule.PAYROLL)
     public ResponseEntity<List<PayrollRunDto>> listRuns(
         @AuthenticationPrincipal UserPrincipal principal
     ) {
@@ -53,7 +55,7 @@ public class PayrollController {
 
     @PostMapping("/runs/{runId}/approve")
     @Operation(summary = "Approve a DRAFT payroll run")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__APPROVE_PAYROLL")
     public ResponseEntity<PayrollRunDto> approve(
         @PathVariable UUID runId,
         @AuthenticationPrincipal UserPrincipal principal
@@ -63,7 +65,7 @@ public class PayrollController {
 
     @PostMapping("/runs/{runId}/mark-paid")
     @Operation(summary = "Mark an APPROVED run as PAID (salaries disbursed)")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__MARK_PAID")
     public ResponseEntity<PayrollRunDto> markPaid(
         @PathVariable UUID runId,
         @AuthenticationPrincipal UserPrincipal principal
@@ -75,7 +77,7 @@ public class PayrollController {
 
     @GetMapping("/runs/{runId}/payslips")
     @Operation(summary = "Get all payslips for a payroll run")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__VIEW_PAYSLIPS")
     public ResponseEntity<List<PayslipDto>> getPayslips(
         @PathVariable UUID runId,
         @AuthenticationPrincipal UserPrincipal principal
@@ -85,7 +87,7 @@ public class PayrollController {
 
     @GetMapping("/payslips/{payslipId}")
     @Operation(summary = "Get a specific payslip by ID")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT','TEACHER','LIBRARIAN','TRANSPORT_MANAGER','HOSTEL_WARDEN')")
+    @RequiresModule(value = StaffModule.PAYROLL, permission = "PAYROLL__VIEW_PAYSLIPS")
     public ResponseEntity<PayslipDto> getPayslip(
         @PathVariable UUID payslipId,
         @AuthenticationPrincipal UserPrincipal principal
@@ -93,9 +95,12 @@ public class PayrollController {
         return ResponseEntity.ok(service.getPayslip(principal.schoolId(), payslipId));
     }
 
+    /**
+     * Self-service: any authenticated staff member can view their own payslips.
+     * No @RequiresModule needed — just being logged in is enough.
+     */
     @GetMapping("/my-payslips")
     @Operation(summary = "Staff member views their own payslip history")
-    @PreAuthorize("hasAnyRole('TEACHER','ACCOUNTANT','LIBRARIAN','TRANSPORT_MANAGER','HOSTEL_WARDEN','SCHOOL_ADMIN')")
     public ResponseEntity<List<PayslipDto>> myPayslips(
         @AuthenticationPrincipal UserPrincipal principal
     ) {

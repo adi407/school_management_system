@@ -3,7 +3,9 @@ package com.sms.api.controller;
 import com.sms.api.dto.payroll.MarkStaffAttendanceRequest;
 import com.sms.api.dto.payroll.StaffAttendanceDto;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.StaffAttendanceService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/staff-attendance")
 @PreAuthorize("isAuthenticated()")
+@RequiresModule(value = StaffModule.HR, permission = "HR__MARK_STAFF_ATTENDANCE")
 @Tag(name = "Staff Attendance", description = "Track daily staff attendance for LOP payroll deduction")
 public class StaffAttendanceController {
 
@@ -31,7 +34,6 @@ public class StaffAttendanceController {
 
     @PostMapping("/mark")
     @Operation(summary = "Mark attendance for multiple staff members on a date")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<List<StaffAttendanceDto>> mark(
         @Valid @RequestBody MarkStaffAttendanceRequest request,
         @AuthenticationPrincipal UserPrincipal principal
@@ -42,7 +44,6 @@ public class StaffAttendanceController {
 
     @GetMapping("/day")
     @Operation(summary = "Get school-wide staff attendance roll for a specific date")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<List<StaffAttendanceDto>> getDayRoll(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
         @AuthenticationPrincipal UserPrincipal principal
@@ -52,7 +53,6 @@ public class StaffAttendanceController {
 
     @GetMapping("/staff/{staffId}/history")
     @Operation(summary = "Get attendance history for a specific staff member")
-    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
     public ResponseEntity<List<StaffAttendanceDto>> getHistory(
         @PathVariable UUID staffId,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,

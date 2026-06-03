@@ -1,3 +1,24 @@
+.module-warn-banner {
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  color: #78350f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  a {
+    color: #b45309;
+    font-weight: 600;
+    text-decoration: underline;
+    &:hover { opacity: 0.8; }
+  }
+}
+
 .mb-24 { margin-bottom: 24px; }
 .mb-32 { margin-bottom: 32px; }
 

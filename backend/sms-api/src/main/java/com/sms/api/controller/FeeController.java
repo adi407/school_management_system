@@ -2,7 +2,9 @@ package com.sms.api.controller;
 
 import com.sms.api.dto.fee.*;
 import com.sms.api.security.UserPrincipal;
+import com.sms.api.security.annotation.RequiresModule;
 import com.sms.api.service.FeeService;
+import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/fees")
 @PreAuthorize("isAuthenticated()")
+@RequiresModule(StaffModule.ACCOUNTING)
 @Tag(name = "Fees", description = "Fee structures and payment management")
 public class FeeController {
 
