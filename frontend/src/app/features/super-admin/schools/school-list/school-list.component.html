@@ -100,10 +100,15 @@
             </td>
             <td>
               <div class="row-actions">
+                <a [routerLink]="['/super-admin/schools', school.id, 'admin-modules']"
+                   class="action-btn action-btn--modules"
+                   [attr.aria-label]="'Manage module access for ' + school.name">
+                  🔐 Admin Modules
+                </a>
                 <a [routerLink]="['/super-admin/schools', school.id, 'features']"
                    class="action-btn action-btn--features"
                    [attr.aria-label]="'Manage features for ' + school.name">
-                  ⚙ Manage Features
+                  ⚙ Features
                 </a>
                 <button class="action-btn"
                   [class.action-btn--approve]="!school.isActive"

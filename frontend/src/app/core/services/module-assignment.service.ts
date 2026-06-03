@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {
   AssignModuleRequest,
   MyModuleDto,
+  SchoolUserDto,
   StaffModule,
   StaffModuleAssignmentDto,
 } from '../models/module.model';
@@ -40,5 +41,37 @@ export class ModuleAssignmentService {
   /** DELETE /api/v1/staff/:id/modules/:module */
   revokeModule(staffId: string, module: StaffModule) {
     return this.http.delete<void>(`${this.base}/staff/${staffId}/modules/${module}`);
+  }
+
+  // ── Super-admin endpoints ─────────────────────────────────────────────────
+
+  private sa(schoolId: string) {
+    return `${this.base}/super-admin/schools/${schoolId}/staff`;
+  }
+
+  /** GET /api/v1/super-admin/schools/:schoolId/staff */
+  getSchoolUsers(schoolId: string) {
+    return this.http.get<SchoolUserDto[]>(this.sa(schoolId));
+  }
+
+  /** GET /api/v1/super-admin/schools/:schoolId/staff/:userId/modules */
+  getSaUserModules(schoolId: string, userId: string) {
+    return this.http.get<StaffModuleAssignmentDto[]>(`${this.sa(schoolId)}/${userId}/modules`);
+  }
+
+  /** POST /api/v1/super-admin/schools/:schoolId/staff/:userId/modules */
+  saAssignModule(schoolId: string, userId: string, req: AssignModuleRequest) {
+    return this.http.post<StaffModuleAssignmentDto>(
+      `${this.sa(schoolId)}/${userId}/modules`, req);
+  }
+
+  /** DELETE /api/v1/super-admin/schools/:schoolId/staff/:userId/modules/:module */
+  saRevokeModule(schoolId: string, userId: string, module: StaffModule) {
+    return this.http.delete<void>(`${this.sa(schoolId)}/${userId}/modules/${module}`);
+  }
+
+  /** POST /api/v1/super-admin/schools/:schoolId/staff/:userId/modules/grant-all */
+  saGrantAllModules(schoolId: string, userId: string) {
+    return this.http.post<void>(`${this.sa(schoolId)}/${userId}/modules/grant-all`, {});
   }
 }

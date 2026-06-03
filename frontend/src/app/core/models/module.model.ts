@@ -35,6 +35,15 @@ export interface AssignModuleRequest {
   subPermissions?: string[];
 }
 
+/** Returned by GET /api/v1/super-admin/schools/:id/staff */
+export interface SchoolUserDto {
+  id: string;
+  fullName: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+}
+
 // ── Display metadata ───────────────────────────────────────────────────────────
 
 export const MODULE_LABELS: Record<StaffModule, string> = {

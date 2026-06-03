@@ -50,6 +50,10 @@ export const routes: Routes = [
             path: 'schools/:id/features',
             loadComponent: () => import('./features/super-admin/schools/school-features/school-features.component').then(m => m.SchoolFeaturesComponent),
           },
+          {
+            path: 'schools/:id/admin-modules',
+            loadComponent: () => import('./features/super-admin/schools/sa-admin-modules/sa-admin-modules.component').then(m => m.SaAdminModulesComponent),
+          },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
       },

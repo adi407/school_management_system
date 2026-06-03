@@ -40,6 +40,8 @@
   transition: all var(--transition); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
 
   &--ghost    { background: var(--input-bg); color: var(--text-secondary); border: 1px solid var(--border); &:hover { border-color: var(--accent); color: var(--accent); } }
+  &--modules  { background: rgba(var(--purple-rgb), .10); color: var(--accent-5); border: 1px solid rgba(var(--purple-rgb), .22);
+                &:hover { background: var(--accent-5); color: #fff; } }
   &--features { background: rgba(var(--accent-rgb), .10); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .22);
                 &:hover { background: var(--accent); color: #fff; } }
   &--approve  { background: rgba(var(--green-rgb), .10); color: var(--success); border: 1px solid rgba(var(--green-rgb), .22);

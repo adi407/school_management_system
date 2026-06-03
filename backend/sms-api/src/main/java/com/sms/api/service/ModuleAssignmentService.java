@@ -143,6 +143,32 @@ public class ModuleAssignmentService {
     // ── Internal helpers ───────────────────────────────────────────────────────
 
     /**
+     * Assign (or update) a module for a school user — called by the super-admin API.
+     * Unlike {@link #assignModule}, this does NOT validate that the caller belongs to the school,
+     * so it is safe to use when the caller is a platform-level SUPER_ADMIN.
+     */
+    public StaffModuleAssignmentDto assignModuleForSchool(UUID schoolId,
+                                                          UUID staffId,
+                                                          AssignModuleRequest req) {
+        User staff = userRepository.findByIdAndSchoolId(staffId, schoolId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", staffId));
+
+        StaffModuleAssignment assignment = assignmentRepo
+            .findByStaffIdAndSchoolIdAndModule(staffId, schoolId, req.module())
+            .orElseGet(StaffModuleAssignment::new);
+
+        assignment.setStaff(staff);
+        assignment.setSchoolId(schoolId);
+        assignment.setModule(req.module());
+        assignment.setSubPermissions(normalizeSubPermissions(req.subPermissions()));
+        assignment.setAssignedBy(staff);   // self-reference; caller is platform admin
+        assignment.setAssignedAt(Instant.now());
+        assignment.setActive(true);
+
+        return toDto(assignmentRepo.save(assignment));
+    }
+
+    /**
      * Auto-assign ALL modules to the founding SCHOOL_ADMIN during school creation.
      * Sub-permissions are null on all rows → full access.
      */

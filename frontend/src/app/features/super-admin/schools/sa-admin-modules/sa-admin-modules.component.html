@@ -1,0 +1,211 @@
+<!-- ── Page header ──────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div>
+    <span class="page-header__tag" aria-hidden="true">Super Admin · School Configuration</span>
+    <h1 class="page-header__title">Admin Module Access</h1>
+    @if (school(); as s) {
+      <p class="page-header__subtitle">
+        {{ s.name }} · {{ s.subscriptionTier }} Plan
+      </p>
+    }
+  </div>
+  <div class="page-header__actions">
+    <a [routerLink]="['/super-admin/schools', schoolId, 'features']"
+       class="btn btn--outline">⚙ Feature Flags</a>
+    <a routerLink="/super-admin/schools" class="btn btn--outline">← Back to Schools</a>
+  </div>
+</div>
+
+<!-- ── Explainer ────────────────────────────────────────────────────────── -->
+<div class="info-banner" role="note">
+  <span aria-hidden="true">🔐</span>
+  <div>
+    <strong>Platform-level module control</strong> — Grant or restrict which functional
+    modules each user in this school can access, and fine-tune their sub-permissions.
+    Changes take effect immediately — no Save needed.
+  </div>
+</div>
+
+<!-- ── Two-panel layout ─────────────────────────────────────────────────── -->
+<div class="am-layout">
+
+  <!-- Left: user picker -->
+  <aside class="am-user-panel" aria-label="School users">
+    <div class="am-panel-header">
+      <h3 class="am-panel-title">School Users</h3>
+      <label for="user-search" class="sr-only">Search users</label>
+      <input
+        id="user-search"
+        class="am-search"
+        type="search"
+        placeholder="Search users…"
+        [value]="searchQuery()"
+        (input)="updateSearch($any($event.target).value)"
+        aria-label="Search users by name, email or role"
+      />
+    </div>
+
+    @if (loadingUsers()) {
+      <div class="am-user-list" aria-busy="true">
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="am-user-skeleton" aria-hidden="true"></div>
+        }
+      </div>
+    } @else if (filteredUsers().length === 0) {
+      <p class="am-empty">No users found.</p>
+    } @else {
+      <div class="am-user-list" role="list">
+        @for (user of filteredUsers(); track user.id) {
+          <button
+            class="am-user-item"
+            role="listitem"
+            [class.am-user-item--active]="selectedUser()?.id === user.id"
+            [attr.aria-pressed]="selectedUser()?.id === user.id"
+            [attr.aria-label]="'Select ' + user.fullName + ', ' + roleLabel(user.role)"
+            (click)="selectUser(user)">
+            <div class="am-user-avatar" aria-hidden="true">{{ user.fullName[0] || '?' }}</div>
+            <div class="am-user-info">
+              <span class="am-user-name">{{ user.fullName }}</span>
+              <span class="badge {{ roleBadgeClass(user.role) }} am-role-badge">
+                {{ roleLabel(user.role) }}
+              </span>
+            </div>
+          </button>
+        }
+      </div>
+    }
+  </aside>
+
+  <!-- Right: module cards -->
+  <main class="am-modules-panel">
+
+    <!-- Empty state -->
+    @if (!selectedUser()) {
+      <div class="am-no-selection">
+        <div class="am-no-selection-icon" aria-hidden="true">🔐</div>
+        <h3>Select a user</h3>
+        <p>Choose a school user from the left to manage their module access.</p>
+      </div>
+    } @else {
+
+      <!-- Modules header -->
+      <div class="am-modules-header">
+        <div>
+          <h2 class="am-user-heading">{{ selectedUser()!.fullName }}</h2>
+          <p class="am-user-meta">
+            {{ selectedUser()!.email }} ·
+            <span class="badge {{ roleBadgeClass(selectedUser()!.role) }}">
+              {{ roleLabel(selectedUser()!.role) }}
+            </span>
+          </p>
+        </div>
+        <div class="am-header-actions">
+          <span class="am-count-chip" aria-live="polite" aria-atomic="true">
+            {{ assignedCount() }} / {{ allModules.length }} modules active
+          </span>
+          <button
+            class="btn btn--primary btn--sm"
+            [disabled]="grantingAll() || loadingMods()"
+            [attr.aria-busy]="grantingAll()"
+            (click)="grantAllModules()">
+            @if (grantingAll()) {
+              <span class="spinner" style="width:12px;height:12px;border-width:2px" aria-hidden="true"></span>
+              Granting…
+            } @else {
+              ✦ Grant All Modules
+            }
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      @if (loadingMods()) {
+        <div class="am-modules-grid" aria-busy="true" aria-label="Loading modules">
+          @for (i of [1,2,3,4,5,6]; track i) {
+            <div class="am-module-skeleton" aria-hidden="true"></div>
+          }
+        </div>
+      } @else {
+
+        <!-- Module cards grid -->
+        <div class="am-modules-grid">
+          @for (mod of allModules; track mod) {
+            <div class="am-module-card"
+                 [class.am-module-card--on]="isModuleAssigned(mod)"
+                 [class.am-module-card--saving]="saving() === mod"
+                 [attr.aria-label]="moduleLabels[mod] + ' module, ' + (isModuleAssigned(mod) ? 'enabled' : 'disabled')">
+
+              <!-- Card header -->
+              <div class="am-card-header">
+                <span class="am-card-icon" aria-hidden="true">{{ moduleIcons[mod] }}</span>
+                <div class="am-card-meta">
+                  <span class="am-card-name">{{ moduleLabels[mod] }}</span>
+                  @if (isModuleAssigned(mod)) {
+                    <span class="am-access-tag" [class.am-access-tag--restricted]="!isFullAccess(mod)">
+                      {{ isFullAccess(mod) ? 'Full access' : 'Restricted' }}
+                    </span>
+                  }
+                </div>
+                <div class="am-card-controls">
+                  <!-- Expand sub-perms -->
+                  @if (isModuleAssigned(mod) && subPermissionsFor(mod).length > 0) {
+                    <button
+                      class="am-expand-btn"
+                      [attr.aria-expanded]="expandedMod() === mod"
+                      [attr.aria-label]="(expandedMod() === mod ? 'Collapse' : 'Edit permissions for') + ' ' + moduleLabels[mod]"
+                      (click)="toggleExpanded(mod)">
+                      {{ expandedMod() === mod ? '▲' : '▼' }}
+                    </button>
+                  }
+                  <!-- ON/OFF toggle -->
+                  <button
+                    class="am-toggle"
+                    [class.am-toggle--on]="isModuleAssigned(mod)"
+                    [disabled]="saving() === mod || grantingAll()"
+                    [attr.aria-pressed]="isModuleAssigned(mod)"
+                    [attr.aria-label]="(isModuleAssigned(mod) ? 'Disable' : 'Enable') + ' ' + moduleLabels[mod]"
+                    (click)="toggleModule(mod)">
+                    @if (saving() === mod) { … }
+                    @else { {{ isModuleAssigned(mod) ? 'ON' : 'OFF' }} }
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sub-permissions panel -->
+              @if (expandedMod() === mod && isModuleAssigned(mod)) {
+                <div class="am-sub-panel">
+                  <div class="am-sub-header">
+                    <span>Permissions</span>
+                    <button class="am-link-btn" (click)="grantFullAccess(mod)">
+                      Grant full access
+                    </button>
+                  </div>
+                  @for (perm of subPermissionsFor(mod); track perm) {
+                    <label class="am-perm-row">
+                      <input
+                        type="checkbox"
+                        [checked]="isPermissionGranted(mod, perm)"
+                        [disabled]="saving() === mod"
+                        (change)="toggleSubPermission(mod, perm)"
+                        [attr.aria-label]="formatPermLabel(perm)"
+                      />
+                      <span>{{ formatPermLabel(perm) }}</span>
+                    </label>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Zero-module warning -->
+        @if (assignedCount() === 0) {
+          <div class="am-zero-warn" role="alert">
+            ⚠️ This user has no modules assigned. They can log in but will see an empty dashboard.
+          </div>
+        }
+      }
+    }
+  </main>
+
+</div>

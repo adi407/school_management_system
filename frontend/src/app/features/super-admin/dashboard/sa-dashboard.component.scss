@@ -18,6 +18,9 @@
 
   &--ghost    { background: var(--input-bg); color: var(--text-secondary); border: 1px solid var(--border);
                 &:hover { border-color: var(--accent); color: var(--accent); } }
+  &--modules  { background: rgba(var(--purple-rgb), .10); color: var(--accent-5); border: 1px solid rgba(var(--purple-rgb), .22);
+                font-size: 13px; padding: 6px 14px;
+                &:hover { background: var(--accent-5); color: #fff; box-shadow: 0 2px 8px rgba(var(--purple-rgb),.25); } }
   &--features { background: rgba(var(--accent-rgb), .12); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .24);
                 font-size: 13px; padding: 6px 14px;
                 &:hover { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(var(--accent-rgb),.3); } }
