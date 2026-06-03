@@ -78,7 +78,7 @@
         </div>
         <button
           class="logout-btn"
-          aria-label="Log out {{ u.fullName }}"
+          [attr.aria-label]="'Log out ' + u.fullName"
           (click)="logout()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>

@@ -25,24 +25,24 @@
       <div class="stat-card">
         <div class="stat-card__icon" style="background:rgba(var(--accent-rgb),.12);color:var(--accent)" aria-hidden="true">🏫</div>
         <div class="stat-card__label">Total Schools</div>
-        <div class="stat-card__value" aria-label="{{ stats().totalSchools }} total schools">{{ stats().totalSchools }}</div>
+        <div class="stat-card__value" [attr.aria-label]="stats().totalSchools + ' total schools'">{{ stats().totalSchools }}</div>
         <div class="stat-card__delta stat-card__delta--up">↑ All time</div>
       </div>
       <div class="stat-card">
         <div class="stat-card__icon" style="background:rgba(var(--green-rgb),.12);color:var(--success)" aria-hidden="true">✓</div>
         <div class="stat-card__label">Active Schools</div>
-        <div class="stat-card__value" aria-label="{{ stats().activeSchools }} active schools">{{ stats().activeSchools }}</div>
+        <div class="stat-card__value" [attr.aria-label]="stats().activeSchools + ' active schools'">{{ stats().activeSchools }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-card__icon" style="background:rgba(var(--yellow-rgb),.12);color:var(--warning)" aria-hidden="true">⚠</div>
         <div class="stat-card__label">Expiring Soon</div>
-        <div class="stat-card__value" aria-label="{{ stats().trialExpiring }} schools expiring soon">{{ stats().trialExpiring }}</div>
+        <div class="stat-card__value" [attr.aria-label]="stats().trialExpiring + ' schools expiring soon'">{{ stats().trialExpiring }}</div>
         <div class="stat-card__delta" style="color:var(--warning)">Within 30 days</div>
       </div>
       <div class="stat-card">
         <div class="stat-card__icon" style="background:rgba(var(--purple-rgb),.12);color:var(--accent-5)" aria-hidden="true">👥</div>
         <div class="stat-card__label">Total Students</div>
-        <div class="stat-card__value" aria-label="{{ stats().totalStudents }} total students">{{ stats().totalStudents | number }}</div>
+        <div class="stat-card__value" [attr.aria-label]="stats().totalStudents + ' total students'">{{ stats().totalStudents | number }}</div>
       </div>
     </div>
   }
