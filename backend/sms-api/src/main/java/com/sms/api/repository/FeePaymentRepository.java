@@ -29,4 +29,11 @@ public interface FeePaymentRepository extends JpaRepository<FeePayment, UUID> {
     BigDecimal sumTotalCollected(@Param("schoolId") UUID schoolId);
 
     List<FeePayment> findTop5BySchoolIdOrderByPaymentDateDescIdDesc(UUID schoolId);
+
+    @Query("SELECT COALESCE(SUM(p.amountPaid), 0) FROM FeePayment p " +
+           "WHERE p.schoolId = :schoolId " +
+           "AND p.paymentDate BETWEEN :from AND :to")
+    BigDecimal sumCollectedInRange(@Param("schoolId") UUID schoolId,
+                                   @Param("from") java.time.LocalDate from,
+                                   @Param("to") java.time.LocalDate to);
 }
