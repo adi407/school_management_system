@@ -1,5 +1,5 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../../../../core/services/student.service';
 import { AcademicService } from '../../../../core/services/academic.service';
@@ -19,9 +19,13 @@ type Step = 1 | 2 | 3 | 4 | 5;
 export class StudentFormComponent implements OnInit {
   private fb              = inject(FormBuilder);
   private router          = inject(Router);
+  private route           = inject(ActivatedRoute);
   private studentService  = inject(StudentService);
   private academicService = inject(AcademicService);
   private toast           = inject(ToastService);
+
+  /** URL to navigate back to after creation (e.g. the class page) */
+  backUrl = '';
 
   currentStep = signal<Step>(1);
   submitting  = signal(false);
@@ -38,8 +42,19 @@ export class StudentFormComponent implements OnInit {
   classes: ClassDto[] = [];
 
   ngOnInit() {
+    // Read context query params set by the caller (e.g. class detail page)
+    const params = this.route.snapshot.queryParamMap;
+    const classId = params.get('classId');
+    this.backUrl  = params.get('back') ?? '';
+
     this.academicService.listClasses().subscribe({
-      next: cls => (this.classes = cls),
+      next: cls => {
+        this.classes = cls;
+        // Pre-select class if caller passed classId
+        if (classId && cls.some(c => c.id === classId)) {
+          this.academicForm.patchValue({ classId });
+        }
+      },
       error: () => { /* optional: show toast */ }
     });
   }
@@ -157,7 +172,12 @@ export class StudentFormComponent implements OnInit {
       next: student => {
         this.submitting.set(false);
         this.toast.success(`Student "${student.fullName}" enrolled successfully!`);
-        this.router.navigate(['/admin/students', student.id]);
+        // Navigate back to class page if we came from there, otherwise student profile
+        if (this.backUrl) {
+          this.router.navigateByUrl(this.backUrl);
+        } else {
+          this.router.navigate(['/admin/students', student.id]);
+        }
       },
       error: err => {
         this.submitting.set(false);

@@ -51,6 +51,15 @@
                 <option [value]="t.id">{{ t.fullName || t.email }}</option>
               }
             </select>
+            @if (teachers().length === 0) {
+              <div class="context-hint">
+                <span class="context-hint__icon">👨‍🏫</span>
+                <span>No teachers found.</span>
+                <button class="context-hint__action" type="button" (click)="openQuickAddTeacher()">
+                  + Add Teacher Now
+                </button>
+              </div>
+            }
           </div>
         </form>
 
@@ -80,11 +89,30 @@
     <div class="tab-panel">
       <div class="section-header mb-16">
         <h3 class="section-title">Assigned Subjects</h3>
-        <button class="btn btn--primary btn--sm" (click)="openAssign()"
-                [disabled]="availableSubjects().length === 0">
-          + Assign Subject
-        </button>
+        <div class="section-header__actions">
+          @if (allSubjects().length === 0) {
+            <a routerLink="/admin/subjects" class="btn btn--ghost btn--sm">
+              ⚠ Create Subjects First →
+            </a>
+          } @else {
+            <button class="btn btn--primary btn--sm" (click)="openAssign()"
+                    [disabled]="availableSubjects().length === 0"
+                    [title]="availableSubjects().length === 0 ? 'All subjects already assigned' : ''">
+              + Assign Subject
+            </button>
+          }
+        </div>
       </div>
+      @if (allSubjects().length === 0) {
+        <div class="context-hint context-hint--block">
+          <span class="context-hint__icon">📚</span>
+          <div>
+            <strong>No subjects created yet.</strong>
+            Go to <a routerLink="/admin/subjects" class="link">Academic Setup → Subjects</a>
+            to create subjects, then come back to assign them here.
+          </div>
+        </div>
+      }
 
       @if (subjects().length === 0) {
         <div class="empty-state">
@@ -138,7 +166,11 @@
     <div class="tab-panel">
       <div class="section-header mb-16">
         <h3 class="section-title">Enrolled Students</h3>
-        <a class="btn btn--ghost btn--sm" routerLink="/admin/students/new">+ Add Student</a>
+        <a class="btn btn--ghost btn--sm"
+           [routerLink]="['/admin/students/new']"
+           [queryParams]="{ classId: classId, back: '/admin/classes/' + classId }">
+          + Add Student
+        </a>
       </div>
 
       @if (students().length === 0 && cls()!.studentCount === 0) {
@@ -167,6 +199,52 @@
       }
     </div>
   }
+}
+
+<!-- ═══════════════ QUICK-ADD TEACHER MODAL ═══════════════ -->
+@if (showQuickAddTeacher()) {
+  <div class="modal-backdrop" (click)="closeQuickAddTeacher()"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qat-title">
+    <div class="modal__header">
+      <h2 class="modal__title" id="qat-title">Add Teacher</h2>
+      <button class="modal__close" (click)="closeQuickAddTeacher()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal__body">
+      <p class="modal__hint">Create a teacher account. They'll be selectable as class teacher immediately.</p>
+      <form [formGroup]="quickTeacherForm" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">First Name <span class="required">*</span></label>
+          <input class="form-input" formControlName="firstName" placeholder="e.g. Priya" />
+          @if (qtf['firstName'].touched && qtf['firstName'].invalid) {
+            <span class="form-error">Required</span>
+          }
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name <span class="required">*</span></label>
+          <input class="form-input" formControlName="lastName" placeholder="e.g. Sharma" />
+          @if (qtf['lastName'].touched && qtf['lastName'].invalid) {
+            <span class="form-error">Required</span>
+          }
+        </div>
+        <div class="form-group form-group--full">
+          <label class="form-label">Email <span class="required">*</span></label>
+          <input class="form-input" type="email" formControlName="email" placeholder="teacher@school.edu" />
+          @if (qtf['email'].touched && qtf['email'].invalid) {
+            <span class="form-error">Valid email required</span>
+          }
+        </div>
+        <p class="form-group--full form-hint text-muted" style="margin:0; font-size:12px">
+          Default password: <code>Welcome&#64;1234</code> · Role will be set to <strong>TEACHER</strong>
+        </p>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" (click)="closeQuickAddTeacher()">Cancel</button>
+      <button class="btn btn--primary" [disabled]="savingQuickTeacher()" (click)="submitQuickTeacher()">
+        {{ savingQuickTeacher() ? 'Creating…' : 'Create Teacher' }}
+      </button>
+    </div>
+  </div>
 }
 
 <!-- ═══════════════ ASSIGN SUBJECT MODAL ═══════════════ -->

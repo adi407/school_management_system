@@ -7,7 +7,7 @@ import { StaffService } from '../../../../core/services/staff.service';
 import { StudentService } from '../../../../core/services/student.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { ClassDto, ClassSubjectDto, SubjectDto } from '../../../../core/models/academic.model';
-import { StaffDto } from '../../../../core/models/staff.model';
+import { StaffDto, STAFF_ROLES } from '../../../../core/models/staff.model';
 import { StudentSummaryDto } from '../../../../core/models/student.model';
 
 type Tab = 'overview' | 'subjects' | 'students';
@@ -67,6 +67,16 @@ export class ClassDetailComponent implements OnInit {
   teacherForm = this.fb.group({
     teacherId: [null as string | null],
   });
+
+  // ── Quick-Add Teacher modal (context-sensitive shortcut) ───────────────────
+  showQuickAddTeacher = signal(false);
+  savingQuickTeacher  = signal(false);
+  quickTeacherForm    = this.fb.group({
+    firstName: ['', Validators.required],
+    lastName:  ['', Validators.required],
+    email:     ['', [Validators.required, Validators.email]],
+  });
+  get qtf() { return this.quickTeacherForm.controls; }
 
   ngOnInit() {
     this.classId = this.route.snapshot.paramMap.get('id')!;
@@ -189,6 +199,41 @@ export class ClassDetailComponent implements OnInit {
         this.toast.success('Subject removed');
       },
       error: err => this.toast.error(err?.error?.message ?? 'Failed to remove subject'),
+    });
+  }
+
+  // ── Quick-Add Teacher ─────────────────────────────────────────────────────
+  openQuickAddTeacher() {
+    this.quickTeacherForm.reset();
+    this.showQuickAddTeacher.set(true);
+  }
+
+  closeQuickAddTeacher() { this.showQuickAddTeacher.set(false); }
+
+  submitQuickTeacher() {
+    if (this.quickTeacherForm.invalid) { this.quickTeacherForm.markAllAsTouched(); return; }
+    const v = this.quickTeacherForm.value;
+    this.savingQuickTeacher.set(true);
+    this.staffSvc.create({
+      email:      v.email!,
+      firstName:  v.firstName!,
+      lastName:   v.lastName!,
+      role:       'TEACHER',
+      phone:      null,
+      department: null,
+      password:   null,
+    }).subscribe({
+      next: staff => {
+        this.teachers.update(list => [...list, staff]);
+        this.overviewForm.patchValue({ classTeacherId: staff.id });
+        this.savingQuickTeacher.set(false);
+        this.closeQuickAddTeacher();
+        this.toast.success(`Teacher ${staff.fullName} created — click Save Changes to assign.`);
+      },
+      error: err => {
+        this.savingQuickTeacher.set(false);
+        this.toast.error(err?.error?.message ?? 'Failed to create teacher');
+      },
     });
   }
 

@@ -5,7 +5,7 @@
     <p class="page-header__subtitle">Complete all steps to enroll a student</p>
   </div>
   <div class="page-header__actions">
-    <a routerLink="/admin/students" class="btn btn--ghost">← Back</a>
+    <a [routerLink]="backUrl || '/admin/students'" class="btn btn--ghost">← Back</a>
   </div>
 </div>
 

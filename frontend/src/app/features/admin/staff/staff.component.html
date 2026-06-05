@@ -50,6 +50,11 @@
         </div>
         <div class="staff-card__footer">
           <button class="btn btn--ghost btn--sm" (click)="openEdit(member)">✏ Edit</button>
+          <a class="btn btn--ghost btn--sm staff-card__modules-btn"
+             routerLink="/admin/module-assignments"
+             [attr.aria-label]="'Manage module access for ' + displayName(member)">
+            ⚙ Modules
+          </a>
           @if (member.isActive) {
             <button class="btn btn--ghost btn--sm" style="color:var(--error)" (click)="deactivate(member)">Deactivate</button>
           } @else {
@@ -94,7 +99,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">Role <span class="required">*</span></label>
-          <select class="form-select" formControlName="role">
+          <select class="form-input" formControlName="role">
             @for (r of staffRoles; track r) { <option [value]="r">{{ r }}</option> }
           </select>
         </div>

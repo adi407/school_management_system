@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { StaffService } from '../../../core/services/staff.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -8,7 +9,7 @@ import { StaffDto, STAFF_ROLES } from '../../../core/models/staff.model';
 @Component({
   selector: 'sms-staff',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, DatePipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, DatePipe],
   templateUrl: './staff.component.html',
   styleUrls: ['./staff.component.scss'],
 })
