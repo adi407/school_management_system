@@ -61,14 +61,4 @@ export class LoginComponent {
     this.router.navigate([map[role] ?? '/']);
   }
 
-  readonly demoAccounts: { label: string; email: string; role: string }[] = [
-    { label: 'Super Admin',  email: 'superadmin@educloud.com',       role: 'SUPER_ADMIN'  },
-    { label: 'School Admin', email: 'admin@schoolmanager.live',      role: 'SCHOOL_ADMIN' },
-    { label: 'Teacher',      email: 'priya.sharma@demo.school',      role: 'TEACHER'      },
-    { label: 'Student',      email: 'student@demo.school',           role: 'STUDENT'      },
-  ];
-
-  fillDemo(email: string) {
-    this.form.patchValue({ email, password: 'Admin@1234' });
-  }
 }

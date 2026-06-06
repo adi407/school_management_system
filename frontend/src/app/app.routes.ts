@@ -14,6 +14,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
   },
 
+  // ── Internal demo access — PIN-gated, not linked from anywhere ────────────
+  // Path is intentionally non-obvious. Change DEMO_PIN in demo-login.component.ts to rotate.
+  {
+    path: 'x/demo-access',
+    loadComponent: () => import('./features/auth/demo-login/demo-login.component').then(m => m.DemoLoginComponent),
+  },
+
   {
     path: 'unauthorized',
     loadComponent: () => import('./shared/components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent),

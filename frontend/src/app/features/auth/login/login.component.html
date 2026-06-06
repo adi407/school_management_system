@@ -81,18 +81,6 @@
       </button>
     </form>
 
-    <!-- Demo accounts -->
-    <div class="demo-accounts">
-      <span class="demo-accounts__label">Quick demo login &nbsp;·&nbsp; password: Admin&#64;1234</span>
-      <div class="demo-accounts__grid">
-        @for (acc of demoAccounts; track acc.role) {
-          <button class="demo-card" (click)="fillDemo(acc.email)" type="button">
-            <span class="demo-card__role">{{ acc.label }}</span>
-            <span class="demo-card__email">{{ acc.email }}</span>
-          </button>
-        }
-      </div>
-    </div>
 
   </div>
 </div>

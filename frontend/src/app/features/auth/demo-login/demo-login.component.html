@@ -1,0 +1,96 @@
+<!-- ── Demo access shell ───────────────────────────────────────────────────── -->
+<div class="demo-page">
+
+  <div class="demo-card" [class.demo-card--wide]="pinUnlocked()">
+
+    <!-- ── Header (always visible) ─────────────────────────────────────────── -->
+    <div class="demo-card__header">
+      <div class="demo-badge">
+        <span class="demo-badge__dot"></span>
+        DEMO ACCESS
+      </div>
+      <p class="demo-card__meta">Internal · Not linked from the application</p>
+    </div>
+
+    <!-- ══════════════════ PHASE 1 — PIN GATE ══════════════════════ -->
+    @if (!pinUnlocked()) {
+      <div class="pin-section" [class.pin-section--shake]="pinShake()">
+
+        <div class="lock-icon" aria-hidden="true">
+          @if (pinError()) { 🔴 } @else { 🔐 }
+        </div>
+
+        <h1 class="pin-title">Enter access PIN</h1>
+        <p class="pin-sub">This page is for internal demos only.</p>
+
+        <div class="pin-field">
+          <input
+            class="pin-input"
+            type="password"
+            inputmode="numeric"
+            maxlength="8"
+            placeholder="••••••••"
+            [(ngModel)]="pinValue"
+            (keydown)="onPinKeydown($event)"
+            [class.pin-input--error]="pinError()"
+            autocomplete="off"
+            aria-label="Demo access PIN"
+            autofocus
+          />
+          @if (pinError()) {
+            <p class="pin-error" role="alert">Incorrect PIN. Try again.</p>
+          }
+        </div>
+
+        <button class="btn-unlock" (click)="checkPin()" [disabled]="!pinValue">
+          Unlock Demo
+        </button>
+
+      </div>
+    }
+
+    <!-- ══════════════════ PHASE 2 — ROLE CARDS ══════════════════════ -->
+    @if (pinUnlocked()) {
+      <div class="roles-section">
+
+        <div class="roles-header">
+          <h1 class="roles-title">Select a role to demo</h1>
+          <p class="roles-sub">One click — signs you in immediately with preset credentials.</p>
+        </div>
+
+        <div class="roles-grid">
+          @for (r of roles; track r.role) {
+            <button
+              class="role-card"
+              [class.role-card--loading]="loading() === r.email"
+              [disabled]="loading() !== null"
+              (click)="loginAs(r.email)"
+              [attr.aria-label]="'Sign in as ' + r.label"
+            >
+              <span class="role-card__icon" aria-hidden="true">{{ r.icon }}</span>
+              <div class="role-card__body">
+                <span class="role-card__label">{{ r.label }}</span>
+                <span class="role-card__desc">{{ r.desc }}</span>
+                <span class="role-card__email">{{ r.email }}</span>
+              </div>
+              <div class="role-card__arrow">
+                @if (loading() === r.email) {
+                  <span class="spinner-sm" aria-hidden="true"></span>
+                } @else {
+                  →
+                }
+              </div>
+            </button>
+          }
+        </div>
+
+        <p class="roles-footer">
+          Default password for all accounts: <code>Admin&#64;1234</code>
+        </p>
+
+      </div>
+    }
+
+  </div>
+
+</div>
