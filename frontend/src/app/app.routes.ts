@@ -197,6 +197,11 @@ export const routes: Routes = [
             path: 'announcements',
             loadComponent: () => import('./features/teacher/announcements/teacher-announcements.component').then(m => m.TeacherAnnouncementsComponent),
           },
+          // Campus Pulse — teacher-accessible copy (same component, teacher-scoped route)
+          {
+            path: 'pulse',
+            loadComponent: () => import('./features/admin/wellness/campus-pulse.component').then(m => m.CampusPulseComponent),
+          },
           {
             path: 'homework/new',
             loadComponent: () => import('./features/admin/homework/homework-form/homework-form.component').then(m => m.HomeworkFormComponent),

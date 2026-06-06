@@ -166,7 +166,7 @@ export class SidebarComponent {
         { label: 'Homework',      route: '/teacher/homework',      icon: '📝' },
         { label: 'Attendance',    route: '/teacher/attendance',    icon: '✓'  },
         { label: 'Announcements', route: '/teacher/announcements', icon: '📢' },
-        { label: 'Campus Pulse',  route: '/admin/pulse',           icon: '💙' },
+        { label: 'Campus Pulse',  route: '/teacher/pulse',         icon: '💙' }, // must be /teacher/* not /admin/*
       ],
     },
 
