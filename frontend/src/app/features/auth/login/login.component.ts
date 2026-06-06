@@ -1,14 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Role } from '../../../core/models/user.model';
 
 @Component({
   selector: 'sms-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
@@ -18,6 +19,7 @@ export class LoginComponent {
   private router = inject(Router);
   private toast  = inject(ToastService);
 
+  theme     = inject(ThemeService);
   loading   = signal(false);
   showPass  = signal(false);
   error     = signal('');

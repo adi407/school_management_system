@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'sms-landing',
@@ -13,6 +14,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
   private router = inject(Router);
   private auth   = inject(AuthService);
   private zone   = inject(NgZone);
+  theme          = inject(ThemeService);
 
   year = new Date().getFullYear();
 

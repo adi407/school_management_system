@@ -82,6 +82,10 @@ $scene-cta:    #F0EFFE;
   }
 }
 
+.nav__actions {
+  display: flex; align-items: center; gap: 10px;
+}
+
 .btn-nav {
   padding: 7px 20px; border-radius: 10px;
   background: rgba(10,132,255,0.1);
@@ -89,6 +93,21 @@ $scene-cta:    #F0EFFE;
   color: $accent; font-size: 13px; font-weight: 600;
   text-decoration: none; transition: all 0.2s;
   &:hover { background: $accent; color: #fff; }
+}
+
+.btn-theme {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: rgba(15,15,30,0.06);
+  border: 1px solid rgba(15,15,30,0.12);
+  color: rgba(15,15,30,0.6);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  &:hover {
+    background: rgba(15,15,30,0.1);
+    color: rgba(15,15,30,0.9);
+    border-color: rgba(15,15,30,0.2);
+  }
+  &:focus-visible { outline: 2px solid $accent; outline-offset: 2px; }
 }
 
 // ── Full section base ────────────────────────────────────────
@@ -610,4 +629,111 @@ $scene-cta:    #F0EFFE;
 
   .cta-orb { display: none; }
   .footer { padding: 22px 20px; }
+}
+
+// ══════════════════════════════════════════════════════════════
+// DARK MODE — applied when .landing--dark is on the root div
+// ══════════════════════════════════════════════════════════════
+.landing--dark {
+  background: #0c0c12;
+  color: #ffffff;
+
+  // Nav
+  .nav {
+    background: rgba(12,12,18,0.78);
+    border-bottom-color: rgba(255,255,255,0.08);
+    box-shadow: none;
+  }
+  .nav__name { color: #fff; }
+  .btn-theme {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.65);
+    &:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border-color: rgba(255,255,255,0.22);
+    }
+  }
+
+  // Scene backgrounds
+  .hero-section              { background: #0c0c12; }
+  .scene--gate               { background: #091525; }
+  .scene--class              { background: #0d1020; }
+  .scene--exam               { background: #120a1f; }
+  .scene--parent             { background: #0a1a12; }
+  .scene--home               { background: #1a100a; }
+  .cta-section               { background: #0c0c12; }
+
+  // Overlays — dark left/right fade
+  .section-overlay--hero {
+    background: linear-gradient(to right, #0c0c12 30%, rgba(12,12,18,.78) 52%, rgba(12,12,18,.3) 72%, transparent 90%);
+  }
+  .section-overlay          { background: linear-gradient(to right, #0c0c12 28%, rgba(12,12,18,.82) 50%, rgba(12,12,18,.38) 70%, transparent 88%); }
+  .scene--gate__overlay     { background: linear-gradient(to right, #091525 28%, rgba(9,21,37,.82)  50%, rgba(9,21,37,.35)  70%, transparent 88%); }
+  .scene--class__overlay    { background: linear-gradient(to left,  #0d1020 28%, rgba(13,16,32,.82) 50%, rgba(13,16,32,.35) 70%, transparent 88%); }
+  .scene--exam__overlay     { background: linear-gradient(to right, #120a1f 28%, rgba(18,10,31,.82) 50%, rgba(18,10,31,.35) 70%, transparent 88%); }
+  .scene--parent__overlay   { background: linear-gradient(to left,  #0a1a12 28%, rgba(10,26,18,.82) 50%, rgba(10,26,18,.35) 70%, transparent 88%); }
+  .scene--home__overlay     { background: linear-gradient(to right, #1a100a 28%, rgba(26,16,10,.82) 50%, rgba(26,16,10,.35) 70%, transparent 88%); }
+
+  // Typography
+  .display-title, .scene-headline, .cta-headline { color: #fff; }
+  .display-sub               { color: rgba(255,255,255,0.58); }
+  .scene-desc                { color: rgba(255,255,255,0.60); }
+  .cta-sub                   { color: rgba(255,255,255,0.55); }
+  .step-label                { color: #0A84FF; opacity: 0.9; }
+
+  // Badges / pills
+  .time-badge {
+    background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7);
+  }
+  .feature-pill {
+    background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.75);
+  }
+  .eyebrow-pill {
+    background: rgba(10,132,255,0.1); border-color: rgba(10,132,255,0.22);
+  }
+
+  // Ghost button (dark version)
+  .btn-ghost {
+    background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.75);
+    &:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.25); }
+  }
+
+  // Scroll hint
+  .scroll-hint { color: rgba(255,255,255,0.32); }
+  .scroll-hint__line { background: rgba(255,255,255,0.25); }
+
+  // Footer
+  .footer {
+    background: #0c0c12; border-top-color: rgba(255,255,255,0.08);
+    &__brand { color: rgba(255,255,255,0.9); }
+    &__copy  { color: rgba(255,255,255,0.3); }
+  }
+
+  // Stars visible in dark
+  .star { animation: star-twinkle 3s ease-in-out infinite alternate; }
+  @keyframes star-twinkle { from { opacity: 0.1; } to { opacity: 0.85; } }
+
+  // Mobile overlay overrides for dark
+  @media (max-width: 900px) {
+    .section-overlay,
+    .scene--gate__overlay, .scene--class__overlay,
+    .scene--exam__overlay, .scene--parent__overlay, .scene--home__overlay {
+      background: linear-gradient(to right, rgba(12,12,18,1) 0%, rgba(12,12,18,.95) 32%, rgba(12,12,18,.70) 55%, rgba(12,12,18,.28) 78%, rgba(12,12,18,.08) 100%) !important;
+    }
+  }
+  @media (max-width: 640px) {
+    .section-overlay,
+    .scene--gate__overlay, .scene--class__overlay,
+    .scene--exam__overlay, .scene--parent__overlay, .scene--home__overlay {
+      background: linear-gradient(to top, rgba(12,12,18,1) 0%, rgba(12,12,18,.98) 42%, rgba(12,12,18,.70) 58%, rgba(12,12,18,.20) 78%, transparent 100%) !important;
+    }
+    .section-overlay--hero {
+      background: linear-gradient(to top, rgba(12,12,18,1) 0%, rgba(12,12,18,.98) 44%, rgba(12,12,18,.60) 62%, transparent 88%) !important;
+    }
+  }
 }
