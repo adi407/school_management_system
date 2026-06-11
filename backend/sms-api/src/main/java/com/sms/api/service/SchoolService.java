@@ -167,268 +167,93 @@ public class SchoolService {
         School school = findOrThrow(id);
         String schoolName = school.getName();
 
-        int totalRecords = 0;
+        // Count before deleting
+        Long usersCount = ((Number) entityManager.createNativeQuery(
+                "SELECT COUNT(*) FROM users WHERE school_id = ?1")
+            .setParameter(1, id).getSingleResult()).longValue();
+        Long studentsCount = ((Number) entityManager.createNativeQuery(
+                "SELECT COUNT(*) FROM students WHERE school_id = ?1")
+            .setParameter(1, id).getSingleResult()).longValue();
 
-        // --- Phase 1: Tables that reference school-owned records (no school_id column) ---
+        // Use a PostgreSQL DO block for cascade delete.
+        // Tables without JPA entities may not exist on production (ddl-auto:update),
+        // so they are wrapped in BEGIN...EXCEPTION WHEN undefined_table.
+        String idStr = id.toString(); // UUID is safe — validated by findOrThrow
+        entityManager.createNativeQuery(
+            "DO $$ DECLARE sid UUID := '" + idStr + "'; BEGIN " +
 
-        // ptm_briefings → references ptm_meetings, students, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM ptm_briefings WHERE ptm_meeting_id IN (SELECT id FROM ptm_meetings WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
+            // Phase 1: junction/child tables with no school_id (reference via sub-query)
+            "DELETE FROM ptm_briefings WHERE ptm_meeting_id IN (SELECT id FROM ptm_meetings WHERE school_id = sid); " +
+            "DELETE FROM homework_submissions WHERE homework_id IN (SELECT id FROM homework WHERE school_id = sid); " +
+            "DELETE FROM book_issues WHERE book_id IN (SELECT id FROM books WHERE school_id = sid); " +
+            "BEGIN DELETE FROM notifications WHERE user_id IN (SELECT id FROM users WHERE school_id = sid); EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM password_reset_tokens WHERE user_id IN (SELECT id FROM users WHERE school_id = sid); " +
+            "DELETE FROM refresh_tokens WHERE user_id IN (SELECT id FROM users WHERE school_id = sid); " +
 
-        // homework_submissions → references homework, students, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM homework_submissions WHERE homework_id IN (SELECT id FROM homework WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
+            // Phase 2: student-related
+            "DELETE FROM guardians WHERE student_id IN (SELECT id FROM students WHERE school_id = sid); " +
+            "BEGIN DELETE FROM student_documents WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM student_attendance WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM achievements WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM attendance WHERE school_id = sid; " +
+            "DELETE FROM fee_payments WHERE school_id = sid; " +
+            "DELETE FROM wellness_checkins WHERE school_id = sid; " +
+            "BEGIN DELETE FROM hostel_rooms WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM students WHERE school_id = sid; " +
 
-        // book_issues → references books (via book_id) and students
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM book_issues WHERE book_id IN (SELECT id FROM books WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
+            // Phase 3: class/academic
+            "DELETE FROM timetable_slots WHERE school_id = sid; " +
+            "DELETE FROM substitute_assignments WHERE school_id = sid; " +
+            "DELETE FROM class_subject_teachers WHERE school_id = sid; " +
+            "BEGIN DELETE FROM class_subjects WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM exams WHERE school_id = sid; " +
+            "DELETE FROM fee_structures WHERE school_id = sid; " +
+            "DELETE FROM homework WHERE school_id = sid; " +
+            "DELETE FROM ptm_meetings WHERE school_id = sid; " +
+            "DELETE FROM school_classes WHERE school_id = sid; " +
 
-        // notifications → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM notifications WHERE user_id IN (SELECT id FROM users WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
+            // Phase 4: staff/payroll/misc
+            "DELETE FROM payslips WHERE school_id = sid; " +
+            "DELETE FROM payroll_runs WHERE school_id = sid; " +
+            "DELETE FROM salary_structures WHERE school_id = sid; " +
+            "DELETE FROM staff_module_assignments WHERE school_id = sid; " +
+            "BEGIN DELETE FROM staff_leaves WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM staff_attendance WHERE school_id = sid; " +
+            "BEGIN DELETE FROM staff WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM grievances WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM expense_entries WHERE school_id = sid; " +
+            "BEGIN DELETE FROM route_stops WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM routes WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM hostels WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM books WHERE school_id = sid; " +
+            "BEGIN DELETE FROM book_categories WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
 
-        // password_reset_tokens → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM password_reset_tokens WHERE user_id IN (SELECT id FROM users WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
+            // Phase 5: school-level config
+            "DELETE FROM announcements WHERE school_id = sid; " +
+            "DELETE FROM activities WHERE school_id = sid; " +
+            "BEGIN DELETE FROM events WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM holiday_calendars WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "BEGIN DELETE FROM exam_types WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM subjects WHERE school_id = sid; " +
+            "BEGIN DELETE FROM terms WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM academic_years WHERE school_id = sid; " +
+            "BEGIN DELETE FROM school_settings WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
+            "DELETE FROM feature_flags WHERE school_id = sid; " +
+            "BEGIN DELETE FROM audit_logs WHERE school_id = sid; EXCEPTION WHEN undefined_table THEN NULL; END; " +
 
-        // refresh_tokens → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM refresh_tokens WHERE user_id IN (SELECT id FROM users WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
+            // Phase 6: users, Phase 7: school
+            "DELETE FROM users WHERE school_id = sid; " +
+            "DELETE FROM schools WHERE id = sid; " +
 
-        // --- Phase 2: Tables with school_id, ordered by FK dependencies (children first) ---
-
-        // guardians → references students
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM guardians WHERE student_id IN (SELECT id FROM students WHERE school_id = ?1)")
-            .setParameter(1, id).executeUpdate();
-
-        // student_documents → references students
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM student_documents WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // student_attendance → references students, school_classes
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM student_attendance WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // achievements → references students, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM achievements WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // attendance → references students, school_classes, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM attendance WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // fee_payments → references students, users, fee_structures
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM fee_payments WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // wellness_checkins → references students
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM wellness_checkins WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // hostel_rooms → references hostels, students
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM hostel_rooms WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // students (now safe — guardians, achievements, attendance, etc. removed)
-        int studentsAffected = entityManager.createNativeQuery(
-                "DELETE FROM students WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-        totalRecords += studentsAffected;
-
-        // --- Phase 3: Tables referencing school_classes, users, etc. ---
-
-        // timetable_slots → references school_classes, subjects
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM timetable_slots WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // substitute_assignments → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM substitute_assignments WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // class_subject_teachers → references class_subjects, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM class_subject_teachers WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // class_subjects → references school_classes, subjects
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM class_subjects WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // exams → references school_classes, exam_types, terms
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM exams WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // fee_structures → references school_classes
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM fee_structures WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // homework → references school_classes, subjects, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM homework WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // ptm_meetings → references school_classes, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM ptm_meetings WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // school_classes
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM school_classes WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // --- Phase 4: Tables referencing users or other school-level entities ---
-
-        // payslips → references users, payroll_runs
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM payslips WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // payroll_runs → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM payroll_runs WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // salary_structures → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM salary_structures WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // staff_module_assignments → references staff, users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM staff_module_assignments WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // staff_leaves → references staff
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM staff_leaves WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // staff_attendance → references staff
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM staff_attendance WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // staff
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM staff WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // grievances → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM grievances WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // expense_entries → references users
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM expense_entries WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // route_stops → references routes
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM route_stops WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // routes
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM routes WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // hostels → references users (warden)
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM hostels WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // books → references book_categories
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM books WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // book_categories
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM book_categories WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // --- Phase 5: Remaining school-level tables (no child dependencies left) ---
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM announcements WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM activities WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM events WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM holiday_calendars WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM exam_types WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM subjects WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM terms WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM academic_years WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM school_settings WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM feature_flags WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-
-        // --- Phase 6: Users (after all user-referencing tables are gone) ---
-
-        int usersAffected = entityManager.createNativeQuery(
-                "DELETE FROM users WHERE school_id = ?1")
-            .setParameter(1, id).executeUpdate();
-        totalRecords += usersAffected;
-
-        // --- Phase 7: The school itself ---
-
-        totalRecords += entityManager.createNativeQuery(
-                "DELETE FROM schools WHERE id = ?1")
-            .setParameter(1, id).executeUpdate();
+            "END $$;"
+        ).executeUpdate();
 
         return new DeleteSchoolResponse(
             schoolName,
             "HARD",
-            usersAffected,
-            studentsAffected,
-            totalRecords
+            usersCount.intValue(),
+            studentsCount.intValue(),
+            usersCount.intValue() + studentsCount.intValue() + 1
         );
     }
 
