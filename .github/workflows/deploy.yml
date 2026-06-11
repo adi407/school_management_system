@@ -55,6 +55,22 @@ jobs:
             frontend/dist/sms-frontend/browser/ \
             root@${{ secrets.DROPLET_HOST }}:/opt/sms/frontend/
 
+      - name: Enable Flyway in prod config
+        run: |
+          ssh root@${{ secrets.DROPLET_HOST }} bash << 'ENDSSH'
+            CONFIG=/opt/sms/app/application-prod.yml
+            # Switch ddl-auto from update to validate
+            sed -i 's/ddl-auto: update/ddl-auto: validate/' "$CONFIG"
+            # Enable Flyway with baseline so existing schema is preserved
+            sed -i 's/flyway:/flyway:/' "$CONFIG"
+            sed -i '/flyway:/,/enabled:/{s/enabled: false/enabled: true/}' "$CONFIG"
+            # Add baseline settings if not present
+            grep -q 'baseline-on-migrate' "$CONFIG" || \
+              sed -i '/enabled: true/a\    baseline-on-migrate: true\n    baseline-version: 13\n    locations: classpath:db/migration' "$CONFIG"
+            echo "Flyway enabled in prod config"
+            grep -A5 'flyway:' "$CONFIG"
+          ENDSSH
+
       - name: Restart & Verify
         run: |
           ssh root@${{ secrets.DROPLET_HOST }} bash << 'ENDSSH'
