@@ -46,4 +46,20 @@ export class SchoolService {
   updateFeatures(id: string, flags: Record<string, boolean>) {
     return this.http.put<void>(`${this.base}/schools/${id}/features`, { flags });
   }
+
+  softDelete(id: string) {
+    return this.http.patch<DeleteSchoolResponse>(`${this.base}/schools/${id}/soft-delete`, {});
+  }
+
+  hardDelete(id: string) {
+    return this.http.delete<DeleteSchoolResponse>(`${this.base}/schools/${id}`);
+  }
+}
+
+export interface DeleteSchoolResponse {
+  schoolName: string;
+  deleteType: string;
+  usersAffected: number;
+  studentsAffected: number;
+  totalRecordsDeleted: number;
 }

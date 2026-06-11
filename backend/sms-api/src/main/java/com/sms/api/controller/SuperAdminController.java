@@ -3,6 +3,7 @@ package com.sms.api.controller;
 import com.sms.api.dto.feature.FeatureFlagDto;
 import com.sms.api.dto.feature.UpdateFeatureFlagsRequest;
 import com.sms.api.dto.school.CreateSchoolRequest;
+import com.sms.api.dto.school.DeleteSchoolResponse;
 import com.sms.api.dto.school.SchoolDto;
 import com.sms.api.dto.school.UpdateSchoolRequest;
 import com.sms.api.security.UserPrincipal;
@@ -77,6 +78,18 @@ public class SuperAdminController {
     ) {
         schoolService.setActive(id, active);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/schools/{id}/soft-delete")
+    @Operation(summary = "Soft-delete a school (deactivate school, users, and students)")
+    public ResponseEntity<DeleteSchoolResponse> softDeleteSchool(@PathVariable UUID id) {
+        return ResponseEntity.ok(schoolService.softDelete(id));
+    }
+
+    @DeleteMapping("/schools/{id}")
+    @Operation(summary = "Hard-delete a school and all related data permanently")
+    public ResponseEntity<DeleteSchoolResponse> hardDeleteSchool(@PathVariable UUID id) {
+        return ResponseEntity.ok(schoolService.hardDelete(id));
     }
 
     @GetMapping("/schools/{id}/features")
