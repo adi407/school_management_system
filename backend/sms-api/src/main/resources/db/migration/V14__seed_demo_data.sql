@@ -10,12 +10,12 @@ VALUES ('735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'EduCloud Platform', 'educloud.i
 ON CONFLICT (id) DO NOTHING;
 
 -- ── Schools ─────────────────────────────────────────────────
-INSERT INTO schools (id, platform_id, name, code, email, address, board, subscription_tier, is_active, created_at, updated_at)
+INSERT INTO schools (id, platform_id, name, code, email, address, board, timezone, locale, subscription_tier, is_active, created_at, updated_at)
 VALUES
-  ('82e3b66f-35ec-4b6e-a5c5-a96188eabe83', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Gita Bal Niketan',          'GBN', 'info@gitabn.edu.in',       'Sector 21D, Faridabad, Haryana 121001', 'CBSE', 'PREMIUM',     true, NOW(), NOW()),
-  ('785a10c6-3507-4d08-a649-57cea55e5fec', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Greenfield Academy',        'GFA', 'admin@greenfield.edu.in',  '',                                      'CBSE', 'PREMIUM',     true, NOW(), NOW()),
-  ('3198e93c-7885-42f5-97bd-3bef603e92b9', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Future Tech International',  'FTI', 'admin@futuretech.edu.in',  '',                                      'IB',   'ENTERPRISE',  true, NOW(), NOW()),
-  ('d15c16e5-6ed6-4f77-8349-9944ff37755a', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Sunrise Public School',      'SPS', 'admin@sunrise.edu.in',     '',                                      'ICSE', 'BASIC',       true, NOW(), NOW())
+  ('82e3b66f-35ec-4b6e-a5c5-a96188eabe83', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Gita Bal Niketan',          'GBN', 'info@gitabn.edu.in',       'Sector 21D, Faridabad, Haryana 121001', 'CBSE', 'Asia/Kolkata', 'en-IN', 'PREMIUM',     true, NOW(), NOW()),
+  ('785a10c6-3507-4d08-a649-57cea55e5fec', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Greenfield Academy',        'GFA', 'admin@greenfield.edu.in',  '',                                      'CBSE', 'Asia/Kolkata', 'en-IN', 'PREMIUM',     true, NOW(), NOW()),
+  ('3198e93c-7885-42f5-97bd-3bef603e92b9', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Future Tech International',  'FTI', 'admin@futuretech.edu.in',  '',                                      'IB',   'Asia/Kolkata', 'en-IN', 'ENTERPRISE',  true, NOW(), NOW()),
+  ('d15c16e5-6ed6-4f77-8349-9944ff37755a', '735487a6-4e5e-4ebb-a32f-360dde6f91f7', 'Sunrise Public School',      'SPS', 'admin@sunrise.edu.in',     '',                                      'ICSE', 'Asia/Kolkata', 'en-IN', 'BASIC',       true, NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
 -- ── Super Admin (no school) ─────────────────────────────────

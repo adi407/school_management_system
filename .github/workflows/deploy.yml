@@ -55,20 +55,39 @@ jobs:
             frontend/dist/sms-frontend/browser/ \
             root@${{ secrets.DROPLET_HOST }}:/opt/sms/frontend/
 
-      - name: Enable Flyway in prod config
+      - name: Prepare prod DB for Flyway
         run: |
           ssh root@${{ secrets.DROPLET_HOST }} bash << 'ENDSSH'
             CONFIG=/opt/sms/app/application-prod.yml
-            # Switch ddl-auto from update to validate
-            sed -i 's/ddl-auto: update/ddl-auto: validate/' "$CONFIG"
-            # Enable Flyway with baseline so existing schema is preserved
-            sed -i 's/flyway:/flyway:/' "$CONFIG"
-            sed -i '/flyway:/,/enabled:/{s/enabled: false/enabled: true/}' "$CONFIG"
-            # Add baseline settings if not present
-            grep -q 'baseline-on-migrate' "$CONFIG" || \
-              sed -i '/enabled: true/a\    baseline-on-migrate: true\n    baseline-version: 13\n    locations: classpath:db/migration' "$CONFIG"
-            echo "Flyway enabled in prod config"
-            grep -A5 'flyway:' "$CONFIG"
+
+            # ── 1. Update application-prod.yml ──────────────────────
+            # Replace the jpa + flyway block in one shot for reliability
+            cat > /tmp/flyway-patch.py << 'PYEOF'
+import re, sys
+with open(sys.argv[1], 'r') as f:
+    content = f.read()
+content = re.sub(
+    r'(  jpa:\s*\n\s*hibernate:\s*\n\s*)ddl-auto:\s*\S+',
+    r'\g<1>ddl-auto: validate',
+    content
+)
+content = re.sub(
+    r'(  flyway:\s*\n\s*)enabled:\s*\S+.*',
+    r'\g<1>enabled: true\n    locations: classpath:db/migration\n    baseline-on-migrate: true\n    baseline-version: 13\n    validate-on-migrate: true',
+    content
+)
+with open(sys.argv[1], 'w') as f:
+    f.write(content)
+PYEOF
+            python3 /tmp/flyway-patch.py "$CONFIG"
+            echo "=== Updated config ==="
+            grep -A8 'flyway:' "$CONFIG"
+
+            # ── 2. Clean up failed Flyway migration entry ──────────
+            DB_PASS=$(grep 'password:' "$CONFIG" | head -1 | awk '{print $2}')
+            PGPASSWORD="$DB_PASS" psql -U sms_user -d sms_db -c \
+              "DELETE FROM flyway_schema_history WHERE version = '14' AND success = false;" 2>/dev/null || true
+            echo "Cleaned up failed V14 entry (if any)"
           ENDSSH
 
       - name: Restart & Verify
