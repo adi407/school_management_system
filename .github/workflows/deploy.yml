@@ -55,18 +55,23 @@ jobs:
             frontend/dist/sms-frontend/browser/ \
             root@${{ secrets.DROPLET_HOST }}:/opt/sms/frontend/
 
-      - name: Prepare prod DB for Flyway
+      - name: Upload & restore seed data
         run: |
+          scp database/seed_data.sql \
+            root@${{ secrets.DROPLET_HOST }}:/opt/sms/app/seed_data.sql
           ssh root@${{ secrets.DROPLET_HOST }} 'bash -s' << 'ENDSSH'
           CONFIG=/opt/sms/app/application-prod.yml
+          # Revert ddl-auto to update (in case previous deploy changed it)
           sed -i "s/ddl-auto: validate/ddl-auto: update/" "$CONFIG"
-          sed -i "/flyway:/,/enabled:/{s/enabled: false/enabled: true/}" "$CONFIG"
-          grep -q "baseline-on-migrate" "$CONFIG" || sed -i "/enabled: true/a\\    baseline-on-migrate: true\\n    baseline-version: 13\\n    locations: classpath:db/migration\\n    validate-on-migrate: true" "$CONFIG"
-          echo "=== Updated flyway config ==="
-          grep -A8 "flyway:" "$CONFIG"
+          # Disable Flyway — seed data is handled by this script
+          sed -i "/flyway:/,/enabled:/{s/enabled: true/enabled: false/}" "$CONFIG"
+          # Drop failed flyway history so it doesn't block future startups
           DB_PASS=$(grep "password:" "$CONFIG" | head -1 | awk '{print $2}')
-          PGPASSWORD="$DB_PASS" psql -U sms_user -d sms_db -c "DELETE FROM flyway_schema_history WHERE version = '14' AND success = false;" 2>/dev/null || true
-          echo "Cleaned up failed V14 entry (if any)"
+          PGPASSWORD="$DB_PASS" psql -U sms_user -d sms_db -c "DROP TABLE IF EXISTS flyway_schema_history;" 2>/dev/null || true
+          # Restore seed data (ON CONFLICT DO NOTHING = idempotent)
+          PGPASSWORD="$DB_PASS" psql -U sms_user -d sms_db -f /opt/sms/app/seed_data.sql 2>&1 | tail -5
+          PGPASSWORD="$DB_PASS" psql -U sms_user -d sms_db -c "SELECT count(*) AS users FROM users; SELECT count(*) AS students FROM students;"
+          echo "Seed data restored"
           ENDSSH
 
       - name: Restart & Verify
