@@ -1,4 +1,4 @@
-.form-card { max-width: 760px; padding: 32px; }
+﻿.form-card { max-width: 760px; padding: 32px; }
 
 .form-row {
   display: grid;
@@ -20,7 +20,7 @@
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 .required { color: var(--error); margin-left: 2px; }
@@ -32,7 +32,7 @@
   border-radius: 8px;
   font-size: 14px;
   background: var(--surface);
-  color: var(--text);
+  color: var(--text-primary);
   transition: border-color .15s;
   &:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12); }
 }

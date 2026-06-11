@@ -1,4 +1,4 @@
-.filter-bar {
+﻿.filter-bar {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -10,13 +10,13 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
-  color: var(--text);
+  color: var(--text-primary);
   font-size: 14px;
   min-width: 160px;
   cursor: pointer;
 }
 
-.hw-title { font-weight: 500; color: var(--text); }
+.hw-title { font-weight: 500; color: var(--text-primary); }
 
 .due-badge {
   display: inline-flex;
@@ -29,7 +29,7 @@
 
   &--upcoming  { background: rgba(var(--accent-rgb), .12); color: var(--accent); }
   &--due-soon  { background: rgba(var(--yellow-rgb), .15); color: var(--warning); }
-  &--due-today { background: rgba(var(--orange-rgb), .15); color: var(--warning); }
+  &--due-today { background: rgba(var(--yellow-rgb), .20); color: var(--warning); }
   &--overdue   { background: rgba(var(--red-rgb), .12);    color: var(--error);   }
 }
 
@@ -42,7 +42,7 @@
   font-size: 12px;
   font-weight: 600;
   &--green { background: rgba(var(--green-rgb), .12); color: var(--success); }
-  &--gray  { background: rgba(var(--border-rgb), .25); color: var(--text-muted); }
+  &--gray  { background: var(--bg-hover); color: var(--text-muted); }
 }
 
 .action-buttons {
@@ -75,6 +75,6 @@
   color: var(--text-muted);
 
   &__icon { font-size: 48px; margin-bottom: 16px; }
-  h3 { color: var(--text); margin-bottom: 8px; }
+  h3 { color: var(--text-primary); margin-bottom: 8px; }
   p  { margin-bottom: 20px; }
 }

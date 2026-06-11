@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,6 +39,9 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
     long countBySchoolId(UUID schoolId);
 
     Optional<Student> findByIdAndSchoolId(UUID id, UUID schoolId);
+
+    /** All active students in a class — used by PTM briefing generation */
+    List<Student> findBySchoolClassIdAndIsActiveTrueOrderByFirstNameAsc(UUID classId);
 
     /** Resolve a Student from their linked User account — used by the submit endpoint */
     @Query("SELECT s FROM Student s WHERE s.user.id = :userId AND s.schoolId = :schoolId")

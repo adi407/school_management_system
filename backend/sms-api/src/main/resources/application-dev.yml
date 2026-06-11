@@ -5,6 +5,31 @@ spring:
       hibernate:
         format_sql: true
 
+  # ── Local dev: disable Redis & RabbitMQ (only Postgres required) ──
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  cache:
+    type: none
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+  rabbitmq:
+    enabled: false
+
+management:
+  health:
+    redis:
+      enabled: false
+    rabbit:
+      enabled: false
+    mail:
+      enabled: false
+
 logging:
   level:
     com.sms: DEBUG

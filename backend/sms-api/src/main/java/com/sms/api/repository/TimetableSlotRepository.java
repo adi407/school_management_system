@@ -19,4 +19,15 @@ public interface TimetableSlotRepository extends JpaRepository<TimetableSlot, UU
 
     Optional<TimetableSlot> findBySchoolClassIdAndDayOfWeekAndPeriodNo(
         UUID classId, String dayOfWeek, int periodNo);
+
+    /** All slots for a teacher on a specific day */
+    List<TimetableSlot> findByTeacherIdAndDayOfWeekOrderByPeriodNoAsc(UUID teacherId, String dayOfWeek);
+
+    /** All slots for a specific day across the school (for finding free teachers) */
+    @org.springframework.data.jpa.repository.Query(
+        "SELECT ts FROM TimetableSlot ts WHERE ts.schoolId = :schoolId " +
+        "AND ts.dayOfWeek = :day ORDER BY ts.periodNo ASC")
+    List<TimetableSlot> findAllBySchoolAndDay(
+        @org.springframework.data.repository.query.Param("schoolId") UUID schoolId,
+        @org.springframework.data.repository.query.Param("day") String day);
 }

@@ -74,4 +74,12 @@ export class ModuleAssignmentService {
   saGrantAllModules(schoolId: string, userId: string) {
     return this.http.post<void>(`${this.sa(schoolId)}/${userId}/modules/grant-all`, {});
   }
+
+  /** POST /api/v1/super-admin/schools/:schoolId/staff/:userId/reset-password */
+  saResetPassword(schoolId: string, userId: string, newPassword: string) {
+    return this.http.post<void>(
+      `${this.sa(schoolId)}/${userId}/reset-password`,
+      { newPassword }
+    );
+  }
 }

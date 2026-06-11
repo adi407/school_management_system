@@ -1,4 +1,4 @@
-.mb-24  { margin-bottom: 24px; }
+﻿.mb-24  { margin-bottom: 24px; }
 .mb-28  { margin-bottom: 28px; }
 .text-muted  { color: var(--text-muted); }
 .text-profit { color: var(--success); }
@@ -73,7 +73,7 @@
     font-weight: 800;
     line-height: 1;
     margin-bottom: 6px;
-    color: var(--text);
+    color: var(--text-primary);
   }
 
   &__sub {
@@ -116,7 +116,7 @@
   &__title {
     font-size: 0.88rem;
     font-weight: 700;
-    color: var(--text);
+    color: var(--text-primary);
     margin-bottom: 16px;
   }
 
@@ -194,12 +194,12 @@
     text-align: right;
     white-space: nowrap;
     font-weight: 600;
-    color: var(--text);
+    color: var(--text-primary);
   }
 
   &__total td {
     font-weight: 700;
-    color: var(--text);
+    color: var(--text-primary);
     border-top: 2px solid var(--border);
     border-bottom: none;
     padding-top: 10px;
@@ -243,7 +243,7 @@
   &__amt {
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--text);
+    color: var(--text-primary);
     text-align: right;
   }
 }
@@ -256,7 +256,7 @@
   border-top: 2px solid var(--border);
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 // ── Bottom-line summary ───────────────────────────────────────────────────────
@@ -272,7 +272,7 @@
   &--result {
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--text);
+    color: var(--text-primary);
   }
 }
 

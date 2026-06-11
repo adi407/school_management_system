@@ -29,11 +29,12 @@ export class DemoLoginComponent implements OnInit {
   // ── Demo role cards ────────────────────────────────────────────────────────
   loading = signal<string | null>(null);  // email of the card currently signing in
 
-  readonly roles: { label: string; email: string; role: string; icon: string; desc: string }[] = [
-    { label: 'Super Admin',  email: 'superadmin@educloud.com',  role: 'SUPER_ADMIN',  icon: '👑', desc: 'Full platform control · all schools' },
-    { label: 'School Admin', email: 'admin@schoolmanager.live', role: 'SCHOOL_ADMIN', icon: '🏫', desc: 'Staff, students, fees, modules'        },
-    { label: 'Teacher',      email: 'priya.sharma@demo.school', role: 'TEACHER',      icon: '📖', desc: 'Classes, homework & attendance'         },
-    { label: 'Student',      email: 'student@demo.school',      role: 'STUDENT',      icon: '🎓', desc: 'Timetable, homework, updates'           },
+  readonly roles: { label: string; email: string; password: string; role: string; icon: string; desc: string }[] = [
+    { label: 'Super Admin',  email: 'superadmin@educloud.in',       password: 'Admin@1234',   role: 'SUPER_ADMIN',  icon: '👑', desc: 'Full platform control · all schools' },
+    { label: 'School Admin', email: 'admin@gitabn.edu.in',          password: 'Admin@1234',   role: 'SCHOOL_ADMIN', icon: '🏫', desc: 'Staff, students, fees, modules'        },
+    { label: 'Teacher',      email: 'amit.sharma@gitabn.edu.in',    password: 'Teacher@2025', role: 'TEACHER',      icon: '📖', desc: 'Classes, homework & attendance'         },
+    { label: 'Accountant',   email: 'accountant@gitabn.edu.in',     password: 'Staff@2025',   role: 'ACCOUNTANT',   icon: '💰', desc: 'Fee collection, payroll & expenses'     },
+    { label: 'Parent',       email: 'akash.arora@gitabn.edu.in',    password: 'Parent@2025',  role: 'PARENT',       icon: '👨‍👧', desc: 'Child progress, fees & homework'       },
   ];
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
@@ -63,7 +64,9 @@ export class DemoLoginComponent implements OnInit {
     if (this.loading()) return;
     this.loading.set(email);
 
-    this.auth.login(email, 'Admin@1234').subscribe({
+    const card = this.roles.find(r => r.email === email);
+    const password = card?.password ?? 'Admin@1234';
+    this.auth.login(email, password).subscribe({
       next: res => {
         this.loading.set(null);
         this.toast.success(`Demo: signed in as ${res.user.role.replace(/_/g, ' ')}`);

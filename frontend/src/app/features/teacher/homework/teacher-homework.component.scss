@@ -1,10 +1,10 @@
-.filter-bar { display: flex; gap: 12px; }
+﻿.filter-bar { display: flex; gap: 12px; }
 .form-select {
   padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
-  color: var(--text);
+  color: var(--text-primary);
   font-size: 14px;
   min-width: 180px;
 }
@@ -34,7 +34,7 @@
     color: var(--accent);
     letter-spacing: .05em;
   }
-  &__title { font-weight: 600; color: var(--text); }
+  &__title { font-weight: 600; color: var(--text-primary); }
   &__right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
   &__due   { font-size: 13px; font-weight: 600; color: var(--text-muted); min-width: 50px; }
 }
@@ -63,5 +63,5 @@
   padding: 60px 20px;
   color: var(--text-muted);
   &__icon { font-size: 48px; margin-bottom: 16px; }
-  h3 { color: var(--text); margin-bottom: 8px; }
+  h3 { color: var(--text-primary); margin-bottom: 8px; }
 }

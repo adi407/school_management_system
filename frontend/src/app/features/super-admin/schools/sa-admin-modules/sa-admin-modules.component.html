@@ -56,21 +56,30 @@
     } @else {
       <div class="am-user-list" role="list">
         @for (user of filteredUsers(); track user.id) {
-          <button
-            class="am-user-item"
-            role="listitem"
-            [class.am-user-item--active]="selectedUser()?.id === user.id"
-            [attr.aria-pressed]="selectedUser()?.id === user.id"
-            [attr.aria-label]="'Select ' + user.fullName + ', ' + roleLabel(user.role)"
-            (click)="selectUser(user)">
-            <div class="am-user-avatar" aria-hidden="true">{{ user.fullName[0] || '?' }}</div>
-            <div class="am-user-info">
-              <span class="am-user-name">{{ user.fullName }}</span>
-              <span class="badge {{ roleBadgeClass(user.role) }} am-role-badge">
-                {{ roleLabel(user.role) }}
-              </span>
-            </div>
-          </button>
+          <div class="am-user-row">
+            <button
+              class="am-user-item"
+              role="listitem"
+              [class.am-user-item--active]="selectedUser()?.id === user.id"
+              [attr.aria-pressed]="selectedUser()?.id === user.id"
+              [attr.aria-label]="'Select ' + user.fullName + ', ' + roleLabel(user.role)"
+              (click)="selectUser(user)">
+              <div class="am-user-avatar" aria-hidden="true">{{ user.fullName[0] || '?' }}</div>
+              <div class="am-user-info">
+                <span class="am-user-name">{{ user.fullName }}</span>
+                <span class="badge {{ roleBadgeClass(user.role) }} am-role-badge">
+                  {{ roleLabel(user.role) }}
+                </span>
+              </div>
+            </button>
+            <button
+              class="am-reset-btn"
+              title="Reset password for {{ user.fullName }}"
+              [attr.aria-label]="'Reset password for ' + user.fullName"
+              (click)="openResetPassword(user)">
+              🔑
+            </button>
+          </div>
         }
       </div>
     }
@@ -209,3 +218,100 @@
   </main>
 
 </div>
+
+<!-- ── Reset Password Modal ──────────────────────────────────────────────── -->
+@if (showResetModal()) {
+  <div class="am-modal-backdrop" (click)="closeResetModal()" aria-hidden="true"></div>
+  <div class="am-modal" role="dialog" aria-modal="true" aria-labelledby="rp-title">
+    <div class="am-modal__header">
+      <div>
+        <h2 class="am-modal__title" id="rp-title">Reset Password</h2>
+        @if (resetTarget(); as u) {
+          <p class="am-modal__subtitle">{{ u.fullName }} · {{ u.email }}</p>
+        }
+      </div>
+      <button class="am-modal__close" (click)="closeResetModal()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="am-modal__body">
+
+      @if (resetError()) {
+        <div class="am-modal__error" role="alert">⚠ {{ resetError() }}</div>
+      }
+
+      <!-- New password -->
+      <div class="rp-field">
+        <label class="rp-label" for="new-pass">New Password</label>
+        <div class="rp-input-wrap">
+          <input
+            id="new-pass"
+            class="rp-input"
+            [type]="showNewPass() ? 'text' : 'password'"
+            [(ngModel)]="newPassword"
+            placeholder="Min. 8 characters"
+            autocomplete="new-password"
+            [class.rp-input--error]="newPassword.length > 0 && newPassword.length < 8"
+          />
+          <button class="rp-eye" type="button"
+            (click)="showNewPass.set(!showNewPass())"
+            [attr.aria-label]="showNewPass() ? 'Hide password' : 'Show password'">
+            {{ showNewPass() ? '🙈' : '👁' }}
+          </button>
+        </div>
+        @if (newPassword.length > 0 && newPassword.length < 8) {
+          <span class="rp-hint rp-hint--warn">Too short — minimum 8 characters</span>
+        } @else if (newPassword.length >= 8) {
+          <span class="rp-hint rp-hint--ok">✓ Length OK</span>
+        }
+      </div>
+
+      <!-- Confirm password -->
+      <div class="rp-field">
+        <label class="rp-label" for="confirm-pass">Confirm Password</label>
+        <div class="rp-input-wrap">
+          <input
+            id="confirm-pass"
+            class="rp-input"
+            [type]="showConfirmPass() ? 'text' : 'password'"
+            [(ngModel)]="confirmPassword"
+            placeholder="Re-enter password"
+            autocomplete="new-password"
+            [class.rp-input--error]="confirmPassword.length > 0 && confirmPassword !== newPassword"
+          />
+          <button class="rp-eye" type="button"
+            (click)="showConfirmPass.set(!showConfirmPass())"
+            [attr.aria-label]="showConfirmPass() ? 'Hide confirm password' : 'Show confirm password'">
+            {{ showConfirmPass() ? '🙈' : '👁' }}
+          </button>
+        </div>
+        @if (confirmPassword.length > 0 && confirmPassword !== newPassword) {
+          <span class="rp-hint rp-hint--warn">Passwords do not match</span>
+        } @else if (confirmPassword.length > 0 && confirmPassword === newPassword) {
+          <span class="rp-hint rp-hint--ok">✓ Passwords match</span>
+        }
+      </div>
+
+      <p class="rp-notice">
+        The user will need this new password on their next login.
+        Notify them directly after saving.
+      </p>
+
+    </div>
+
+    <div class="am-modal__footer">
+      <button class="btn btn--outline" (click)="closeResetModal()">Cancel</button>
+      <button
+        class="btn btn--primary"
+        [disabled]="resetSaving() || newPassword.length < 8 || newPassword !== confirmPassword"
+        [attr.aria-busy]="resetSaving()"
+        (click)="submitResetPassword()">
+        @if (resetSaving()) {
+          <span class="spinner" style="width:13px;height:13px;border-width:2px" aria-hidden="true"></span>
+          Saving…
+        } @else {
+          🔑 Set New Password
+        }
+      </button>
+    </div>
+  </div>
+}

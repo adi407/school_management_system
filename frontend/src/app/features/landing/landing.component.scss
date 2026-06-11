@@ -387,6 +387,140 @@ $scene-cta:    #F0EFFE;
 @keyframes hint-fade { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
 @keyframes line-slide { 0% { left: -100%; } 60% { left: 100%; } 100% { left: 100%; } }
 
+// ── AI Features Section ─────────────────────────────────────
+$scene-ai: #F4F0FF;
+
+.ai-section {
+  background: $scene-ai;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.ai-section__overlay {
+  background: none !important; // no SVG in this section
+}
+
+.ai-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  padding: 0 24px; max-width: 900px; margin: 0 auto;
+  gap: 20px;
+}
+
+.ai-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 18px; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(124,58,237,.1), rgba(37,99,235,.1));
+  border: 1px solid rgba(124,58,237,.2);
+  font-size: 12px; font-weight: 700; letter-spacing: .5px;
+  color: #7C3AED;
+
+  &__sparkle {
+    font-size: 14px;
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+}
+
+.ai-headline {
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 900; line-height: 1.1;
+  letter-spacing: -2px; margin: 0;
+  color: $text;
+}
+
+.ai-desc {
+  font-size: 16px; line-height: 1.7;
+  color: rgba(15,15,30,0.58);
+  max-width: 500px; margin: 0;
+}
+
+.ai-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px; width: 100%;
+  margin-top: 12px;
+}
+
+.ai-card {
+  background: #fff;
+  border: 1px solid rgba(15,15,30,0.08);
+  border-radius: 20px;
+  padding: 32px 28px;
+  text-align: left;
+  transition: all 0.25s;
+  box-shadow: 0 2px 20px rgba(15,15,30,0.04);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(124,58,237,0.1);
+    border-color: rgba(124,58,237,0.2);
+  }
+
+  &__icon-wrap {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+
+    &--blue   { background: rgba(37,99,235,0.08);  color: #2563EB; }
+    &--purple { background: rgba(124,58,237,0.08); color: #7C3AED; }
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 3px 12px; border-radius: 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: .4px;
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    color: #fff; margin-bottom: 14px;
+  }
+
+  &__title {
+    font-size: 22px; font-weight: 800;
+    line-height: 1.2; letter-spacing: -0.5px;
+    color: $text; margin: 0 0 10px;
+  }
+
+  &__desc {
+    font-size: 14px; line-height: 1.7;
+    color: rgba(15,15,30,0.58);
+    margin: 0 0 16px;
+  }
+
+  &__features {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+}
+
+.ai-feature-tag {
+  display: inline-flex;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+  background: rgba(124,58,237,0.06);
+  color: #7C3AED;
+  border: 1px solid rgba(124,58,237,0.12);
+}
+
+.ai-provider {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 8px; padding-top: 8px;
+
+  &__label {
+    font-size: 12px; color: rgba(15,15,30,0.4);
+    font-weight: 500;
+  }
+  &__name {
+    font-size: 12px; font-weight: 700;
+    color: rgba(15,15,30,0.7);
+  }
+  &__sep { color: rgba(15,15,30,0.2); }
+  &__note {
+    font-size: 11px; color: rgba(15,15,30,0.4);
+    font-style: italic;
+  }
+}
+
 // ── CTA section ──────────────────────────────────────────────
 .cta-section {
   background: $scene-cta;
@@ -712,6 +846,32 @@ $scene-cta:    #F0EFFE;
     background: #0c0c12; border-top-color: rgba(255,255,255,0.08);
     &__brand { color: rgba(255,255,255,0.9); }
     &__copy  { color: rgba(255,255,255,0.3); }
+  }
+
+  // AI section dark
+  .ai-section { background: #0e0a1a; }
+  .ai-headline { color: #fff; }
+  .ai-desc { color: rgba(255,255,255,0.55); }
+  .ai-eyebrow {
+    background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.3);
+    color: #A78BFA;
+  }
+  .ai-card {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.08);
+    &:hover { border-color: rgba(124,58,237,0.3); box-shadow: 0 12px 40px rgba(124,58,237,0.12); }
+    &__title { color: #fff; }
+    &__desc  { color: rgba(255,255,255,0.55); }
+  }
+  .ai-feature-tag {
+    background: rgba(124,58,237,0.12); color: #A78BFA;
+    border-color: rgba(124,58,237,0.2);
+  }
+  .ai-provider {
+    &__label { color: rgba(255,255,255,0.35); }
+    &__name  { color: rgba(255,255,255,0.65); }
+    &__sep   { color: rgba(255,255,255,0.15); }
+    &__note  { color: rgba(255,255,255,0.35); }
   }
 
   // Stars visible in dark

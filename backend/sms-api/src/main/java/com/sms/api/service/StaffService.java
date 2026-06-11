@@ -99,6 +99,20 @@ public class StaffService {
         return toDto(userRepository.save(user));
     }
 
+    /**
+     * Resets the password for any user belonging to the given school.
+     * Intended for super-admin use only — the controller enforces that role constraint.
+     * Uses tenant-safe lookup (schoolId + userId must match) so a super-admin
+     * cannot accidentally reset a user from a different school.
+     */
+    public void resetUserPassword(UUID schoolId, UUID userId, String newPassword) {
+        User user = userRepository.findByIdAndSchoolId(userId, schoolId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     public void deleteStaff(UUID schoolId, UUID staffId) {
         User user = userRepository.findById(staffId)
             .filter(u -> u.getSchool() != null && schoolId.equals(u.getSchool().getId()))

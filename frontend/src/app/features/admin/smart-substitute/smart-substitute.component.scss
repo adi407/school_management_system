@@ -1,0 +1,268 @@
+/* ═══════════════════════════════════════════════════════════════
+   Smart Substitute — AI teacher replacement UI
+   ═══════════════════════════════════════════════════════════════ */
+
+.ss-page { padding: 24px; max-width: 1100px; }
+
+/* ── Header ──────────────────────────────────────────────────── */
+.ss-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+}
+
+.ss-title {
+  font-size: 22px; font-weight: 800; color: var(--text-primary);
+  display: flex; align-items: center; gap: 10px; margin: 0 0 6px;
+}
+
+.ss-ai-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800;
+  background: linear-gradient(135deg, #7C3AED, #2563EB);
+  color: #fff; letter-spacing: .5px;
+}
+
+.ss-subtitle { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+.ss-date-input {
+  padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--input-bg); color: var(--text-primary);
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  &:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .1); }
+}
+
+/* ── Stats ────────────────────────────────────────────────────── */
+.ss-stats {
+  display: flex; gap: 14px; margin-bottom: 24px;
+}
+
+.ss-stat {
+  flex: 1; padding: 16px 20px; border-radius: 14px;
+  background: var(--card-bg); border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+
+  &__num  { font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+  &__label { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+  &--warning .ss-stat__num { color: var(--warning); }
+  &--success .ss-stat__num { color: var(--success); }
+}
+
+/* ── Report Card ─────────────────────────────────────────────── */
+.ss-report-card { padding: 20px 24px; margin-bottom: 24px; }
+.ss-report-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0 0 14px; }
+
+.ss-report-form {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+
+.ss-select, .ss-input {
+  padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--input-bg); color: var(--text-primary);
+  font-family: var(--font); font-size: 13px;
+  &:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .1); }
+}
+.ss-select { min-width: 220px; }
+.ss-input { flex: 1; min-width: 160px; }
+
+.ss-report-btn {
+  padding: 9px 22px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #7C3AED, #2563EB);
+  color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: var(--font); transition: all .2s; white-space: nowrap;
+  display: flex; align-items: center; gap: 8px;
+  &:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
+/* ── Assignment Cards ────────────────────────────────────────── */
+.ss-assignments { display: flex; flex-direction: column; gap: 12px; }
+
+.ss-card {
+  display: flex; align-items: center; gap: 16px; padding: 18px 22px;
+  border-left: 4px solid var(--border); transition: all .2s;
+
+  &--assigned  { border-left-color: var(--success); background: rgba(var(--green-rgb), .03); }
+  &--self-study { border-left-color: var(--warning); background: rgba(var(--yellow-rgb), .03); }
+
+  &__period {
+    text-align: center; flex-shrink: 0; min-width: 70px;
+    &-num  { font-size: 18px; font-weight: 800; color: var(--accent); }
+    &-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  }
+
+  &__body {
+    flex: 1; min-width: 0;
+    &-class, .ss-card__class { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    &-subject, .ss-card__subject { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  }
+
+  &__absent {
+    font-size: 12px; color: var(--text-muted); margin-top: 4px;
+    &-label { color: var(--error); font-weight: 600; }
+  }
+
+  &__suggestion { flex: 1; min-width: 200px; }
+
+  &__suggested {
+    font-size: 13px; color: var(--text-primary);
+    strong { color: var(--accent); }
+  }
+
+  &__assigned-to {
+    font-size: 14px; font-weight: 600; color: var(--success);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  &__self-study {
+    font-size: 14px; font-weight: 600; color: var(--warning);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  &__no-match { font-size: 13px; color: var(--error); font-style: italic; }
+
+  &__reason {
+    font-size: 11px; color: var(--text-muted); margin-top: 4px;
+    font-style: italic;
+  }
+
+  &__actions {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+}
+
+.ss-ai-sparkle {
+  background: linear-gradient(135deg, #7C3AED, #2563EB);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.ss-assigned-icon {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--success); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+}
+
+.ss-action-btn {
+  padding: 6px 16px; border-radius: 8px; border: 1px solid var(--accent);
+  background: transparent; color: var(--accent); font-size: 12px;
+  font-weight: 600; cursor: pointer; font-family: var(--font);
+  transition: all .15s; white-space: nowrap;
+  &:hover { background: var(--accent); color: #fff; }
+}
+
+/* ── Modal ────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px); z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.ss-modal {
+  width: min(600px, 95vw); max-height: 80vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  animation: slide-up .2s ease;
+
+  &__header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-primary); }
+  }
+
+  &__close {
+    background: none; border: none; cursor: pointer; font-size: 18px;
+    color: var(--text-muted); padding: 4px;
+    &:hover { color: var(--text-primary); }
+  }
+
+  &__body { padding: 16px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+  &__footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: center;
+  }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Suggestion Row ──────────────────────────────────────────── */
+.ss-suggestion {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border);
+  transition: all .15s;
+
+  &:hover { border-color: var(--accent); background: rgba(var(--accent-rgb), .03); }
+  &--best { border-color: var(--accent); background: rgba(var(--accent-rgb), .04); }
+
+  &__avatar {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 15px; flex-shrink: 0;
+  }
+
+  &__info { flex: 1; min-width: 0; }
+
+  &__name {
+    font-size: 14px; font-weight: 600; color: var(--text-primary);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  &__reason { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  &__meta   { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+}
+
+.ss-tag {
+  display: inline-flex; padding: 1px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: .3px;
+  &--subject { background: rgba(var(--green-rgb), .12); color: var(--success); }
+}
+
+.ss-assign-btn {
+  padding: 8px 18px; border-radius: 9px; border: none;
+  background: var(--accent); color: #fff; font-size: 12px;
+  font-weight: 700; cursor: pointer; font-family: var(--font);
+  transition: all .15s; flex-shrink: 0;
+  &:hover { filter: brightness(1.08); }
+}
+
+.ss-self-study-btn {
+  padding: 10px 24px; border-radius: 10px;
+  border: 1px dashed var(--border-2); background: var(--input-bg);
+  color: var(--text-2); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all .15s;
+  &:hover { border-color: var(--warning); color: var(--warning); background: rgba(var(--yellow-rgb), .06); }
+}
+
+/* ── Utilities ────────────────────────────────────────────────── */
+.ss-loading { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+
+.ss-empty {
+  text-align: center; padding: 48px 24px; color: var(--text-muted);
+  &__icon { font-size: 48px; margin-bottom: 12px; opacity: .5; }
+  h3 { color: var(--text-primary); font-size: 16px; margin: 0 0 6px; }
+  p  { font-size: 13px; margin: 0; }
+}
+
+.ss-empty-suggestions {
+  text-align: center; padding: 32px; color: var(--text-muted); font-size: 14px;
+}
+
+.spinner {
+  width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .6s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ss-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .ss-stats { flex-direction: column; }
+  .ss-report-form { flex-direction: column; }
+  .ss-select, .ss-input { width: 100%; min-width: 0; }
+}

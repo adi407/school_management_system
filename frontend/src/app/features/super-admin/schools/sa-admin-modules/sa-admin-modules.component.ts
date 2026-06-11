@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ModuleAssignmentService } from '../../../../core/services/module-assignment.service';
 import { SchoolService } from '../../../../core/services/school.service';
@@ -18,7 +19,7 @@ import { SchoolDto } from '../../../../core/models/school.model';
 @Component({
   selector: 'sms-sa-admin-modules',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './sa-admin-modules.component.html',
   styleUrls: ['./sa-admin-modules.component.scss'],
 })
@@ -41,6 +42,16 @@ export class SaAdminModulesComponent implements OnInit {
   saving        = signal<StaffModule | null>(null);
   grantingAll   = signal(false);
   searchQuery   = signal('');
+
+  // ── Reset password modal ───────────────────────────────────────────────────
+  showResetModal    = signal(false);
+  resetTarget       = signal<SchoolUserDto | null>(null);
+  resetSaving       = signal(false);
+  resetError        = signal('');
+  newPassword       = '';
+  confirmPassword   = '';
+  showNewPass       = signal(false);
+  showConfirmPass   = signal(false);
 
   // ── Constants ──────────────────────────────────────────────────────────────
   readonly allModules    = Object.keys(MODULE_LABELS) as StaffModule[];
@@ -204,6 +215,52 @@ export class SaAdminModulesComponent implements OnInit {
       error: () => {
         this.grantingAll.set(false);
         this.toast.error('Failed to grant all modules');
+      },
+    });
+  }
+
+  // ── Reset password ─────────────────────────────────────────────────────────
+  openResetPassword(user: SchoolUserDto) {
+    this.resetTarget.set(user);
+    this.newPassword     = '';
+    this.confirmPassword = '';
+    this.resetError.set('');
+    this.showNewPass.set(false);
+    this.showConfirmPass.set(false);
+    this.showResetModal.set(true);
+  }
+
+  closeResetModal() {
+    this.showResetModal.set(false);
+    this.resetTarget.set(null);
+  }
+
+  submitResetPassword() {
+    const user = this.resetTarget();
+    if (!user) return;
+
+    // Client-side validation
+    if (this.newPassword.length < 8) {
+      this.resetError.set('Password must be at least 8 characters.');
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      this.resetError.set('Passwords do not match.');
+      return;
+    }
+
+    this.resetError.set('');
+    this.resetSaving.set(true);
+
+    this.moduleSvc.saResetPassword(this.schoolId, user.id, this.newPassword).subscribe({
+      next: () => {
+        this.resetSaving.set(false);
+        this.closeResetModal();
+        this.toast.success(`Password updated for ${user.fullName}`);
+      },
+      error: err => {
+        this.resetSaving.set(false);
+        this.resetError.set(err?.error?.message ?? 'Failed to reset password. Try again.');
       },
     });
   }

@@ -172,6 +172,15 @@ export const routes: Routes = [
             path: 'module-assignments',
             loadComponent: () => import('./features/admin/module-assignments/module-assignments.component').then(m => m.ModuleAssignmentsComponent),
           },
+          // ── AI Features ──────────────────────────────────────────────
+          {
+            path: 'smart-substitute',
+            loadComponent: () => import('./features/admin/smart-substitute/smart-substitute.component').then(m => m.SmartSubstituteComponent),
+          },
+          {
+            path: 'ptm-prep',
+            loadComponent: () => import('./features/admin/ptm-prep/ptm-prep.component').then(m => m.PtmPrepComponent),
+          },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
       },

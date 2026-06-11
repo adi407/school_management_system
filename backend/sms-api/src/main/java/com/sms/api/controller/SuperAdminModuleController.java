@@ -3,9 +3,11 @@ package com.sms.api.controller;
 import com.sms.api.dto.module.AssignModuleRequest;
 import com.sms.api.dto.module.StaffModuleAssignmentDto;
 import com.sms.api.dto.school.SchoolUserDto;
+import com.sms.api.dto.staff.ResetPasswordRequest;
 import com.sms.api.entity.User;
 import com.sms.api.repository.UserRepository;
 import com.sms.api.service.ModuleAssignmentService;
+import com.sms.api.service.StaffService;
 import com.sms.core.enums.StaffModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,11 +35,14 @@ public class SuperAdminModuleController {
 
     private final ModuleAssignmentService moduleService;
     private final UserRepository          userRepository;
+    private final StaffService            staffService;
 
     public SuperAdminModuleController(ModuleAssignmentService moduleService,
-                                      UserRepository userRepository) {
+                                      UserRepository userRepository,
+                                      StaffService staffService) {
         this.moduleService  = moduleService;
         this.userRepository = userRepository;
+        this.staffService   = staffService;
     }
 
     // ── User listing ──────────────────────────────────────────────────────────
@@ -115,6 +120,24 @@ public class SuperAdminModuleController {
         @PathVariable UUID userId
     ) {
         moduleService.assignAllModules(schoolId, userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ── Password management ───────────────────────────────────────────────────
+
+    /**
+     * POST /api/v1/super-admin/schools/{schoolId}/staff/{userId}/reset-password
+     * Lets the super-admin set a new password for any user in the school.
+     * The user is looked up by both schoolId and userId (tenant-safe).
+     */
+    @PostMapping("/{userId}/reset-password")
+    @Operation(summary = "Reset a school user's password (super-admin only)")
+    public ResponseEntity<Void> resetPassword(
+        @PathVariable UUID schoolId,
+        @PathVariable UUID userId,
+        @Valid @RequestBody ResetPasswordRequest request
+    ) {
+        staffService.resetUserPassword(schoolId, userId, request.newPassword());
         return ResponseEntity.noContent().build();
     }
 

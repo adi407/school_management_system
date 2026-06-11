@@ -1,4 +1,4 @@
-.alert-banner {
+﻿.alert-banner {
   display: flex;
   align-items: flex-start;
   gap: 14px;
@@ -37,7 +37,7 @@
   text-align: center;
   border: 1px solid var(--border);
 
-  &__value { font-size: 36px; font-weight: 700; color: var(--text); }
+  &__value { font-size: 36px; font-weight: 700; color: var(--text-primary); }
   &__label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
   &--green &__value { color: var(--success); }
@@ -72,7 +72,7 @@
   }
 }
 
-.class-name { font-weight: 600; font-size: 15px; color: var(--text); }
+.class-name { font-weight: 600; font-size: 15px; color: var(--text-primary); }
 
 .alert-badge {
   font-size: 11px;
@@ -96,7 +96,7 @@
   height: 10px;
   border-radius: 5px;
   overflow: hidden;
-  background: rgba(var(--border-rgb), .3);
+  background: var(--bg-hover);
   display: flex;
   margin-bottom: 12px;
 
@@ -117,14 +117,14 @@
   gap: 2px;
 
   &__emoji { font-size: 18px; }
-  &__num   { font-size: 13px; font-weight: 600; color: var(--text); }
+  &__num   { font-size: 13px; font-weight: 600; color: var(--text-primary); }
 }
 
 .neg-indicator {
   font-size: 12px;
   color: var(--text-muted);
   padding: 6px 10px;
-  background: rgba(var(--border-rgb), .2);
+  background: var(--bg-hover);
   border-radius: 6px;
   text-align: center;
 
@@ -149,7 +149,7 @@
   padding: 60px 20px;
   color: var(--text-muted);
   &__icon { font-size: 48px; margin-bottom: 16px; }
-  h3 { color: var(--text); margin-bottom: 8px; }
+  h3 { color: var(--text-primary); margin-bottom: 8px; }
 }
 
 @media (max-width: 700px) {

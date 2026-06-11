@@ -105,6 +105,16 @@ export class SidebarComponent {
       ],
     },
 
+    // ── Admin: AI-Powered Features ──────────────────────────────────────────
+    {
+      label: 'AI Assistant',
+      roles: ['SCHOOL_ADMIN'],
+      items: [
+        { label: 'Smart Substitute', route: '/admin/smart-substitute', icon: '🔄' },
+        { label: 'PTM Prep',         route: '/admin/ptm-prep',         icon: '🤝' },
+      ],
+    },
+
     // ── Admin: HR module ──────────────────────────────────────────────────────
     {
       label: 'HR & Staff',

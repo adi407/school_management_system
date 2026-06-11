@@ -1,0 +1,506 @@
+{
+  "school": "Gita Bal Niketan, Sector 21D, Faridabad 121001",
+  "board": "CBSE",
+  "academic_year": {
+    "id": "2fa9086c-172d-42a6-85cf-0a6193e6661b",
+    "name": "2025-26"
+  },
+  "subjects": {
+    "created": 29,
+    "failed": 0,
+    "ids": {
+      "ENG-PRI": "b7995e33-8651-4a00-bd57-6ff5294342db",
+      "HIN-PRI": "b1683d71-68f4-498e-8c04-6ba726d93a8a",
+      "MTH-PRI": "58a39f03-15a7-4cb1-a893-f90b41442a53",
+      "EVS": "05d96cc5-76a0-45c2-9a7e-335cabfe36e4",
+      "GK": "bff32e25-74ea-4a38-b446-1c6909ef2ce7",
+      "CS-APP": "40c85fc1-9fe9-4d07-bdcf-f38fa34c6744",
+      "ART": "4dfb46f2-fa2b-4b01-afc9-757c4367ed8e",
+      "PHY-ED": "34773d70-c3bc-4cdb-922f-2fb94a6b108c",
+      "SCI": "c0798488-cf13-4615-a47b-dbbc98a5501f",
+      "SST": "a15b95f7-13aa-41f1-8b50-36ce3aedc81e",
+      "FRE": "2073d02b-176a-49f7-abff-b8dd3d488018",
+      "IT": "c8c3b588-7963-4ccb-8a28-7443e9ba7a03",
+      "ENG-C": "d737a4bb-6c59-4b47-8319-b4882c6a5692",
+      "HIN-C": "a97db710-9993-4dc7-923e-9fad1c318372",
+      "PHY": "b4bc0e74-83d1-4feb-ab19-6997e4e86c36",
+      "CHE": "1cad0671-adcc-4959-adf8-fb4cd6ba8240",
+      "MTH-H": "f8b56bf6-b248-4396-bbba-d5f9b23ac755",
+      "BIO": "3a407161-7152-40ea-bbec-724592f9f98d",
+      "CS-ADV": "08bec4e3-47a5-45c3-9f03-9aac785fd1bd",
+      "ACC": "f1fe0181-6f80-4287-8d4b-7b96be17cf5a",
+      "BST": "36674fb8-19b6-4732-895f-327323325fed",
+      "ECO": "519d6370-7945-42ac-bbb4-004b337167f2",
+      "MTH-A": "bedd7b00-0c71-4ce0-bb5f-802e435511a9",
+      "IP": "4f235433-af81-44ed-9387-2ec704dc06dc",
+      "HIS": "0e226acd-ee57-448c-b076-d6ec17693a74",
+      "GEO": "62ad1872-441d-45f1-8215-a92cfe111b29",
+      "POL": "23e33a66-c982-4a1f-9169-be78f17db876",
+      "PSY": "5f4abef6-5a3c-493c-b824-7d0dfdffb74e",
+      "FRE-SR": "a7c38504-770a-4d42-86df-bb4b314309e5"
+    }
+  },
+  "staff": {
+    "created": 36,
+    "failed": 0,
+    "salary_reference": [
+      {
+        "staffId": "cbb1c62c-dbd8-40a4-9621-0186f2bf6056",
+        "name": "Sunita Sharma",
+        "email": "sunita.sharma@gitabn.edu.in",
+        "department": "Primary English",
+        "monthlySalaryINR": 30000
+      },
+      {
+        "staffId": "d40b342e-3511-4710-a039-3b79c871e521",
+        "name": "Anita Verma",
+        "email": "anita.verma@gitabn.edu.in",
+        "department": "Primary Hindi",
+        "monthlySalaryINR": 28000
+      },
+      {
+        "staffId": "b258d631-292e-40b0-8f10-cb1c3c913247",
+        "name": "Rekha Gupta",
+        "email": "rekha.gupta@gitabn.edu.in",
+        "department": "Primary Mathematics",
+        "monthlySalaryINR": 32000
+      },
+      {
+        "staffId": "7d1f5608-0249-4635-a93d-f7e4c122ab67",
+        "name": "Kavita Singh",
+        "email": "kavita.singh@gitabn.edu.in",
+        "department": "Primary EVS",
+        "monthlySalaryINR": 27000
+      },
+      {
+        "staffId": "64fdab06-1302-46b2-a0f2-b57a2724edff",
+        "name": "Neha Kapoor",
+        "email": "neha.kapoor@gitabn.edu.in",
+        "department": "Primary GK",
+        "monthlySalaryINR": 25000
+      },
+      {
+        "staffId": "13ff15e4-8b35-4a10-a915-019cd6ba9902",
+        "name": "Priya Bansal",
+        "email": "priya.bansal@gitabn.edu.in",
+        "department": "Primary Computer",
+        "monthlySalaryINR": 28000
+      },
+      {
+        "staffId": "b8053ecd-1cbb-4c6d-b562-3e6e44622cec",
+        "name": "Meena Arora",
+        "email": "meena.arora@gitabn.edu.in",
+        "department": "Arts",
+        "monthlySalaryINR": 24000
+      },
+      {
+        "staffId": "e3a3f40c-f79a-4ebc-8b05-6c34a6dfee5d",
+        "name": "Ramesh Yadav",
+        "email": "ramesh.yadav@gitabn.edu.in",
+        "department": "Physical Education",
+        "monthlySalaryINR": 26000
+      },
+      {
+        "staffId": "65cb44f9-0997-458f-a63f-8380b2faea69",
+        "name": "Amit Sharma",
+        "email": "amit.sharma@gitabn.edu.in",
+        "department": "English",
+        "monthlySalaryINR": 68000
+      },
+      {
+        "staffId": "c1cc8f11-fc30-4ad7-aa8c-9fa4361d2c4b",
+        "name": "Sushma Mishra",
+        "email": "sushma.mishra@gitabn.edu.in",
+        "department": "Hindi",
+        "monthlySalaryINR": 58000
+      },
+      {
+        "staffId": "34bac23a-acbe-4729-8ae8-2c5ec08f23bb",
+        "name": "Rohit Kumar",
+        "email": "rohit.kumar@gitabn.edu.in",
+        "department": "Mathematics",
+        "monthlySalaryINR": 65000
+      },
+      {
+        "staffId": "df9b4117-a452-4d7f-b9a4-be2c22b4b0b7",
+        "name": "Priti Agarwal",
+        "email": "priti.agarwal@gitabn.edu.in",
+        "department": "Science",
+        "monthlySalaryINR": 70000
+      },
+      {
+        "staffId": "51b5b95a-66f4-44b2-92ef-a5a1e0bacd00",
+        "name": "Sunita Chaudhary",
+        "email": "sunita.chaudhary@gitabn.edu.in",
+        "department": "Social Science",
+        "monthlySalaryINR": 58000
+      },
+      {
+        "staffId": "0fc0370a-0785-4ffb-a532-7eba58f78e99",
+        "name": "Vikash Singh",
+        "email": "vikash.singh@gitabn.edu.in",
+        "department": "Computer Science",
+        "monthlySalaryINR": 55000
+      },
+      {
+        "staffId": "02bcacb7-b30d-4511-8bf4-154aebbda508",
+        "name": "Mahesh Tanwar",
+        "email": "mahesh.tanwar@gitabn.edu.in",
+        "department": "Physical Education",
+        "monthlySalaryINR": 45000
+      },
+      {
+        "staffId": "b14c10bf-a4ad-45da-b38b-14a41baaa0be",
+        "name": "Priyanka Mehta",
+        "email": "priyanka.mehta@gitabn.edu.in",
+        "department": "French",
+        "monthlySalaryINR": 52000
+      },
+      {
+        "staffId": "779e50de-664c-4e45-8285-12b1841f0f34",
+        "name": "Ravi Verma",
+        "email": "ravi.verma@gitabn.edu.in",
+        "department": "English",
+        "monthlySalaryINR": 38000
+      },
+      {
+        "staffId": "1f59a709-07ad-49c5-a70e-457ee7d607d6",
+        "name": "Sangeeta Sharma",
+        "email": "sangeeta.sharma@gitabn.edu.in",
+        "department": "Hindi",
+        "monthlySalaryINR": 35000
+      },
+      {
+        "staffId": "5a303e04-c7e4-43f6-8eb9-afd58102de7c",
+        "name": "Pankaj Gupta",
+        "email": "pankaj.gupta@gitabn.edu.in",
+        "department": "Mathematics",
+        "monthlySalaryINR": 40000
+      },
+      {
+        "staffId": "15352646-de6c-4815-b6c2-13d56937d58e",
+        "name": "Nidhi Jain",
+        "email": "nidhi.jain@gitabn.edu.in",
+        "department": "Science",
+        "monthlySalaryINR": 38000
+      },
+      {
+        "staffId": "8fc404de-02ec-40b3-ad62-4c7b0021e764",
+        "name": "Alok Srivastava",
+        "email": "alok.srivastava@gitabn.edu.in",
+        "department": "Social Science",
+        "monthlySalaryINR": 36000
+      },
+      {
+        "staffId": "3dcc0609-a99b-419e-9a61-6b4d2e03c12f",
+        "name": "Sumit Aggarwal",
+        "email": "sumit.aggarwal@gitabn.edu.in",
+        "department": "Computer Science",
+        "monthlySalaryINR": 38000
+      },
+      {
+        "staffId": "17409133-ec5d-44af-be04-06e3f333bd11",
+        "name": "Renu Yadav",
+        "email": "renu.yadav@gitabn.edu.in",
+        "department": "Physical Education",
+        "monthlySalaryINR": 32000
+      },
+      {
+        "staffId": "dfd41fcd-0145-436e-a060-21a4aecc0134",
+        "name": "Priya Chopra",
+        "email": "priya.chopra@gitabn.edu.in",
+        "department": "French",
+        "monthlySalaryINR": 35000
+      },
+      {
+        "staffId": "3655cb2d-8e86-4df0-bac8-66c12c1c495b",
+        "name": "Deepak Agarwal",
+        "email": "deepak.agarwal@gitabn.edu.in",
+        "department": "Commerce",
+        "monthlySalaryINR": 55000
+      },
+      {
+        "staffId": "57f0f609-dfd2-4b63-b651-7dbad18a0f15",
+        "name": "Neha Goel",
+        "email": "neha.goel@gitabn.edu.in",
+        "department": "Commerce",
+        "monthlySalaryINR": 48000
+      },
+      {
+        "staffId": "40475920-b1d2-4af5-8cca-d0e4becada3e",
+        "name": "Sonia Bansal",
+        "email": "sonia.bansal@gitabn.edu.in",
+        "department": "Economics",
+        "monthlySalaryINR": 58000
+      },
+      {
+        "staffId": "b4e73526-4ef3-4fe4-a00a-0510b3b87db3",
+        "name": "Rajesh Nanda",
+        "email": "rajesh.nanda@gitabn.edu.in",
+        "department": "Mathematics",
+        "monthlySalaryINR": 50000
+      },
+      {
+        "staffId": "95615d14-489e-4d1f-a585-85a1a0f80e00",
+        "name": "Anil Khanna",
+        "email": "anil.khanna@gitabn.edu.in",
+        "department": "Physics",
+        "monthlySalaryINR": 62000
+      },
+      {
+        "staffId": "03fb8b60-8c21-46e4-85e7-c829ada557d3",
+        "name": "Smita Malhotra",
+        "email": "smita.malhotra@gitabn.edu.in",
+        "department": "Chemistry",
+        "monthlySalaryINR": 60000
+      },
+      {
+        "staffId": "0e00bb3d-6253-4930-b5f1-d38e9807c141",
+        "name": "Ritu Jain",
+        "email": "ritu.jain@gitabn.edu.in",
+        "department": "Biology",
+        "monthlySalaryINR": 58000
+      },
+      {
+        "staffId": "616ab142-0f4d-4f89-a038-e0e43923310f",
+        "name": "Vivek Khatri",
+        "email": "vivek.khatri@gitabn.edu.in",
+        "department": "Computer Science",
+        "monthlySalaryINR": 52000
+      },
+      {
+        "staffId": "dbfc86cb-070a-4284-9081-5367357359b0",
+        "name": "Anita Hooda",
+        "email": "anita.hooda@gitabn.edu.in",
+        "department": "History",
+        "monthlySalaryINR": 55000
+      },
+      {
+        "staffId": "8eba588c-30f6-4b5a-be28-248d273f71ae",
+        "name": "Suresh Mann",
+        "email": "suresh.mann@gitabn.edu.in",
+        "department": "Geography",
+        "monthlySalaryINR": 48000
+      },
+      {
+        "staffId": "5d81a0e6-cf32-4f49-8530-675cf4efe4d1",
+        "name": "Pooja Saini",
+        "email": "pooja.saini@gitabn.edu.in",
+        "department": "Political Science",
+        "monthlySalaryINR": 45000
+      },
+      {
+        "staffId": "dafa88b7-e29b-4a93-a2cc-7144063fe7fa",
+        "name": "Kavya Duhan",
+        "email": "kavya.duhan@gitabn.edu.in",
+        "department": "Arts",
+        "monthlySalaryINR": 50000
+      }
+    ]
+  },
+  "classes": {
+    "created": 36,
+    "failed": 0,
+    "ids": {
+      "1_A": "8872e0dd-3a79-4127-ab5f-ea98c6dcdc94",
+      "1_B": "0d0d4461-dcc4-43bd-b116-fa4b49f1339a",
+      "1_C": "0fd5c6ee-2b82-4a5a-a8e4-390fbda1a214",
+      "2_A": "88fa933e-fb66-4bf7-8e6a-9845047db851",
+      "2_B": "93497f6d-0e36-48ab-b85d-66a81d8d6ed6",
+      "2_C": "67f94b9c-763e-41c8-b75b-a4d3c7cd00be",
+      "3_A": "22c9dbad-9f35-4537-bd39-5fd4cc88c6ba",
+      "3_B": "8f5d2305-56a3-42bf-af05-3ea3e04f35af",
+      "3_C": "ab0b653f-61a7-445a-9a0f-e3ebcf2a34e9",
+      "4_A": "38a3d591-10be-44d0-99ac-d89235806dbf",
+      "4_B": "ea6cf9c7-030e-480d-97fc-72b88e66beec",
+      "4_C": "5b28b7e0-a95f-47cf-a542-0cb223f26e66",
+      "5_A": "44a08e1b-9860-4573-8c3f-85d837c9dcab",
+      "5_B": "403309f7-31ab-44dd-8847-38e267a99735",
+      "5_C": "40a07609-0439-4af1-af3d-552e108aa863",
+      "6_A": "8097b1c8-7cf5-4d07-9788-2ad01c613819",
+      "6_B": "72d0e461-9df9-46e7-8abb-e4499b1092e8",
+      "6_C": "d3159c27-f4f4-4be4-bcdb-2eb18531f952",
+      "7_A": "14d96983-2b92-46b6-ba13-463d0078216a",
+      "7_B": "c8f27643-ef7b-4593-b5d2-2886ca6924cd",
+      "7_C": "a45b7c29-915b-4566-bab1-a4e4f20f9da2",
+      "8_A": "e84aefe9-8106-4e37-a0b2-4fe5b2460c1e",
+      "8_B": "c1ac65ab-5fbf-46d4-9afa-d7331777b669",
+      "8_C": "3da211a3-d299-471f-9dc1-44b6e817b10e",
+      "9_A": "e02d0e30-4678-44b7-84da-712034334e28",
+      "9_B": "e98a7e06-4018-4531-85a2-3b56dc528f79",
+      "9_C": "82ffa56f-a7db-4678-8b22-f36476bfb324",
+      "10_A": "9259ac8c-cdb4-435e-81c0-134355cd9e83",
+      "10_B": "91dfe219-c5e8-490e-84e8-ceef4087568e",
+      "10_C": "07c1a2e3-817e-4c42-85fd-48b9f3c2e453",
+      "11_A": "dc4c7aab-14cc-455c-bd47-6df04ead1df7",
+      "11_B": "e78a8be6-a116-4061-9782-da53e3c65df0",
+      "11_C": "25c9b443-5aed-4f28-979b-fedb722ac002",
+      "12_A": "6303a65a-e084-4e3d-ae6e-d25e093db06d",
+      "12_B": "bad1b7eb-a502-4d01-a2e4-aabc973f67bb",
+      "12_C": "1b3f3796-a4b1-4927-8043-0d6144d53c43"
+    }
+  },
+  "class_subjects": {
+    "created": 288,
+    "failed": 0
+  },
+  "students": {
+    "created": 1080,
+    "failed": 0,
+    "by_class": {
+      "1_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "1_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "1_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "2_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "2_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "2_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "3_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "3_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "3_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "4_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "4_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "4_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "5_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "5_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "5_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "6_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "6_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "6_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "7_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "7_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "7_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "8_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "8_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "8_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "9_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "9_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "9_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "10_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "10_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "10_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "11_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "11_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "11_C": {
+        "ok": 30,
+        "fail": 0
+      },
+      "12_A": {
+        "ok": 30,
+        "fail": 0
+      },
+      "12_B": {
+        "ok": 30,
+        "fail": 0
+      },
+      "12_C": {
+        "ok": 30,
+        "fail": 0
+      }
+    }
+  },
+  "guardians": {
+    "total": 1718
+  },
+  "errors": [],
+  "notes": {
+    "grade_11_12_section_C": "Section C in Grades 11-12 is a split section: first 15 students follow PCB/Medical stream, next 15 follow Arts stream. All subjects from both streams are assigned to this class for AI analysis purposes.",
+    "salary": "Salary structures must be configured separately via Payroll \u2192 Salary Structures. See salary_reference in staff section for recommended figures.",
+    "teacher_password": "Teacher@2025 (set for all teacher accounts)"
+  }
+}

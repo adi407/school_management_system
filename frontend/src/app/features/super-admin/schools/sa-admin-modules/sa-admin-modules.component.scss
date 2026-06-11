@@ -221,3 +221,139 @@
   background: rgba(var(--yellow-rgb), .1); border: 1px solid var(--warning);
   border-radius: var(--radius-sm); font-size: 13px; color: var(--warning);
 }
+
+// ── User row (user button + reset key icon side-by-side) ──────────────────────
+.am-user-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .am-user-item { flex: 1; }
+}
+
+.am-reset-btn {
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; border: 1px solid transparent;
+  background: transparent; cursor: pointer; font-size: 14px;
+  color: var(--text-muted); transition: background var(--transition), border-color var(--transition);
+
+  &:hover {
+    background: rgba(var(--yellow-rgb, 255,159,10), .1);
+    border-color: rgba(var(--yellow-rgb, 255,159,10), .25);
+    color: var(--warning);
+  }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+
+// ── Reset password modal ──────────────────────────────────────────────────────
+.am-modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+}
+
+.am-modal {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 301;
+  background: var(--card-bg, var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 80px rgba(0,0,0,.22);
+  width: min(460px, 96vw);
+  display: flex; flex-direction: column;
+  animation: am-modal-in .18s cubic-bezier(0.16,1,0.3,1);
+
+  &__header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+  }
+  &__title  { font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0 0 3px; }
+  &__subtitle { font-size: 12px; color: var(--text-muted); margin: 0; }
+  &__close {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--transition), color var(--transition);
+    flex-shrink: 0; margin-left: 8px;
+    &:hover { background: var(--bg-hover); color: var(--text-primary); }
+    &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  }
+  &__body { padding: 20px 24px; }
+  &__footer {
+    display: flex; gap: 10px; justify-content: flex-end;
+    padding: 14px 24px 20px; border-top: 1px solid var(--border);
+  }
+  &__error {
+    background: rgba(var(--error-rgb, 255,69,58), .08);
+    border: 1px solid rgba(var(--error-rgb, 255,69,58), .22);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px; margin-bottom: 16px;
+    font-size: 13px; color: var(--error);
+  }
+}
+
+@keyframes am-modal-in {
+  from { opacity: 0; transform: translate(-50%, -47%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+// ── Password fields ────────────────────────────────────────────────────────────
+.rp-field {
+  display: flex; flex-direction: column; gap: 5px;
+  margin-bottom: 16px;
+  &:last-of-type { margin-bottom: 0; }
+}
+
+.rp-label {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .06em;
+}
+
+.rp-input-wrap {
+  position: relative;
+}
+
+.rp-input {
+  width: 100%; box-sizing: border-box;
+  padding: 10px 40px 10px 12px;
+  background: var(--input-bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-primary);
+  font-size: 14px; font-family: var(--font, inherit); outline: none;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .1);
+  }
+  &--error {
+    border-color: var(--error) !important;
+    box-shadow: 0 0 0 3px rgba(var(--error-rgb, 255,69,58), .08) !important;
+  }
+  &::placeholder { color: var(--text-muted); }
+}
+
+.rp-eye {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; padding: 4px;
+  font-size: 14px; color: var(--text-muted); line-height: 1;
+  &:hover { color: var(--text-primary); }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+}
+
+.rp-hint {
+  font-size: 11px; font-weight: 600;
+  &--warn { color: var(--warning, #FF9F0A); }
+  &--ok   { color: var(--success, #30D158); }
+}
+
+.rp-notice {
+  margin: 16px 0 0; padding: 10px 14px;
+  background: rgba(var(--accent-rgb), .06);
+  border: 1px solid rgba(var(--accent-rgb), .14);
+  border-radius: var(--radius-sm);
+  font-size: 12px; color: var(--text-muted); line-height: 1.5;
+}

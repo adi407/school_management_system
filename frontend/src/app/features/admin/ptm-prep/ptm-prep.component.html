@@ -1,0 +1,199 @@
+<div class="ptm-page">
+
+  <!-- ══════════ MEETING LIST VIEW ══════════ -->
+  @if (!selectedMeeting()) {
+
+    <!-- Header -->
+    <div class="ptm-header">
+      <div>
+        <h1 class="ptm-title">
+          <span class="ptm-ai-badge">AI</span>
+          PTM Prep
+        </h1>
+        <p class="ptm-subtitle">AI-generated per-student briefings for Parent-Teacher Meetings</p>
+      </div>
+      <button class="ptm-create-btn" (click)="showCreateForm.set(true)">+ Schedule PTM</button>
+    </div>
+
+    <!-- Create form -->
+    @if (showCreateForm()) {
+      <div class="card ptm-form-card">
+        <h3 class="ptm-form-title">Schedule New PTM</h3>
+        <div class="ptm-form-grid">
+          <div class="ptm-field">
+            <label>Title *</label>
+            <input type="text" class="ptm-input" placeholder="e.g. Mid-Term PTM — Class 9A" [(ngModel)]="newTitle" />
+          </div>
+          <div class="ptm-field">
+            <label>Class</label>
+            <select class="ptm-input" [(ngModel)]="newClassId">
+              <option value="">School-wide</option>
+              @for (c of classes(); track c.id) {
+                <option [value]="c.id">{{ c.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="ptm-field">
+            <label>Academic Year *</label>
+            <select class="ptm-input" [(ngModel)]="newYearId">
+              <option value="">Select year...</option>
+              @for (y of years(); track y.id) {
+                <option [value]="y.id">{{ y.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="ptm-field">
+            <label>Date *</label>
+            <input type="date" class="ptm-input" [(ngModel)]="newDate" />
+          </div>
+          <div class="ptm-field ptm-field--full">
+            <label>Notes</label>
+            <textarea class="ptm-input ptm-textarea" placeholder="Optional notes for teachers..." [(ngModel)]="newNotes"></textarea>
+          </div>
+        </div>
+        <div class="ptm-form-actions">
+          <button class="ptm-cancel-btn" (click)="showCreateForm.set(false)">Cancel</button>
+          <button class="ptm-save-btn" (click)="createMeeting()" [disabled]="!newTitle || !newYearId || !newDate">
+            Schedule Meeting
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Meeting List -->
+    @if (loading()) {
+      <div class="ptm-loading">Loading meetings...</div>
+    } @else if (meetings().length === 0) {
+      <div class="card ptm-empty">
+        <div class="ptm-empty__icon">🤝</div>
+        <h3>No PTM meetings scheduled</h3>
+        <p>Schedule your first Parent-Teacher Meeting and let AI prepare the briefings</p>
+      </div>
+    } @else {
+      <div class="ptm-meeting-list">
+        @for (m of meetings(); track m.id) {
+          <div class="card ptm-meeting-card" (click)="selectMeeting(m)">
+            <div class="ptm-meeting__icon">{{ statusIcon(m.status) }}</div>
+            <div class="ptm-meeting__body">
+              <div class="ptm-meeting__title">{{ m.title }}</div>
+              <div class="ptm-meeting__meta">
+                {{ m.meetingDate | date:'dd MMM yyyy' }}
+                @if (m.className) { · {{ m.className }} }
+                · {{ m.status }}
+              </div>
+            </div>
+            <div class="ptm-meeting__stats">
+              <div class="ptm-meeting__briefing-count">
+                <span class="ptm-meeting__count-num">{{ m.briefingCount }}</span>
+                <span class="ptm-meeting__count-label">Briefings</span>
+              </div>
+              <span class="ptm-meeting__arrow">→</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  } @else {
+
+    <!-- ══════════ MEETING DETAIL VIEW ══════════ -->
+    <div class="ptm-detail-header">
+      <button class="ptm-back-btn" (click)="backToList()">← Back</button>
+      <div class="ptm-detail-info">
+        <h2 class="ptm-detail-title">{{ selectedMeeting()!.title }}</h2>
+        <p class="ptm-detail-meta">
+          {{ selectedMeeting()!.meetingDate | date:'EEEE, dd MMMM yyyy' }}
+          @if (selectedMeeting()!.className) { · {{ selectedMeeting()!.className }} }
+        </p>
+      </div>
+      <button class="ptm-generate-btn" (click)="generateBriefings()" [disabled]="generating()">
+        @if (generating()) { <span class="spinner"></span> Generating... }
+        @else { ✦ Generate AI Briefings }
+      </button>
+    </div>
+
+    <!-- Briefings -->
+    @if (briefings().length === 0 && !generating()) {
+      <div class="card ptm-empty">
+        <div class="ptm-empty__icon">✦</div>
+        <h3>No briefings yet</h3>
+        <p>Click "Generate AI Briefings" to create per-student preparation sheets</p>
+      </div>
+    } @else {
+      <div class="ptm-briefings">
+        @for (b of briefings(); track b.id) {
+          <div class="card ptm-briefing" [class.ptm-briefing--expanded]="expandedBriefing() === b.id" [class.ptm-briefing--reviewed]="b.status === 'REVIEWED'">
+
+            <!-- Collapsed row -->
+            <div class="ptm-briefing__header" (click)="toggleBriefing(b.id)">
+              <div class="ptm-briefing__avatar">{{ (b.studentName || '?').charAt(0) }}</div>
+              <div class="ptm-briefing__summary">
+                <div class="ptm-briefing__name">{{ b.studentName }}</div>
+                <div class="ptm-briefing__quick-stats">
+                  @if (b.attendancePct !== null) {
+                    <span class="ptm-mini-stat ptm-mini-stat--{{ attendanceClass(b.attendancePct) }}">
+                      {{ b.attendancePct | number:'1.0-0' }}% att
+                    </span>
+                  }
+                  @if (b.avgMarks !== null) {
+                    <span class="ptm-mini-stat">{{ b.avgMarks | number:'1.0-0' }}% marks</span>
+                  }
+                  <span class="ptm-mini-stat">{{ wellnessIcon(b.wellnessTrend) }} {{ b.wellnessTrend || 'N/A' }}</span>
+                </div>
+              </div>
+              <div class="ptm-briefing__status">
+                @if (b.status === 'REVIEWED') {
+                  <span class="badge badge--green">Reviewed</span>
+                } @else {
+                  <span class="badge badge--yellow">Draft</span>
+                }
+              </div>
+              <span class="ptm-briefing__chevron">{{ expandedBriefing() === b.id ? '▾' : '▸' }}</span>
+            </div>
+
+            <!-- Expanded content -->
+            @if (expandedBriefing() === b.id) {
+              <div class="ptm-briefing__body">
+
+                <!-- AI Summary -->
+                @if (b.aiSummary) {
+                  <div class="ptm-section">
+                    <div class="ptm-section__label">
+                      <span class="ptm-ai-sparkle">✦</span> AI Summary
+                    </div>
+                    <div class="ptm-section__content">{{ b.aiSummary }}</div>
+                  </div>
+                }
+
+                <!-- Talking Points -->
+                @if (b.talkingPoints) {
+                  <div class="ptm-section">
+                    <div class="ptm-section__label">💬 Talking Points</div>
+                    <div class="ptm-section__content ptm-talking-points">{{ b.talkingPoints }}</div>
+                  </div>
+                }
+
+                <!-- Parent Preview -->
+                @if (b.parentPreview) {
+                  <div class="ptm-section ptm-section--parent">
+                    <div class="ptm-section__label">👨‍👧 Parent Card Preview</div>
+                    <div class="ptm-section__content">{{ b.parentPreview }}</div>
+                  </div>
+                }
+
+                <!-- Actions -->
+                <div class="ptm-briefing__actions">
+                  @if (b.status !== 'REVIEWED') {
+                    <button class="ptm-review-btn" (click)="reviewBriefing(b.id); $event.stopPropagation()">
+                      ✓ Mark as Reviewed
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

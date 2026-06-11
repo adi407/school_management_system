@@ -38,6 +38,9 @@ update-service.sh
 **/application-prod.yml
 **/application-prod.properties
 
+# ── Claude Code ──────────────────────────────────────────────
+.claude/
+
 # ── OS ───────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db

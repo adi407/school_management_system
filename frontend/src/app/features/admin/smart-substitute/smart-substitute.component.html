@@ -1,0 +1,162 @@
+<div class="ss-page">
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <div class="ss-header">
+    <div>
+      <h1 class="ss-title">
+        <span class="ss-ai-badge">AI</span>
+        Smart Substitute
+      </h1>
+      <p class="ss-subtitle">AI-powered teacher replacement — finds the best available match in seconds</p>
+    </div>
+    <div class="ss-date-picker">
+      <input type="date" class="ss-date-input" [value]="selectedDate()" (change)="onDateChange($any($event.target).value)" />
+    </div>
+  </div>
+
+  <!-- ── Stats Bar ──────────────────────────────────────── -->
+  <div class="ss-stats">
+    <div class="ss-stat">
+      <div class="ss-stat__num">{{ assignments().length }}</div>
+      <div class="ss-stat__label">Total Periods</div>
+    </div>
+    <div class="ss-stat ss-stat--warning">
+      <div class="ss-stat__num">{{ pendingCount }}</div>
+      <div class="ss-stat__label">Need Coverage</div>
+    </div>
+    <div class="ss-stat ss-stat--success">
+      <div class="ss-stat__num">{{ assignedCount }}</div>
+      <div class="ss-stat__label">Covered</div>
+    </div>
+  </div>
+
+  <!-- ── Report Absence Card ────────────────────────────── -->
+  <div class="card ss-report-card">
+    <h3 class="ss-report-title">Report Teacher Absence</h3>
+    <div class="ss-report-form">
+      <select class="ss-select" [(ngModel)]="selectedTeacherId">
+        <option value="">Select teacher...</option>
+        @for (t of teachers(); track t.id) {
+          <option [value]="t.id">{{ t.firstName }} {{ t.lastName }}</option>
+        }
+      </select>
+      <input type="text" class="ss-input" placeholder="Remarks (optional)" [(ngModel)]="absenceRemarks" />
+      <button class="ss-report-btn" (click)="reportAbsence()" [disabled]="!selectedTeacherId || reporting()">
+        @if (reporting()) { <span class="spinner"></span> Finding substitutes... }
+        @else { Run AI Matching }
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Assignments List ───────────────────────────────── -->
+  @if (loading()) {
+    <div class="ss-loading">Loading assignments...</div>
+  } @else if (assignments().length === 0) {
+    <div class="card ss-empty">
+      <div class="ss-empty__icon">📋</div>
+      <h3>No absences reported for this date</h3>
+      <p>Report a teacher absence above to see AI-powered substitute suggestions</p>
+    </div>
+  } @else {
+    <div class="ss-assignments">
+      @for (a of assignments(); track a.id) {
+        <div class="card ss-card" [class.ss-card--assigned]="a.status === 'ASSIGNED'" [class.ss-card--self-study]="a.status === 'SELF_STUDY'">
+          <div class="ss-card__period">
+            <div class="ss-card__period-num">P{{ a.periodNo }}</div>
+            <div class="ss-card__period-time">{{ a.startTime | slice:0:5 }} – {{ a.endTime | slice:0:5 }}</div>
+          </div>
+
+          <div class="ss-card__body">
+            <div class="ss-card__class">{{ a.className }}</div>
+            <div class="ss-card__subject">{{ a.subjectName || 'Free Period' }}</div>
+            <div class="ss-card__absent">
+              <span class="ss-card__absent-label">Absent:</span> {{ a.absentTeacherName }}
+            </div>
+          </div>
+
+          <div class="ss-card__suggestion">
+            @if (a.status === 'ASSIGNED') {
+              <div class="ss-card__assigned-to">
+                <span class="ss-assigned-icon">✓</span>
+                {{ a.substituteTeacherName }}
+              </div>
+            } @else if (a.status === 'SELF_STUDY') {
+              <div class="ss-card__self-study">
+                <span>📖</span> Self Study
+              </div>
+            } @else if (a.substituteTeacherName) {
+              <div class="ss-card__suggested">
+                <span class="ss-ai-sparkle">✦</span>
+                AI suggests: <strong>{{ a.substituteTeacherName }}</strong>
+              </div>
+              @if (a.confidenceScore !== null) {
+                <span class="badge badge--{{ confidenceColor(a.confidenceScore) }}">
+                  {{ confidenceLabel(a.confidenceScore) }}
+                </span>
+              }
+              <div class="ss-card__reason">{{ a.suggestionReason }}</div>
+            } @else {
+              <div class="ss-card__no-match">No match found</div>
+            }
+          </div>
+
+          <div class="ss-card__actions">
+            <span class="badge badge--{{ statusColor(a.status) }}">{{ a.status.replace('_', ' ') }}</span>
+            @if (a.status !== 'ASSIGNED' && a.status !== 'SELF_STUDY' && a.status !== 'CANCELLED') {
+              <button class="ss-action-btn" (click)="openSuggestions(a)">View Options</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- ── Suggestions Modal ──────────────────────────────── -->
+@if (showSuggestions()) {
+  <div class="modal-overlay" (click)="closeSuggestions()">
+    <div class="card ss-modal" (click)="$event.stopPropagation()">
+      <div class="ss-modal__header">
+        <div>
+          <h3>Substitute Options</h3>
+          <p class="text-muted text-sm">
+            P{{ activeAssignment()?.periodNo }} · {{ activeAssignment()?.className }} · {{ activeAssignment()?.subjectName }}
+          </p>
+        </div>
+        <button class="ss-modal__close" (click)="closeSuggestions()">✕</button>
+      </div>
+
+      <div class="ss-modal__body">
+        @if (loadingSuggestions()) {
+          <div class="ss-loading">Analyzing available teachers...</div>
+        } @else if (suggestions().length === 0) {
+          <div class="ss-empty-suggestions">No available teachers for this period</div>
+        } @else {
+          @for (s of suggestions(); track s.teacherId) {
+            <div class="ss-suggestion" [class.ss-suggestion--best]="s.confidenceScore >= 0.8">
+              <div class="ss-suggestion__avatar">{{ s.teacherName.charAt(0) }}</div>
+              <div class="ss-suggestion__info">
+                <div class="ss-suggestion__name">
+                  {{ s.teacherName }}
+                  @if (s.teachesSameSubject) {
+                    <span class="ss-tag ss-tag--subject">Same Subject</span>
+                  }
+                </div>
+                <div class="ss-suggestion__reason">{{ s.reason }}</div>
+                <div class="ss-suggestion__meta">
+                  Load today: {{ s.currentLoadToday }} periods
+                  · Match: {{ (s.confidenceScore * 100) | number:'1.0-0' }}%
+                </div>
+              </div>
+              <button class="ss-assign-btn" (click)="assignTeacher(s.teacherId)">Assign</button>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="ss-modal__footer">
+        <button class="ss-self-study-btn" (click)="assignTeacher(null)">📖 Mark as Self Study</button>
+      </div>
+    </div>
+  </div>
+}
