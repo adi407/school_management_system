@@ -1,14 +1,14 @@
 <div class="landing" [class.landing--dark]="theme.isDark()">
 
   <!-- ── NAV ─────────────────────────────────────────────── -->
-  <nav class="nav">
+  <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__brand">
-      <div class="nav__logo">
+      <div class="nav__logo" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <defs>
             <linearGradient id="ng" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#0A84FF"/>
-              <stop offset="100%" stop-color="#BF5AF2"/>
+              <stop offset="0%" stop-color="#2563EB"/>
+              <stop offset="100%" stop-color="#7C3AED"/>
             </linearGradient>
           </defs>
           <rect width="24" height="24" rx="7" fill="url(#ng)"/>
@@ -18,14 +18,17 @@
           <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
         </svg>
       </div>
-      <span class="nav__name">School Manager</span>
+      <span class="nav__name">SchoolManager</span>
+    </div>
+    <div class="nav__links">
+      <a href="#features" class="nav__link">Features</a>
+      <a href="#workflow" class="nav__link">How It Works</a>
+      <a href="#trust" class="nav__link">Security</a>
     </div>
     <div class="nav__actions">
       <button class="btn-theme" (click)="theme.toggle()"
-              [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
-              [title]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+              [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
         @if (theme.isDark()) {
-          <!-- Sun icon -->
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
             <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
@@ -33,527 +36,429 @@
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
           </svg>
         } @else {
-          <!-- Moon icon -->
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
         }
       </button>
-      <a routerLink="/login" class="btn-nav">Sign In →</a>
+      <a routerLink="/login" class="btn-signin">Sign In</a>
     </div>
   </nav>
 
   <!-- ── HERO ─────────────────────────────────────────────── -->
-  <section class="full-section hero-section reveal-section">
-    <div class="section-bg hero-bg">
-      <svg viewBox="0 0 420 340" fill="none" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#FF9F0A" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#FF9F0A" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <!-- Sun glow -->
-        <circle class="sun-glow" cx="330" cy="110" r="80" fill="url(#sunGlow)"/>
-        <circle class="sun" cx="330" cy="110" r="30" fill="#FF9F0A" opacity="0.85"/>
-        <!-- School building -->
-        <rect x="100" y="130" width="200" height="130" fill="#1e1e30" rx="2"/>
-        <polygon points="85,130 210,68 335,130" fill="#28284a"/>
-        <line x1="85" y1="130" x2="335" y2="130" stroke="#3a3a5a" stroke-width="2"/>
-        <!-- Flag -->
-        <line x1="210" y1="68" x2="210" y2="38" stroke="#4a4a6a" stroke-width="2"/>
-        <rect class="flag" x="210" y="38" width="26" height="15" fill="#0A84FF" rx="1"/>
-        <!-- Windows -->
-        <rect x="130" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.7"/>
-        <rect x="175" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.45"/>
-        <rect x="245" y="155" width="30" height="36" fill="#0A84FF" rx="3" opacity="0.7"/>
-        <rect x="290" y="155" width="30" height="36" fill="#BF5AF2" rx="3" opacity="0.5"/>
-        <line x1="145" y1="155" x2="145" y2="191" stroke="#111" stroke-width="1"/>
-        <line x1="130" y1="173" x2="160" y2="173" stroke="#111" stroke-width="1"/>
-        <!-- Door -->
-        <rect x="185" y="210" width="40" height="50" fill="#14142a" rx="4"/>
-        <circle cx="221" cy="237" r="2.5" fill="#FF9F0A"/>
-        <!-- Steps -->
-        <rect x="175" y="258" width="60" height="5" fill="#2d2d4a" rx="1"/>
-        <rect x="180" y="253" width="50" height="5" fill="#333350" rx="1"/>
-        <!-- Ground -->
-        <rect x="0" y="262" width="420" height="78" fill="#13131e" rx="0"/>
-        <!-- Path -->
-        <path d="M 210 265 Q 210 292 160 302 Q 100 312 60 302" stroke="#28283a" stroke-width="8" stroke-linecap="round" fill="none"/>
-        <!-- Trees -->
-        <rect x="60" y="218" width="8" height="44" fill="#26263a"/>
-        <ellipse cx="64" cy="210" rx="20" ry="22" fill="#1a4428"/>
-        <rect x="345" y="228" width="8" height="34" fill="#26263a"/>
-        <ellipse cx="349" cy="220" rx="17" ry="19" fill="#1a4428"/>
-        <!-- Student walking -->
-        <g class="student-hero">
-          <rect x="42" y="222" width="16" height="22" fill="#0A84FF" rx="3"/>
-          <circle cx="50" cy="213" r="10" fill="#f4a26a"/>
-          <path d="M 40 207 Q 50 200 60 207" fill="#2d1810" stroke="none"/>
-          <rect x="57" y="224" width="10" height="14" fill="#BF5AF2" rx="2"/>
-          <rect class="leg-l" x="43" y="244" width="6" height="14" fill="#1a1a5e" rx="2"/>
-          <rect class="leg-r" x="51" y="244" width="6" height="14" fill="#1a1a5e" rx="2"/>
-        </g>
-        <!-- Stars -->
-        <circle cx="50" cy="38" r="1.5" fill="white" opacity="0.5" class="star"/>
-        <circle cx="120" cy="18" r="1" fill="white" opacity="0.35" class="star"/>
-        <circle cx="280" cy="28" r="1.5" fill="white" opacity="0.45" class="star"/>
-        <circle cx="370" cy="48" r="1" fill="white" opacity="0.3" class="star"/>
-        <circle cx="22" cy="78" r="1" fill="white" opacity="0.4" class="star"/>
-        <circle cx="400" cy="22" r="1.5" fill="white" opacity="0.25" class="star"/>
-      </svg>
-    </div>
-    <div class="section-overlay section-overlay--hero"></div>
-
-    <div class="hero-content">
-      <div class="eyebrow-pill stagger-child">✦ A day in the life of a student</div>
-      <h1 class="display-title stagger-child">
-        Every moment<br/>at school,<br/>
-        <span class="gradient-text">beautifully managed.</span>
+  <section class="hero reveal-section" id="hero">
+    <div class="hero__content">
+      <div class="hero__badge stagger-child">
+        <span class="hero__badge-dot"></span>
+        School Management Platform
+      </div>
+      <h1 class="hero__title stagger-child">
+        Manage your entire school<br/>from one platform.
       </h1>
-      <p class="display-sub stagger-child">
-        Follow Arjun through his school day — and see how School Manager
-        is woven into every step, from morning roll call to the last bell.
+      <p class="hero__sub stagger-child">
+        Attendance, admissions, academics, fees, communication,
+        reporting, and administration — unified in one system built
+        for modern schools.
       </p>
-      <div class="hero-cta stagger-child">
+      <div class="hero__cta stagger-child">
         <a routerLink="/login" class="btn-primary">
-          Get Started
+          Request Demo
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
-        <a href="#story" class="btn-ghost">See the story ↓</a>
+        <a href="#features" class="btn-secondary">Explore Features</a>
+      </div>
+      <div class="hero__proof stagger-child">
+        <div class="hero__proof-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>End-to-end encrypted</span>
+        </div>
+        <div class="hero__proof-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Role-based access</span>
+        </div>
+        <div class="hero__proof-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span>Works on any device</span>
+        </div>
       </div>
     </div>
 
-    <div class="scroll-hint">
-      <div class="scroll-hint__line"></div>
-      <span>Scroll to follow Arjun's day</span>
-    </div>
-  </section>
-
-  <!-- ── STORY ─────────────────────────────────────────────── -->
-  <div id="story">
-
-    <!-- ── SCENE 1: Morning arrival / Attendance ─────────── -->
-    <section class="full-section story-section scene--gate reveal-section" id="scene-1">
-      <div class="section-bg">
-        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
-          <!-- School gate -->
-          <rect x="80" y="80" width="12" height="100" fill="#3a3a5a" rx="3"/>
-          <rect x="208" y="80" width="12" height="100" fill="#3a3a5a" rx="3"/>
-          <path d="M 80 80 Q 150 38 220 80" stroke="#0A84FF" stroke-width="3" fill="none"/>
-          <rect x="110" y="54" width="80" height="22" fill="#0A84FF" rx="4"/>
-          <text x="150" y="69" text-anchor="middle" fill="white" font-size="8" font-weight="700">SCHOOL GATE</text>
-          <rect x="102" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-          <rect x="118" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-          <rect x="176" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-          <rect x="192" y="82" width="6" height="80" fill="#2d2d4a" rx="2"/>
-          <!-- Student at gate -->
-          <g transform="translate(60, 145)">
-            <circle cx="0" cy="-40" r="12" fill="#f4a26a"/>
-            <path d="M -12 -48 Q 0 -57 12 -48" fill="#2d1810"/>
-            <rect x="-10" y="-28" width="20" height="25" fill="#0A84FF" rx="3"/>
-            <rect x="9" y="-26" width="12" height="16" fill="#BF5AF2" rx="2"/>
-            <rect x="-9" y="-3" width="8" height="18" fill="#1a1a5e" rx="2"/>
-            <rect x="1" y="-3" width="8" height="18" fill="#1a1a5e" rx="2"/>
-          </g>
-          <!-- NFC tap point -->
-          <circle class="tap-pulse" cx="95" cy="140" r="14" fill="#30D158" opacity="0.2"/>
-          <circle cx="95" cy="140" r="9" fill="#30D158" opacity="0.9"/>
-          <text x="95" y="144" text-anchor="middle" fill="white" font-size="8">✓</text>
-          <circle class="wave" cx="95" cy="140" r="20" stroke="#30D158" stroke-width="1.5" fill="none" opacity="0.6"/>
-          <circle class="wave wave--2" cx="95" cy="140" r="30" stroke="#30D158" stroke-width="1" fill="none" opacity="0.35"/>
-          <!-- Ground -->
-          <rect x="0" y="185" width="300" height="75" fill="#12121e" rx="0"/>
-          <!-- Morning glow on horizon -->
-          <rect x="0" y="183" width="300" height="6" fill="#1e1e30"/>
-          <ellipse cx="150" cy="183" rx="120" ry="20" fill="#0A84FF" opacity="0.06"/>
-        </svg>
-      </div>
-      <div class="section-overlay scene--gate__overlay"></div>
-
-      <div class="section-content">
-        <div class="time-badge stagger-child">7:45 AM</div>
-        <div class="step-label stagger-child">Step 01 · Attendance</div>
-        <h2 class="scene-headline stagger-child">Arjun walks<br/>through the gate.</h2>
-        <p class="scene-desc stagger-child">
-          The moment he steps in, School Manager marks his attendance —
-          no queue, no register, logged to the millisecond.
-        </p>
-        <div class="feature-pill stagger-child">
-          <span class="feature-pill__dot"></span>
-          Attendance Module · Live
-        </div>
-      </div>
-    </section>
-
-    <!-- ── SCENE 2: Classroom / Homework ─────────────────── -->
-    <section class="full-section story-section scene--class reveal-section" id="scene-2">
-      <div class="section-bg">
-        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
-          <!-- Chalkboard -->
-          <rect x="50" y="35" width="200" height="125" fill="#1a3a2a" rx="6"/>
-          <rect x="55" y="40" width="190" height="115" fill="#1e4d35" rx="4"/>
-          <!-- Chalk lines -->
-          <text x="90" y="72" fill="rgba(255,255,255,0.8)" font-size="11" font-family="monospace">sin²θ + cos²θ = 1</text>
-          <text x="90" y="89" fill="rgba(255,255,255,0.6)" font-size="9">Chapter 5 · Trigonometry</text>
-          <line x1="80" y1="100" x2="170" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="80" y1="112" x2="150" y2="112" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Chalk tray -->
-          <rect x="50" y="158" width="200" height="8" fill="#22223a" rx="2"/>
-          <!-- Teacher -->
-          <g transform="translate(242, 145)">
-            <circle cx="0" cy="-22" r="12" fill="#c8a882"/>
-            <path d="M -12 -29 Q 0 -38 12 -29" fill="#5c3317"/>
-            <rect x="-13" y="-12" width="26" height="28" fill="#BF5AF2" rx="3"/>
-          </g>
-          <line x1="228" y1="118" x2="175" y2="74" stroke="#8B7355" stroke-width="2" stroke-linecap="round"/>
-          <!-- Desks -->
-          <rect x="55" y="192" width="52" height="32" fill="#22223a" rx="4"/>
-          <rect x="122" y="192" width="52" height="32" fill="#22223a" rx="4"/>
-          <rect x="188" y="192" width="52" height="32" fill="#22223a" rx="4"/>
-          <!-- Student heads -->
-          <circle cx="81" cy="185" r="11" fill="#f4a26a"/>
-          <circle cx="148" cy="185" r="11" fill="#c8a882"/>
-          <circle cx="214" cy="185" r="11" fill="#e8b89a"/>
-          <!-- Homework notification glow -->
-          <rect class="phone-glow" x="62" y="199" width="20" height="12" fill="#0A84FF" rx="2" opacity="0.8"/>
-        </svg>
-      </div>
-      <div class="section-overlay scene--class__overlay"></div>
-
-      <div class="section-content section-content--right">
-        <div class="time-badge stagger-child">8:30 AM</div>
-        <div class="step-label stagger-child">Step 02 · Timetable & Homework</div>
-        <h2 class="scene-headline stagger-child">Class begins.<br/>Homework assigned<br/>instantly.</h2>
-        <p class="scene-desc stagger-child">
-          Ms. Priya assigns Chapter 5 to Class 9-A. Arjun's phone buzzes —
-          due date, subject, all details right there.
-        </p>
-        <div class="feature-pill stagger-child">
-          <span class="feature-pill__dot"></span>
-          Homework Module · Live
-        </div>
-      </div>
-    </section>
-
-    <!-- ── SCENE 3: Exam ────────────────────────────────── -->
-    <section class="full-section story-section scene--exam reveal-section" id="scene-3">
-      <div class="section-bg">
-        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
-          <!-- Exam hall -->
-          <rect x="30" y="55" width="240" height="165" fill="#16162a" rx="8"/>
-          <!-- Desks -->
-          <rect x="50" y="75" width="60" height="42" fill="#20203a" rx="3"/>
-          <rect x="130" y="75" width="60" height="42" fill="#20203a" rx="3"/>
-          <rect x="210" y="75" width="60" height="42" fill="#20203a" rx="3"/>
-          <rect x="50" y="135" width="60" height="42" fill="#20203a" rx="3"/>
-          <rect x="130" y="135" width="60" height="42" fill="#20203a" rx="3"/>
-          <rect x="210" y="135" width="60" height="42" fill="#20203a" rx="3"/>
-          <!-- Answer papers -->
-          <rect x="55" y="79" width="50" height="34" fill="#282842" rx="2"/>
-          <rect x="135" y="79" width="50" height="34" fill="#282842" rx="2"/>
-          <rect x="215" y="79" width="50" height="34" fill="#282842" rx="2"/>
-          <rect x="55" y="139" width="50" height="34" fill="#282842" rx="2"/>
-          <rect x="135" y="139" width="50" height="34" fill="#282842" rx="2"/>
-          <rect x="215" y="139" width="50" height="34" fill="#282842" rx="2"/>
-          <!-- Students writing -->
-          <circle cx="80" cy="71" r="10" fill="#f4a26a"/>
-          <circle cx="160" cy="71" r="10" fill="#c8a882"/>
-          <circle cx="240" cy="71" r="10" fill="#e8b89a"/>
-          <circle cx="80" cy="131" r="10" fill="#c8a882"/>
-          <circle cx="160" cy="131" r="10" fill="#f4a26a"/>
-          <circle cx="240" cy="131" r="10" fill="#e8b89a"/>
-          <!-- Arjun's writing lines (animated) -->
-          <g class="writing">
-            <line x1="63" y1="88" x2="97" y2="88" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="63" y1="96" x2="90" y2="96" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="63" y1="104" x2="94" y2="104" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round"/>
-          </g>
-          <!-- Clock -->
-          <circle cx="150" cy="34" r="20" fill="#20203a" stroke="#0A84FF" stroke-width="1.5"/>
-          <line x1="150" y1="22" x2="150" y2="34" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          <line x1="150" y1="34" x2="159" y2="40" stroke="#FF9F0A" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="section-overlay scene--exam__overlay"></div>
-
-      <div class="section-content">
-        <div class="time-badge stagger-child">2:00 PM</div>
-        <div class="step-label stagger-child">Step 03 · Exam Management</div>
-        <h2 class="scene-headline stagger-child">Exam day.<br/>Results published<br/>instantly.</h2>
-        <p class="scene-desc stagger-child">
-          Once the teacher uploads marks, grades, ranks and subject-wise
-          performance are live — visible to Arjun and his parents the moment
-          it's published.
-        </p>
-        <div class="feature-pill stagger-child">
-          <span class="feature-pill__dot"></span>
-          Exam &amp; Results Module · Live
-        </div>
-      </div>
-    </section>
-
-    <!-- ── SCENE 4: Parent notification ─────────────────── -->
-    <section class="full-section story-section scene--parent reveal-section" id="scene-4">
-      <div class="section-bg">
-        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
-          <!-- Window with city -->
-          <rect x="35" y="25" width="90" height="80" fill="#14213d" rx="4" stroke="#2d2d4a" stroke-width="1"/>
-          <rect x="40" y="30" width="38" height="70" fill="#0d1b2a"/>
-          <rect x="80" y="30" width="40" height="70" fill="#0d1b2a"/>
-          <!-- City silhouette in window -->
-          <rect x="45" y="58" width="12" height="42" fill="#1a1a3a"/>
-          <rect x="59" y="48" width="14" height="52" fill="#22223a"/>
-          <rect x="84" y="63" width="12" height="37" fill="#1a1a3a"/>
-          <rect x="98" y="53" width="14" height="47" fill="#22223a"/>
-          <!-- Office desk -->
-          <rect x="35" y="165" width="230" height="55" fill="#1e1e30" rx="6"/>
-          <!-- Laptop -->
-          <rect x="95" y="100" width="140" height="88" fill="#22223a" rx="4"/>
-          <rect x="95" y="100" width="140" height="78" fill="#181830" rx="4"/>
-          <rect x="72" y="185" width="185" height="8" fill="#2d2d4a" rx="2"/>
-          <!-- Screen content -->
-          <rect x="103" y="108" width="124" height="62" fill="#1a1a35" rx="3"/>
-          <rect x="108" y="113" width="75" height="5" fill="#0A84FF" rx="2"/>
-          <rect x="108" y="122" width="110" height="3" fill="#2d2d5a" rx="1"/>
-          <rect x="108" y="130" width="90" height="3" fill="#2d2d5a" rx="1"/>
-          <rect x="108" y="138" width="100" height="3" fill="#2d2d5a" rx="1"/>
-          <rect x="108" y="146" width="65" height="5" fill="#30D158" rx="2"/>
-          <!-- Mother figure -->
-          <g transform="translate(52, 158)">
-            <circle cx="0" cy="-22" r="15" fill="#c8a882"/>
-            <path d="M -15 -30 Q 0 -40 15 -30" fill="#8B4513"/>
-            <rect x="-17" y="-8" width="34" height="32" fill="#BF5AF2" rx="4"/>
-          </g>
-          <!-- Notification phone -->
-          <g class="parent-phone">
-            <rect x="66" y="97" width="30" height="52" fill="#14142a" rx="5"/>
-            <rect x="69" y="100" width="24" height="46" fill="#0A84FF" rx="3" opacity="0.18"/>
-            <rect x="71" y="102" width="18" height="7" fill="#30D158" rx="2" opacity="0.9"/>
-            <circle class="notif-pulse" cx="91" cy="100" r="6" fill="#FF9F0A"/>
-            <text x="91" y="104" text-anchor="middle" fill="white" font-size="6" font-weight="700">!</text>
-          </g>
-          <!-- Office plant -->
-          <rect x="248" y="140" width="8" height="26" fill="#26263a"/>
-          <ellipse cx="252" cy="133" rx="15" ry="17" fill="#1a4428"/>
-        </svg>
-      </div>
-      <div class="section-overlay scene--parent__overlay"></div>
-
-      <div class="section-content section-content--right">
-        <div class="time-badge stagger-child">4:00 PM</div>
-        <div class="step-label stagger-child">Step 04 · Parent Portal</div>
-        <h2 class="scene-headline stagger-child">Mum gets<br/>the notification<br/>at work.</h2>
-        <p class="scene-desc stagger-child">
-          Attendance, homework, results, fee dues — all in one scroll
-          on the Parent Portal. No calls to the school office, ever.
-        </p>
-        <div class="feature-pill stagger-child">
-          <span class="feature-pill__dot"></span>
-          Parent Portal · Live
-        </div>
-      </div>
-    </section>
-
-    <!-- ── SCENE 5: Heading home / Fee paid ─────────────── -->
-    <section class="full-section story-section scene--home reveal-section" id="scene-5">
-      <div class="section-bg">
-        <svg viewBox="0 0 300 260" fill="none" preserveAspectRatio="xMidYMid meet">
-          <!-- Setting sun -->
-          <circle cx="150" cy="68" r="55" fill="#FF9F0A" opacity="0.10"/>
-          <circle cx="150" cy="68" r="36" fill="#FF9F0A" opacity="0.20"/>
-          <circle cx="150" cy="68" r="22" fill="#FF9F0A" opacity="0.65"/>
-          <!-- Sky rays -->
-          <line x1="150" y1="35" x2="150" y2="20" stroke="#FF9F0A" stroke-width="1" opacity="0.3"/>
-          <line x1="180" y1="44" x2="190" y2="32" stroke="#FF9F0A" stroke-width="1" opacity="0.3"/>
-          <line x1="120" y1="44" x2="110" y2="32" stroke="#FF9F0A" stroke-width="1" opacity="0.3"/>
-          <!-- Ground / horizon -->
-          <rect x="0" y="188" width="300" height="72" fill="#12120e"/>
-          <rect x="0" y="186" width="300" height="6" fill="#1e1c14"/>
-          <!-- Road -->
-          <rect x="105" y="188" width="90" height="72" fill="#181814"/>
-          <rect x="148" y="197" width="5" height="18" fill="#FF9F0A" opacity="0.45"/>
-          <rect x="148" y="228" width="5" height="18" fill="#FF9F0A" opacity="0.45"/>
-          <!-- Houses -->
-          <rect x="28" y="142" width="62" height="48" fill="#1e1e28" rx="2"/>
-          <polygon points="18,142 59,112 100,142" fill="#28283a"/>
-          <rect x="48" y="158" width="18" height="32" fill="#12121e" rx="2"/>
-          <rect x="33" y="150" width="16" height="16" fill="#0A84FF" rx="2" opacity="0.45"/>
-          <rect x="71" y="150" width="16" height="16" fill="#FF9F0A" rx="2" opacity="0.4"/>
-          <rect x="210" y="152" width="58" height="38" fill="#1e1e28" rx="2"/>
-          <polygon points="202,152 239,126 276,152" fill="#28283a"/>
-          <rect x="228" y="162" width="16" height="28" fill="#12121e" rx="2"/>
-          <!-- Arjun walking home -->
-          <g class="student-home">
-            <circle cx="170" cy="137" r="14" fill="#f4a26a"/>
-            <path d="M 156 129 Q 170 120 184 129" fill="#2d1810"/>
-            <rect x="158" y="151" width="24" height="28" fill="#0A84FF" rx="4"/>
-            <rect x="181" y="153" width="14" height="18" fill="#BF5AF2" rx="3"/>
-            <rect class="leg-walk-l" x="159" y="179" width="10" height="20" fill="#1a1a5e" rx="3"/>
-            <rect class="leg-walk-r" x="171" y="179" width="10" height="20" fill="#1a1a5e" rx="3"/>
-            <!-- Phone in hand showing green tick -->
-            <rect x="146" y="158" width="12" height="18" fill="#14142a" rx="2"/>
-            <rect x="148" y="160" width="8" height="14" fill="#30D158" rx="1" opacity="0.85"/>
-          </g>
-          <!-- Fee receipt floating -->
-          <g class="receipt-float">
-            <rect x="56" y="118" width="74" height="58" fill="#1e1e2a" rx="7" stroke="#30D158" stroke-width="1.5"/>
-            <text x="93" y="135" text-anchor="middle" fill="#30D158" font-size="8" font-weight="700">FEE PAID ✓</text>
-            <line x1="68" y1="143" x2="118" y2="143" stroke="#2d2d3a" stroke-width="1"/>
-            <text x="93" y="154" text-anchor="middle" fill="#636366" font-size="7">₹4,200 · UPI</text>
-            <text x="93" y="165" text-anchor="middle" fill="#636366" font-size="7">5 Jun 2026</text>
-          </g>
-        </svg>
-      </div>
-      <div class="section-overlay scene--home__overlay"></div>
-
-      <div class="section-content">
-        <div class="time-badge stagger-child">5:00 PM</div>
-        <div class="step-label stagger-child">Step 05 · Fee Management</div>
-        <h2 class="scene-headline stagger-child">School's done.<br/>Fees are paid.<br/>All good.</h2>
-        <p class="scene-desc stagger-child">
-          Arjun's mother paid the term fee in 30 seconds from the Parent Portal.
-          Receipt generated. No queue at the office — ever.
-        </p>
-        <div class="feature-pill stagger-child">
-          <span class="feature-pill__dot"></span>
-          Fee Management · Live
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /#story -->
-
-  <!-- ── AI FEATURES SECTION ──────────────────────────────── -->
-  <section class="full-section ai-section reveal-section" id="ai-features">
-    <div class="section-overlay ai-section__overlay"></div>
-
-    <div class="ai-content">
-      <div class="ai-eyebrow stagger-child">
-        <span class="ai-eyebrow__sparkle">✦</span>
-        Powered by AI
-      </div>
-      <h2 class="ai-headline stagger-child">
-        Intelligence that<br/>
-        <span class="gradient-text">schools never had.</span>
-      </h2>
-      <p class="ai-desc stagger-child">
-        Two AI-powered features that solve daily headaches —
-        no other school platform offers these.
-      </p>
-
-      <div class="ai-cards stagger-child">
-        <!-- Card 1: Smart Substitute -->
-        <div class="ai-card">
-          <div class="ai-card__icon-wrap ai-card__icon-wrap--blue">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              <line x1="19" y1="8" x2="23" y2="8" opacity="0.5"/>
-              <line x1="21" y1="6" x2="21" y2="10" opacity="0.5"/>
-            </svg>
+    <!-- Dashboard Preview -->
+    <div class="hero__preview stagger-child">
+      <div class="preview">
+        <div class="preview__header">
+          <div class="preview__dots">
+            <span></span><span></span><span></span>
           </div>
-          <div class="ai-card__badge">Smart Substitute</div>
-          <h3 class="ai-card__title">Teacher absent?<br/>AI finds the replacement.</h3>
-          <p class="ai-card__desc">
-            Scores every free teacher by subject match, department, and workload.
-            Best substitute assigned in seconds — not hours of WhatsApp chaos.
-          </p>
-          <div class="ai-card__features">
-            <span class="ai-feature-tag">Subject matching</span>
-            <span class="ai-feature-tag">Load balancing</span>
-            <span class="ai-feature-tag">Auto-suggest</span>
+          <div class="preview__url">schoolmanager.live/admin/dashboard</div>
+        </div>
+        <div class="preview__body">
+          <!-- Mini sidebar -->
+          <div class="preview__sidebar">
+            <div class="preview__sidebar-logo"></div>
+            <div class="preview__sidebar-item preview__sidebar-item--active"></div>
+            <div class="preview__sidebar-item"></div>
+            <div class="preview__sidebar-item"></div>
+            <div class="preview__sidebar-item"></div>
+            <div class="preview__sidebar-item"></div>
+          </div>
+          <!-- Main content -->
+          <div class="preview__main">
+            <div class="preview__topbar">
+              <div class="preview__greeting"></div>
+              <div class="preview__avatar"></div>
+            </div>
+            <!-- KPI cards -->
+            <div class="preview__kpis">
+              <div class="preview__kpi">
+                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-val">96%</div>
+                <div class="preview__kpi-bar preview__kpi-bar--green"></div>
+              </div>
+              <div class="preview__kpi">
+                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-val">₹4.2L</div>
+                <div class="preview__kpi-bar preview__kpi-bar--blue"></div>
+              </div>
+              <div class="preview__kpi">
+                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-val">847</div>
+                <div class="preview__kpi-bar preview__kpi-bar--purple"></div>
+              </div>
+              <div class="preview__kpi">
+                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-val">42</div>
+                <div class="preview__kpi-bar preview__kpi-bar--amber"></div>
+              </div>
+            </div>
+            <!-- Table preview -->
+            <div class="preview__table">
+              <div class="preview__table-header">
+                <div></div><div></div><div></div><div></div>
+              </div>
+              <div class="preview__table-row">
+                <div class="preview__table-cell--name"></div>
+                <div class="preview__table-cell"></div>
+                <div class="preview__table-cell--badge"></div>
+                <div class="preview__table-cell"></div>
+              </div>
+              <div class="preview__table-row">
+                <div class="preview__table-cell--name"></div>
+                <div class="preview__table-cell"></div>
+                <div class="preview__table-cell--badge preview__table-cell--badge-warn"></div>
+                <div class="preview__table-cell"></div>
+              </div>
+              <div class="preview__table-row">
+                <div class="preview__table-cell--name"></div>
+                <div class="preview__table-cell"></div>
+                <div class="preview__table-cell--badge"></div>
+                <div class="preview__table-cell"></div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- Card 2: PTM Prep -->
-        <div class="ai-card">
-          <div class="ai-card__icon-wrap ai-card__icon-wrap--purple">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
-          </div>
-          <div class="ai-card__badge">PTM Prep AI</div>
-          <h3 class="ai-card__title">1-page briefing<br/>per student, per teacher.</h3>
-          <p class="ai-card__desc">
-            Before every Parent-Teacher Meeting, AI aggregates attendance, marks,
-            homework, and wellness — then writes talking points and parent cards.
-          </p>
-          <div class="ai-card__features">
-            <span class="ai-feature-tag">AI summaries</span>
-            <span class="ai-feature-tag">Talking points</span>
-            <span class="ai-feature-tag">Parent preview</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ai-provider stagger-child">
-        <span class="ai-provider__label">Runs on</span>
-        <span class="ai-provider__name">Google Gemini Flash</span>
-        <span class="ai-provider__sep">·</span>
-        <span class="ai-provider__name">Claude by Anthropic</span>
-        <span class="ai-provider__sep">·</span>
-        <span class="ai-provider__note">Swappable — your data stays on your server</span>
       </div>
     </div>
   </section>
 
-  <!-- ── CTA ───────────────────────────────────────────────── -->
-  <section class="full-section cta-section reveal-section">
-    <div class="cta-orb cta-orb--1"></div>
-    <div class="cta-orb cta-orb--2"></div>
-    <div class="cta-content">
-      <div class="cta-logo stagger-child">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
-          <defs>
-            <linearGradient id="ctaG" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#0A84FF"/>
-              <stop offset="100%" stop-color="#BF5AF2"/>
-            </linearGradient>
-          </defs>
-          <rect width="24" height="24" rx="7" fill="url(#ctaG)"/>
-          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
-          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
-          <line x1="19" y1="8.5" x2="19" y2="13" stroke="white" stroke-width="1.4" opacity="0.85" stroke-linecap="round"/>
-          <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
-        </svg>
+  <!-- ── FEATURES ──────────────────────────────────────────── -->
+  <section class="features reveal-section" id="features">
+    <div class="features__header">
+      <span class="section-tag stagger-child">Modules</span>
+      <h2 class="section-heading stagger-child">Everything a school needs.<br/>Nothing it doesn't.</h2>
+      <p class="section-sub stagger-child">Six core modules that cover the entire school operations lifecycle — from morning attendance to annual reports.</p>
+    </div>
+    <div class="features__grid stagger-child">
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="feature-card__title">Student Management</h3>
+        <p class="feature-card__desc">Complete student profiles with admission records, guardian details, documents, and academic history in one place.</p>
+        <div class="feature-card__tags">
+          <span>Admissions</span><span>Profiles</span><span>Documents</span>
+        </div>
       </div>
-      <h2 class="cta-headline stagger-child">
-        Arjun's school<br/>runs on School Manager.<br/>
-        <span class="gradient-text">Does yours?</span>
-      </h2>
-      <p class="cta-sub stagger-child">
-        One platform. Every stakeholder. Every moment of the school day — managed.
-      </p>
-      <a routerLink="/login" class="btn-primary btn-primary--lg stagger-child">
-        Sign In to School Manager
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3 class="feature-card__title">Attendance Tracking</h3>
+        <p class="feature-card__desc">Daily student and staff attendance with automated reports, absence alerts, and trend analytics across the term.</p>
+        <div class="feature-card__tags">
+          <span>Daily Logs</span><span>Reports</span><span>Alerts</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--amber">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <h3 class="feature-card__title">Fee Management</h3>
+        <p class="feature-card__desc">Create fee structures by class, track payments, generate receipts, and identify overdue balances automatically.</p>
+        <div class="feature-card__tags">
+          <span>Structures</span><span>Payments</span><span>Receipts</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="feature-card__title">Exam & Results</h3>
+        <p class="feature-card__desc">Schedule exams, enter marks, auto-calculate grades and ranks, and publish report cards to students and parents.</p>
+        <div class="feature-card__tags">
+          <span>Scheduling</span><span>Grading</span><span>Report Cards</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--teal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3 class="feature-card__title">Timetable & Schedule</h3>
+        <p class="feature-card__desc">Build class timetables, manage teacher assignments, and handle substitute allocation with AI-powered suggestions.</p>
+        <div class="feature-card__tags">
+          <span>Timetable</span><span>Substitutes</span><span>AI Matching</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--rose">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3 class="feature-card__title">Parent Portal</h3>
+        <p class="feature-card__desc">Parents see attendance, homework, results, and fee status in real time. No phone calls to the school office required.</p>
+        <div class="feature-card__tags">
+          <span>Real-time</span><span>Notifications</span><span>Fee Pay</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── WORKFLOW ──────────────────────────────────────────── -->
+  <section class="workflow reveal-section" id="workflow">
+    <div class="workflow__header">
+      <span class="section-tag stagger-child">How It Works</span>
+      <h2 class="section-heading stagger-child">From admission to report card.<br/>One continuous workflow.</h2>
+      <p class="section-sub stagger-child">Every step of the school lifecycle is connected. Data flows automatically between modules — no re-entry, no spreadsheets.</p>
+    </div>
+    <div class="workflow__steps stagger-child">
+      <div class="wf-step">
+        <div class="wf-step__num">1</div>
+        <div class="wf-step__content">
+          <h3>Admission</h3>
+          <p>Enroll a student with profile, guardian, and document details. Automatically assigned to a class.</p>
+        </div>
+      </div>
+      <div class="wf-step__connector" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="wf-step">
+        <div class="wf-step__num">2</div>
+        <div class="wf-step__content">
+          <h3>Daily Operations</h3>
+          <p>Attendance, timetable, homework — all logged daily. Teachers update via their dashboard.</p>
+        </div>
+      </div>
+      <div class="wf-step__connector" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="wf-step">
+        <div class="wf-step__num">3</div>
+        <div class="wf-step__content">
+          <h3>Examinations</h3>
+          <p>Schedule exams, record marks, auto-generate grades and class ranks.</p>
+        </div>
+      </div>
+      <div class="wf-step__connector" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="wf-step">
+        <div class="wf-step__num">4</div>
+        <div class="wf-step__content">
+          <h3>Fee Collection</h3>
+          <p>Parents pay online. Receipts auto-generated. Overdue tracking built in.</p>
+        </div>
+      </div>
+      <div class="wf-step__connector" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="wf-step">
+        <div class="wf-step__num">5</div>
+        <div class="wf-step__content">
+          <h3>Reports & Analytics</h3>
+          <p>Attendance trends, fee summaries, academic performance — data-driven decisions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROLES ──────────────────────────────────────────────── -->
+  <section class="roles reveal-section" id="roles">
+    <div class="roles__header">
+      <span class="section-tag stagger-child">Built for Everyone</span>
+      <h2 class="section-heading stagger-child">Five roles. One platform.</h2>
+      <p class="section-sub stagger-child">Every stakeholder gets a tailored experience. Same data, different views — each role sees exactly what they need.</p>
+    </div>
+    <div class="roles__grid stagger-child">
+      <div class="role-card">
+        <div class="role-card__icon">🛡️</div>
+        <h3>Super Admin</h3>
+        <p>Platform-wide oversight. Manage schools, tiers, modules, and feature flags across the entire system.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-card__icon">🏫</div>
+        <h3>School Admin</h3>
+        <p>Full school control. Students, staff, fees, exams, reports — everything in one dashboard.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-card__icon">👨‍🏫</div>
+        <h3>Teacher</h3>
+        <p>Attendance, homework, exam entry, timetable, and parent meeting prep — streamlined for daily use.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-card__icon">🎓</div>
+        <h3>Student</h3>
+        <p>View timetable, homework, results, and attendance. Stay on top of academics.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-card__icon">👪</div>
+        <h3>Parent</h3>
+        <p>Real-time visibility into attendance, grades, fees, and school announcements. Zero guesswork.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRUST ──────────────────────────────────────────────── -->
+  <section class="trust reveal-section" id="trust">
+    <div class="trust__header">
+      <span class="section-tag stagger-child">Trust & Security</span>
+      <h2 class="section-heading stagger-child">Built for school data.<br/>Secured like enterprise.</h2>
+    </div>
+    <div class="trust__grid stagger-child">
+      <div class="trust-card">
+        <div class="trust-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Data Protection</h3>
+        <p>Student data encrypted at rest and in transit. Role-based access ensures only authorized users see sensitive information.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>Role-Based Access</h3>
+        <p>Five distinct roles with granular permissions. Teachers can't access fee data. Parents can't see other students. Every boundary enforced.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Audit Logging</h3>
+        <p>Every action logged. Know who changed what, when, and why. Full accountability across the platform.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Cloud Infrastructure</h3>
+        <p>Hosted on reliable cloud infrastructure with automated backups, zero-downtime deployments, and 99.9% uptime target.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AI FEATURES ──────────────────────────────────────── -->
+  <section class="ai reveal-section" id="ai">
+    <div class="ai__header">
+      <div class="ai__badge stagger-child">
+        <span class="ai__badge-sparkle">✦</span>
+        AI-Powered
+      </div>
+      <h2 class="section-heading stagger-child">Intelligence built in.<br/>Not bolted on.</h2>
+      <p class="section-sub stagger-child">Two features that solve real daily problems — unique to SchoolManager.</p>
+    </div>
+    <div class="ai__cards stagger-child">
+      <div class="ai-card">
+        <div class="ai-card__icon ai-card__icon--blue">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="ai-card__badge">Smart Substitute</div>
+        <h3>Teacher absent? AI finds the replacement.</h3>
+        <p>Scores every free teacher by subject match, department, and workload. Best substitute assigned in seconds.</p>
+        <div class="ai-card__tags">
+          <span>Subject matching</span><span>Load balancing</span><span>Auto-suggest</span>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card__icon ai-card__icon--purple">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="ai-card__badge">PTM Prep AI</div>
+        <h3>1-page briefing per student, per teacher.</h3>
+        <p>Before every Parent-Teacher Meeting, AI aggregates attendance, marks, homework, and wellness — then writes talking points.</p>
+        <div class="ai-card__tags">
+          <span>AI summaries</span><span>Talking points</span><span>Parent preview</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ──────────────────────────────────────────────── -->
+  <section class="cta reveal-section">
+    <div class="cta__bg" aria-hidden="true">
+      <div class="cta__orb cta__orb--1"></div>
+      <div class="cta__orb cta__orb--2"></div>
+    </div>
+    <div class="cta__content">
+      <h2 class="cta__title stagger-child">Ready to modernize<br/>your school operations?</h2>
+      <p class="cta__sub stagger-child">One platform. Every stakeholder. Every moment of the school day — managed.</p>
+      <div class="cta__actions stagger-child">
+        <a routerLink="/login" class="btn-primary btn-primary--lg">
+          Get Started
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- ── FOOTER ─────────────────────────────────────────────── -->
   <footer class="footer">
-    <div class="footer__brand">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <defs><linearGradient id="fg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#0A84FF"/><stop offset="100%" stop-color="#BF5AF2"/>
-        </linearGradient></defs>
-        <rect width="24" height="24" rx="7" fill="url(#fg)"/>
-        <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
-        <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
-        <line x1="19" y1="8.5" x2="19" y2="13" stroke="white" stroke-width="1.4" opacity="0.85" stroke-linecap="round"/>
-        <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
-      </svg>
-      <span>School Manager</span>
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <defs><linearGradient id="fg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#7C3AED"/>
+          </linearGradient></defs>
+          <rect width="24" height="24" rx="7" fill="url(#fg)"/>
+          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+          <line x1="19" y1="8.5" x2="19" y2="13" stroke="white" stroke-width="1.4" opacity="0.85" stroke-linecap="round"/>
+          <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
+        </svg>
+        <span>SchoolManager</span>
+      </div>
+      <div class="footer__links">
+        <a href="#features">Features</a>
+        <a href="#workflow">How It Works</a>
+        <a href="#trust">Security</a>
+        <a routerLink="/login">Sign In</a>
+      </div>
+      <p class="footer__copy">© {{ year }} SchoolManager — School Management Platform</p>
     </div>
-    <p class="footer__copy">© {{ year }} School Manager · School Management Platform · Built for the future of education</p>
   </footer>
 
 </div>
