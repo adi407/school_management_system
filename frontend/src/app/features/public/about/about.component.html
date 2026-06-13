@@ -1,0 +1,99 @@
+<div class="page" [class.page--dark]="theme.isDark()">
+  <nav class="page-nav">
+    <a routerLink="/" class="page-nav__brand">
+      <div class="page-nav__logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#059669"/>
+          </linearGradient></defs>
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+        </svg>
+      </div>
+      <span>SchoolManager</span>
+    </a>
+    <div class="page-nav__actions">
+      <a routerLink="/request-demo" class="btn-nav">Request Demo</a>
+    </div>
+  </nav>
+
+  <div class="about-container">
+    <div class="about-hero">
+      <span class="section-tag">About Us</span>
+      <h1>Building the operating system<br/>for modern Indian schools</h1>
+      <p>SchoolManager was born from a simple observation: schools spend more time on paperwork than on students. We're here to change that.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-section">
+        <div class="about-section__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Our Mission</h3>
+        <p>To give every school — regardless of size or budget — access to the same caliber of management tools that top institutions use. We believe great education starts with well-run schools.</p>
+      </div>
+
+      <div class="about-section">
+        <div class="about-section__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3>Based in India</h3>
+        <p>SchoolManager is designed and built in India, for Indian schools. We understand the unique challenges of CBSE, ICSE, and state board schools — from attendance registers to fee collection cycles.</p>
+      </div>
+
+      <div class="about-section">
+        <div class="about-section__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>Technology</h3>
+        <p>Built on enterprise-grade technology — Spring Boot, Angular, and PostgreSQL — with the same architectural patterns used by companies like Notion and Linear. Your data is secure, your school runs fast.</p>
+      </div>
+
+      <div class="about-section">
+        <div class="about-section__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Who We Serve</h3>
+        <p>From 50-student primary schools to 2,000+ student senior secondary institutions. Whether you're a single school or a chain of schools, SchoolManager scales to fit your needs.</p>
+      </div>
+    </div>
+
+    <div class="about-values">
+      <h2>What We Believe</h2>
+      <div class="values-grid">
+        <div class="value-item">
+          <h4>Your data, your control</h4>
+          <p>Schools own their data completely. Export everything, anytime. No lock-in.</p>
+        </div>
+        <div class="value-item">
+          <h4>Simple over clever</h4>
+          <p>Every feature should be usable by a teacher who has never used software before.</p>
+        </div>
+        <div class="value-item">
+          <h4>Privacy by default</h4>
+          <p>Student data is sensitive. We treat it with the same care we'd want for our own children.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-cta">
+      <h2>Ready to see SchoolManager in action?</h2>
+      <p>Book a personalized demo and see how your school can save 10+ hours per week on admin work.</p>
+      <a routerLink="/request-demo" class="btn-cta">
+        Request a Demo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <div class="page-footer__links">
+      <a routerLink="/about">About</a>
+      <a routerLink="/pricing">Pricing</a>
+      <a routerLink="/terms">Terms</a>
+      <a routerLink="/privacy">Privacy</a>
+    </div>
+    <p>&copy; {{ year }} SchoolManager. All rights reserved.</p>
+  </footer>
+</div>

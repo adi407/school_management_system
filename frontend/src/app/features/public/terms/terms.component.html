@@ -1,0 +1,70 @@
+<div class="page" [class.page--dark]="theme.isDark()">
+  <nav class="page-nav">
+    <a routerLink="/" class="page-nav__brand">
+      <div class="page-nav__logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#059669"/>
+          </linearGradient></defs>
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+        </svg>
+      </div>
+      <span>SchoolManager</span>
+    </a>
+  </nav>
+
+  <div class="legal-container">
+    <h1>Terms of Service</h1>
+    <p class="legal-updated">Last updated: June 13, 2026</p>
+
+    <div class="legal-content">
+      <h2>1. Acceptance of Terms</h2>
+      <p>By accessing or using SchoolManager ("the Service"), you agree to be bound by these Terms of Service. If you are using the Service on behalf of a school or organization, you represent that you have the authority to bind that entity to these terms.</p>
+
+      <h2>2. Description of Service</h2>
+      <p>SchoolManager is a cloud-based school management platform that provides tools for student management, attendance tracking, fee management, exam administration, timetable scheduling, and related educational operations.</p>
+
+      <h2>3. User Accounts</h2>
+      <p>You are responsible for maintaining the confidentiality of your account credentials. You must notify us immediately of any unauthorized use of your account. School administrators are responsible for managing user access within their institution.</p>
+
+      <h2>4. Data Ownership</h2>
+      <p>Your school retains full ownership of all data entered into SchoolManager. We do not sell, share, or use your data for advertising. You may export your data at any time. Upon account termination, we will provide a complete data export upon request.</p>
+
+      <h2>5. Acceptable Use</h2>
+      <p>You agree not to misuse the Service. This includes attempting to access accounts of other schools, reverse-engineering the platform, uploading malicious content, or using the Service for purposes other than school administration.</p>
+
+      <h2>6. Service Availability</h2>
+      <p>We target 99.9% uptime but do not guarantee uninterrupted access. Scheduled maintenance will be communicated in advance. We are not liable for downtime caused by factors outside our control.</p>
+
+      <h2>7. Payment Terms</h2>
+      <p>Paid plans are billed monthly or annually as selected. Prices are in Indian Rupees (INR). We reserve the right to change pricing with 30 days notice. Refunds are handled on a case-by-case basis.</p>
+
+      <h2>8. Termination</h2>
+      <p>Either party may terminate the agreement with 30 days written notice. Upon termination, you will have 60 days to export your data before it is permanently deleted from our systems.</p>
+
+      <h2>9. Limitation of Liability</h2>
+      <p>To the maximum extent permitted by law, SchoolManager's liability is limited to the amount paid by you in the 12 months preceding the claim. We are not liable for indirect, incidental, or consequential damages.</p>
+
+      <h2>10. Changes to Terms</h2>
+      <p>We may update these terms from time to time. Material changes will be communicated via email or in-app notification at least 30 days before they take effect.</p>
+
+      <h2>11. Governing Law</h2>
+      <p>These terms are governed by the laws of India. Any disputes shall be resolved in the courts of Bangalore, Karnataka.</p>
+
+      <h2>Contact</h2>
+      <p>For questions about these terms, contact us at <strong>legal&#64;schoolmanager.live</strong>.</p>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <div class="page-footer__links">
+      <a routerLink="/about">About</a>
+      <a routerLink="/pricing">Pricing</a>
+      <a routerLink="/terms">Terms</a>
+      <a routerLink="/privacy">Privacy</a>
+    </div>
+    <p>&copy; {{ year }} SchoolManager. All rights reserved.</p>
+  </footer>
+</div>

@@ -3,28 +3,32 @@
   <!-- ── NAV ─────────────────────────────────────────────── -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__brand">
-      <div class="nav__logo" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <defs>
-            <linearGradient id="ng" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#2563EB"/>
-              <stop offset="100%" stop-color="#7C3AED"/>
-            </linearGradient>
-          </defs>
-          <rect width="24" height="24" rx="7" fill="url(#ng)"/>
-          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
-          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
-          <line x1="19" y1="8.5" x2="19" y2="13" stroke="white" stroke-width="1.4" opacity="0.85" stroke-linecap="round"/>
-          <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
-        </svg>
-      </div>
-      <span class="nav__name">SchoolManager</span>
+      <a routerLink="/" class="nav__brand-link">
+        <div class="nav__logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <defs>
+              <linearGradient id="ng" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#2563EB"/>
+                <stop offset="100%" stop-color="#059669"/>
+              </linearGradient>
+            </defs>
+            <rect width="24" height="24" rx="7" fill="url(#ng)"/>
+            <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+            <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+          </svg>
+        </div>
+        <span class="nav__name">SchoolManager</span>
+      </a>
     </div>
-    <div class="nav__links">
-      <a href="#features" class="nav__link">Features</a>
-      <a href="#workflow" class="nav__link">How It Works</a>
-      <a href="#trust" class="nav__link">Security</a>
+
+    <div class="nav__links" [class.nav__links--open]="mobileMenuOpen">
+      <a href="#features" class="nav__link" (click)="closeMobile()">Features</a>
+      <a href="#workflow" class="nav__link" (click)="closeMobile()">How It Works</a>
+      <a routerLink="/pricing" class="nav__link" (click)="closeMobile()">Pricing</a>
+      <a href="#trust" class="nav__link" (click)="closeMobile()">Security</a>
+      <a routerLink="/about" class="nav__link nav__link--mobile-only" (click)="closeMobile()">About</a>
     </div>
+
     <div class="nav__actions">
       <button class="btn-theme" (click)="theme.toggle()"
               [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
@@ -42,6 +46,13 @@
         }
       </button>
       <a routerLink="/login" class="btn-signin">Sign In</a>
+      <button class="nav__hamburger" (click)="toggleMobile()" [attr.aria-label]="mobileMenuOpen ? 'Close menu' : 'Open menu'" aria-expanded="false">
+        @if (mobileMenuOpen) {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        } @else {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        }
+      </button>
     </div>
   </nav>
 
@@ -61,7 +72,7 @@
         for modern schools.
       </p>
       <div class="hero__cta stagger-child">
-        <a routerLink="/login" class="btn-primary">
+        <a routerLink="/request-demo" class="btn-primary">
           Request Demo
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
@@ -70,11 +81,11 @@
       <div class="hero__proof stagger-child">
         <div class="hero__proof-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>End-to-end encrypted</span>
+          <span>Bank-grade security</span>
         </div>
         <div class="hero__proof-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <span>Role-based access</span>
+          <span>Setup in 15 minutes</span>
         </div>
         <div class="hero__proof-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -93,7 +104,6 @@
           <div class="preview__url">schoolmanager.live/admin/dashboard</div>
         </div>
         <div class="preview__body">
-          <!-- Mini sidebar -->
           <div class="preview__sidebar">
             <div class="preview__sidebar-logo"></div>
             <div class="preview__sidebar-item preview__sidebar-item--active"></div>
@@ -102,57 +112,54 @@
             <div class="preview__sidebar-item"></div>
             <div class="preview__sidebar-item"></div>
           </div>
-          <!-- Main content -->
           <div class="preview__main">
             <div class="preview__topbar">
-              <div class="preview__greeting"></div>
+              <div class="preview__greeting">Good morning, Admin</div>
               <div class="preview__avatar"></div>
             </div>
-            <!-- KPI cards -->
             <div class="preview__kpis">
               <div class="preview__kpi">
-                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-label">Attendance</div>
                 <div class="preview__kpi-val">96%</div>
                 <div class="preview__kpi-bar preview__kpi-bar--green"></div>
               </div>
               <div class="preview__kpi">
-                <div class="preview__kpi-label"></div>
-                <div class="preview__kpi-val">₹4.2L</div>
+                <div class="preview__kpi-label">Fees Collected</div>
+                <div class="preview__kpi-val">&#8377;4.2L</div>
                 <div class="preview__kpi-bar preview__kpi-bar--blue"></div>
               </div>
               <div class="preview__kpi">
-                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-label">Students</div>
                 <div class="preview__kpi-val">847</div>
                 <div class="preview__kpi-bar preview__kpi-bar--purple"></div>
               </div>
               <div class="preview__kpi">
-                <div class="preview__kpi-label"></div>
+                <div class="preview__kpi-label">Staff</div>
                 <div class="preview__kpi-val">42</div>
                 <div class="preview__kpi-bar preview__kpi-bar--amber"></div>
               </div>
             </div>
-            <!-- Table preview -->
             <div class="preview__table">
               <div class="preview__table-header">
-                <div></div><div></div><div></div><div></div>
+                <div>Student</div><div>Class</div><div>Status</div><div>Fee</div>
               </div>
               <div class="preview__table-row">
-                <div class="preview__table-cell--name"></div>
-                <div class="preview__table-cell"></div>
-                <div class="preview__table-cell--badge"></div>
-                <div class="preview__table-cell"></div>
+                <div class="preview__table-cell--name">Priya Sharma</div>
+                <div class="preview__table-cell">VIII-A</div>
+                <div class="preview__table-cell--badge">Present</div>
+                <div class="preview__table-cell">Paid</div>
               </div>
               <div class="preview__table-row">
-                <div class="preview__table-cell--name"></div>
-                <div class="preview__table-cell"></div>
-                <div class="preview__table-cell--badge preview__table-cell--badge-warn"></div>
-                <div class="preview__table-cell"></div>
+                <div class="preview__table-cell--name">Rohan Gupta</div>
+                <div class="preview__table-cell">IX-B</div>
+                <div class="preview__table-cell--badge preview__table-cell--badge-warn">Absent</div>
+                <div class="preview__table-cell">Due</div>
               </div>
               <div class="preview__table-row">
-                <div class="preview__table-cell--name"></div>
-                <div class="preview__table-cell"></div>
-                <div class="preview__table-cell--badge"></div>
-                <div class="preview__table-cell"></div>
+                <div class="preview__table-cell--name">Ananya Reddy</div>
+                <div class="preview__table-cell">VII-C</div>
+                <div class="preview__table-cell--badge">Present</div>
+                <div class="preview__table-cell">Paid</div>
               </div>
             </div>
           </div>
@@ -177,7 +184,7 @@
         <h3 class="feature-card__title">Student Management</h3>
         <p class="feature-card__desc">Complete student profiles with admission records, guardian details, documents, and academic history in one place.</p>
         <div class="feature-card__tags">
-          <span>Admissions</span><span>Profiles</span><span>Documents</span>
+          <span>Admissions</span><span>Profiles</span>
         </div>
       </div>
 
@@ -188,7 +195,7 @@
         <h3 class="feature-card__title">Attendance Tracking</h3>
         <p class="feature-card__desc">Daily student and staff attendance with automated reports, absence alerts, and trend analytics across the term.</p>
         <div class="feature-card__tags">
-          <span>Daily Logs</span><span>Reports</span><span>Alerts</span>
+          <span>Daily Logs</span><span>Reports</span>
         </div>
       </div>
 
@@ -199,7 +206,7 @@
         <h3 class="feature-card__title">Fee Management</h3>
         <p class="feature-card__desc">Create fee structures by class, track payments, generate receipts, and identify overdue balances automatically.</p>
         <div class="feature-card__tags">
-          <span>Structures</span><span>Payments</span><span>Receipts</span>
+          <span>Payments</span><span>Receipts</span>
         </div>
       </div>
 
@@ -210,7 +217,7 @@
         <h3 class="feature-card__title">Exam & Results</h3>
         <p class="feature-card__desc">Schedule exams, enter marks, auto-calculate grades and ranks, and publish report cards to students and parents.</p>
         <div class="feature-card__tags">
-          <span>Scheduling</span><span>Grading</span><span>Report Cards</span>
+          <span>Grading</span><span>Report Cards</span>
         </div>
       </div>
 
@@ -221,7 +228,7 @@
         <h3 class="feature-card__title">Timetable & Schedule</h3>
         <p class="feature-card__desc">Build class timetables, manage teacher assignments, and handle substitute allocation with AI-powered suggestions.</p>
         <div class="feature-card__tags">
-          <span>Timetable</span><span>Substitutes</span><span>AI Matching</span>
+          <span>Timetable</span><span>AI Matching</span>
         </div>
       </div>
 
@@ -232,7 +239,7 @@
         <h3 class="feature-card__title">Parent Portal</h3>
         <p class="feature-card__desc">Parents see attendance, homework, results, and fee status in real time. No phone calls to the school office required.</p>
         <div class="feature-card__tags">
-          <span>Real-time</span><span>Notifications</span><span>Fee Pay</span>
+          <span>Real-time</span><span>Fee Status</span>
         </div>
       </div>
 
@@ -246,52 +253,54 @@
       <h2 class="section-heading stagger-child">From admission to report card.<br/>One continuous workflow.</h2>
       <p class="section-sub stagger-child">Every step of the school lifecycle is connected. Data flows automatically between modules — no re-entry, no spreadsheets.</p>
     </div>
-    <div class="workflow__steps stagger-child">
+    <div class="workflow__timeline stagger-child">
       <div class="wf-step">
-        <div class="wf-step__num">1</div>
+        <div class="wf-step__marker">
+          <div class="wf-step__num">1</div>
+          <div class="wf-step__line"></div>
+        </div>
         <div class="wf-step__content">
           <h3>Admission</h3>
-          <p>Enroll a student with profile, guardian, and document details. Automatically assigned to a class.</p>
+          <p>Enroll a student with profile, guardian, and document details. Automatically assigned to a class section.</p>
         </div>
       </div>
-      <div class="wf-step__connector" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
       <div class="wf-step">
-        <div class="wf-step__num">2</div>
+        <div class="wf-step__marker">
+          <div class="wf-step__num">2</div>
+          <div class="wf-step__line"></div>
+        </div>
         <div class="wf-step__content">
           <h3>Daily Operations</h3>
-          <p>Attendance, timetable, homework — all logged daily. Teachers update via their dashboard.</p>
+          <p>Attendance, timetable, homework — all logged daily by teachers from their own dashboard.</p>
         </div>
       </div>
-      <div class="wf-step__connector" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
       <div class="wf-step">
-        <div class="wf-step__num">3</div>
+        <div class="wf-step__marker">
+          <div class="wf-step__num">3</div>
+          <div class="wf-step__line"></div>
+        </div>
         <div class="wf-step__content">
           <h3>Examinations</h3>
-          <p>Schedule exams, record marks, auto-generate grades and class ranks.</p>
+          <p>Schedule exams, record marks, auto-generate grades, class ranks, and report cards.</p>
         </div>
       </div>
-      <div class="wf-step__connector" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
       <div class="wf-step">
-        <div class="wf-step__num">4</div>
+        <div class="wf-step__marker">
+          <div class="wf-step__num">4</div>
+          <div class="wf-step__line"></div>
+        </div>
         <div class="wf-step__content">
           <h3>Fee Collection</h3>
-          <p>Parents pay online. Receipts auto-generated. Overdue tracking built in.</p>
+          <p>Parents view fee status in their portal. Receipts auto-generated. Overdue tracking built in.</p>
         </div>
       </div>
-      <div class="wf-step__connector" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
       <div class="wf-step">
-        <div class="wf-step__num">5</div>
+        <div class="wf-step__marker">
+          <div class="wf-step__num">5</div>
+        </div>
         <div class="wf-step__content">
           <h3>Reports & Analytics</h3>
-          <p>Attendance trends, fee summaries, academic performance — data-driven decisions.</p>
+          <p>Attendance trends, fee summaries, academic performance — all the data you need for informed decisions.</p>
         </div>
       </div>
     </div>
@@ -306,27 +315,37 @@
     </div>
     <div class="roles__grid stagger-child">
       <div class="role-card">
-        <div class="role-card__icon">🛡️</div>
+        <div class="role-card__icon role-card__icon--blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
         <h3>Super Admin</h3>
         <p>Platform-wide oversight. Manage schools, tiers, modules, and feature flags across the entire system.</p>
       </div>
       <div class="role-card">
-        <div class="role-card__icon">🏫</div>
+        <div class="role-card__icon role-card__icon--green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
         <h3>School Admin</h3>
         <p>Full school control. Students, staff, fees, exams, reports — everything in one dashboard.</p>
       </div>
       <div class="role-card">
-        <div class="role-card__icon">👨‍🏫</div>
+        <div class="role-card__icon role-card__icon--purple">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
         <h3>Teacher</h3>
         <p>Attendance, homework, exam entry, timetable, and parent meeting prep — streamlined for daily use.</p>
       </div>
       <div class="role-card">
-        <div class="role-card__icon">🎓</div>
+        <div class="role-card__icon role-card__icon--amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+        </div>
         <h3>Student</h3>
-        <p>View timetable, homework, results, and attendance. Stay on top of academics.</p>
+        <p>View timetable, homework, results, and attendance. Stay on top of academics with a personal dashboard.</p>
       </div>
       <div class="role-card">
-        <div class="role-card__icon">👪</div>
+        <div class="role-card__icon role-card__icon--rose">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
         <h3>Parent</h3>
         <p>Real-time visibility into attendance, grades, fees, and school announcements. Zero guesswork.</p>
       </div>
@@ -337,36 +356,37 @@
   <section class="trust reveal-section" id="trust">
     <div class="trust__header">
       <span class="section-tag stagger-child">Trust & Security</span>
-      <h2 class="section-heading stagger-child">Built for school data.<br/>Secured like enterprise.</h2>
+      <h2 class="section-heading stagger-child">Your school's data is safe with us.</h2>
+      <p class="section-sub stagger-child">We treat student data with the same care we'd want for our own children.</p>
     </div>
     <div class="trust__grid stagger-child">
-      <div class="trust-card">
+      <div class="trust-card trust-card--green">
         <div class="trust-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <h3>Data Protection</h3>
-        <p>Student data encrypted at rest and in transit. Role-based access ensures only authorized users see sensitive information.</p>
+        <h3>Your Data, Your Control</h3>
+        <p>All student data is encrypted and protected. Only you and your authorized staff can access it. Export everything, anytime — no lock-in, ever.</p>
       </div>
-      <div class="trust-card">
+      <div class="trust-card trust-card--blue">
         <div class="trust-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
-        <h3>Role-Based Access</h3>
-        <p>Five distinct roles with granular permissions. Teachers can't access fee data. Parents can't see other students. Every boundary enforced.</p>
+        <h3>Strict Access Boundaries</h3>
+        <p>Teachers only see their classes. Parents only see their own child. No school on the platform can see another school's data. Every boundary is enforced.</p>
       </div>
-      <div class="trust-card">
+      <div class="trust-card trust-card--purple">
         <div class="trust-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
-        <h3>Audit Logging</h3>
-        <p>Every action logged. Know who changed what, when, and why. Full accountability across the platform.</p>
+        <h3>Complete Accountability</h3>
+        <p>Every action is logged — who changed what, when, and why. If a record is modified, you'll know exactly who did it and when.</p>
       </div>
-      <div class="trust-card">
+      <div class="trust-card trust-card--teal">
         <div class="trust-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
-        <h3>Cloud Infrastructure</h3>
-        <p>Hosted on reliable cloud infrastructure with automated backups, zero-downtime deployments, and 99.9% uptime target.</p>
+        <h3>Always Available</h3>
+        <p>Hosted on reliable cloud infrastructure with automated daily backups, zero-downtime updates, and 99.9% uptime — so your school never misses a beat.</p>
       </div>
     </div>
   </section>
@@ -375,7 +395,7 @@
   <section class="ai reveal-section" id="ai">
     <div class="ai__header">
       <div class="ai__badge stagger-child">
-        <span class="ai__badge-sparkle">✦</span>
+        <span class="ai__badge-sparkle">&#10038;</span>
         AI-Powered
       </div>
       <h2 class="section-heading stagger-child">Intelligence built in.<br/>Not bolted on.</h2>
@@ -395,7 +415,7 @@
         <h3>Teacher absent? AI finds the replacement.</h3>
         <p>Scores every free teacher by subject match, department, and workload. Best substitute assigned in seconds.</p>
         <div class="ai-card__tags">
-          <span>Subject matching</span><span>Load balancing</span><span>Auto-suggest</span>
+          <span>Subject matching</span><span>Auto-suggest</span>
         </div>
       </div>
       <div class="ai-card">
@@ -411,8 +431,42 @@
         <h3>1-page briefing per student, per teacher.</h3>
         <p>Before every Parent-Teacher Meeting, AI aggregates attendance, marks, homework, and wellness — then writes talking points.</p>
         <div class="ai-card__tags">
-          <span>AI summaries</span><span>Talking points</span><span>Parent preview</span>
+          <span>AI summaries</span><span>Talking points</span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ─────────────────────────────────────────────── -->
+  <section class="faq reveal-section" id="faq">
+    <div class="faq__header">
+      <span class="section-tag stagger-child">FAQ</span>
+      <h2 class="section-heading stagger-child">Common questions</h2>
+    </div>
+    <div class="faq__grid stagger-child">
+      <div class="faq-item">
+        <h4>How long does it take to set up?</h4>
+        <p>Most schools are up and running within 15 minutes. We help you import your existing student data and configure classes, subjects, and fee structures.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Do I need to install anything?</h4>
+        <p>No. SchoolManager runs entirely in the browser. Teachers, parents, and students can access it from any device — phone, tablet, or computer.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Is my school's data safe?</h4>
+        <p>Absolutely. All data is encrypted, access is role-based, and no school can see another school's data. We take daily automated backups.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Can I export my data?</h4>
+        <p>Yes. You can export student records, attendance, fee reports, and exam results at any time in standard formats. Your data is always yours.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What boards do you support?</h4>
+        <p>CBSE, ICSE, and all state boards. The platform is flexible enough to handle any grading system, term structure, or report card format.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Is there a free plan?</h4>
+        <p>Yes. Schools with up to 50 students can use SchoolManager for free, forever. No credit card required. <a routerLink="/pricing">See all plans.</a></p>
       </div>
     </div>
   </section>
@@ -427,10 +481,11 @@
       <h2 class="cta__title stagger-child">Ready to modernize<br/>your school operations?</h2>
       <p class="cta__sub stagger-child">One platform. Every stakeholder. Every moment of the school day — managed.</p>
       <div class="cta__actions stagger-child">
-        <a routerLink="/login" class="btn-primary btn-primary--lg">
-          Get Started
+        <a routerLink="/request-demo" class="btn-primary btn-primary--lg">
+          Request a Demo
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
+        <a routerLink="/pricing" class="btn-secondary">View Pricing</a>
       </div>
     </div>
   </section>
@@ -438,27 +493,58 @@
   <!-- ── FOOTER ─────────────────────────────────────────────── -->
   <footer class="footer">
     <div class="footer__inner">
-      <div class="footer__brand">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <defs><linearGradient id="fg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#7C3AED"/>
-          </linearGradient></defs>
-          <rect width="24" height="24" rx="7" fill="url(#fg)"/>
-          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
-          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
-          <line x1="19" y1="8.5" x2="19" y2="13" stroke="white" stroke-width="1.4" opacity="0.85" stroke-linecap="round"/>
-          <circle cx="19" cy="14" r="1.1" fill="white" opacity="0.80"/>
-        </svg>
-        <span>SchoolManager</span>
+      <div class="footer__top">
+        <div class="footer__brand-col">
+          <div class="footer__brand">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <defs><linearGradient id="fg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#059669"/>
+              </linearGradient></defs>
+              <rect width="24" height="24" rx="7" fill="url(#fg)"/>
+              <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+              <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+            </svg>
+            <span>SchoolManager</span>
+          </div>
+          <p class="footer__tagline">The operating system for modern Indian schools.</p>
+          <p class="footer__contact">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            hello&#64;schoolmanager.live
+          </p>
+          <p class="footer__contact">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Based in India
+          </p>
+        </div>
+        <div class="footer__links-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a routerLink="/pricing">Pricing</a>
+          <a href="#workflow">How It Works</a>
+          <a routerLink="/request-demo">Request Demo</a>
+        </div>
+        <div class="footer__links-col">
+          <h4>Company</h4>
+          <a routerLink="/about">About</a>
+          <a href="#trust">Security</a>
+          <a routerLink="/terms">Terms of Service</a>
+          <a routerLink="/privacy">Privacy Policy</a>
+        </div>
       </div>
-      <div class="footer__links">
-        <a href="#features">Features</a>
-        <a href="#workflow">How It Works</a>
-        <a href="#trust">Security</a>
-        <a routerLink="/login">Sign In</a>
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; {{ year }} SchoolManager. All rights reserved.</p>
       </div>
-      <p class="footer__copy">© {{ year }} SchoolManager — School Management Platform</p>
     </div>
   </footer>
+
+  <!-- ── STICKY MOBILE CTA ──────────────────────────────── -->
+  <div class="mobile-cta" [class.mobile-cta--visible]="showMobileCta">
+    <a routerLink="/request-demo" class="mobile-cta__btn">Request Demo</a>
+  </div>
+
+  <!-- ── BACK TO TOP ──────────────────────────────────────── -->
+  <button class="back-to-top" [class.back-to-top--visible]="showBackToTop" (click)="scrollToTop()" aria-label="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
 </div>

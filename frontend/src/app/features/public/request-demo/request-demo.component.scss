@@ -1,0 +1,141 @@
+$font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+$text: #18181B;
+$text-2: #3F3F46;
+$text-3: #71717A;
+$blue: #2563EB;
+$green: #059669;
+$bg: #FAFAFA;
+$surface: #FFFFFF;
+$border: rgba(0,0,0,0.08);
+
+:host { display: block; }
+
+.page {
+  min-height: 100vh; background: $bg; font-family: $font;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-nav {
+  display: flex; align-items: center; padding: 0 clamp(20px, 4vw, 48px); height: 60px;
+  border-bottom: 1px solid $border; background: rgba(250,250,250,0.88);
+  backdrop-filter: blur(16px);
+  &__brand {
+    display: flex; align-items: center; gap: 10px; text-decoration: none; color: $text;
+    font-weight: 800; font-size: 16px; letter-spacing: -0.5px;
+  }
+  &__logo {
+    width: 32px; height: 32px; border-radius: 10px;
+    background: linear-gradient(135deg, $blue, $green);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 12px rgba($blue, 0.3);
+  }
+}
+
+.demo-container {
+  max-width: 680px; margin: 0 auto; padding: 48px 24px 80px;
+}
+
+.demo-header {
+  margin-bottom: 36px;
+  h1 {
+    font-size: 32px; font-weight: 800; letter-spacing: -1px; color: $text; margin: 0 0 10px;
+  }
+  p {
+    font-size: 16px; line-height: 1.6; color: $text-3; margin: 0;
+  }
+}
+
+.demo-form {
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.form-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  @media (max-width: 580px) { grid-template-columns: 1fr; }
+}
+
+.form-group {
+  display: flex; flex-direction: column; gap: 6px;
+  &--full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 14px; font-weight: 600; color: $text-2;
+    .req { color: #E11D48; }
+  }
+
+  input, select, textarea {
+    padding: 11px 14px; border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.12); background: $surface;
+    font-size: 15px; font-family: $font; color: $text;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    &:focus {
+      outline: none; border-color: $blue;
+      box-shadow: 0 0 0 3px rgba($blue, 0.1);
+    }
+    &::placeholder { color: #A1A1AA; }
+  }
+  select { cursor: pointer; }
+  textarea { resize: vertical; min-height: 80px; }
+}
+
+.form-error {
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(#E11D48, 0.06); border: 1px solid rgba(#E11D48, 0.2);
+  color: #E11D48; font-size: 14px; font-weight: 500;
+}
+
+.btn-submit {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 32px; border-radius: 12px;
+  background: $blue; color: #fff;
+  font-size: 16px; font-weight: 700; font-family: $font;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba($blue, 0.3);
+  transition: all 0.22s; align-self: flex-start;
+  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba($blue, 0.4); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.demo-success {
+  text-align: center; padding: 60px 0;
+  &__icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba($green, 0.08); color: $green;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+  }
+  h2 {
+    font-size: 28px; font-weight: 800; color: $text; margin: 0 0 12px; letter-spacing: -0.5px;
+  }
+  p {
+    font-size: 16px; line-height: 1.6; color: $text-3; max-width: 420px; margin: 0 auto 28px;
+  }
+}
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 12px 28px; border-radius: 12px;
+  background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.12);
+  color: $text-2; font-size: 15px; font-weight: 600; font-family: $font;
+  text-decoration: none; transition: all 0.2s;
+  &:hover { background: rgba(0,0,0,0.08); color: $text; }
+}
+
+// Dark mode
+.page--dark {
+  background: #09090B;
+  .page-nav { background: rgba(9,9,11,0.85); border-bottom-color: rgba(255,255,255,0.06); }
+  .page-nav__brand { color: #FAFAFA; }
+  .demo-header h1 { color: #FAFAFA; }
+  .demo-header p, .demo-success p { color: #71717A; }
+  .demo-success h2 { color: #FAFAFA; }
+  label { color: #A1A1AA; }
+  input, select, textarea {
+    background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); color: #FAFAFA;
+    &:focus { border-color: $blue; box-shadow: 0 0 0 3px rgba($blue, 0.2); }
+    &::placeholder { color: #52525B; }
+  }
+  .btn-back { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: #A1A1AA;
+    &:hover { background: rgba(255,255,255,0.1); color: #FAFAFA; }
+  }
+}

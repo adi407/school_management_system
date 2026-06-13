@@ -1,0 +1,48 @@
+$font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+$blue: #2563EB;
+$green: #059669;
+
+:host { display: block; }
+
+.nf {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: #FAFAFA; font-family: $font; -webkit-font-smoothing: antialiased;
+  padding: 24px;
+}
+
+.nf__content { text-align: center; max-width: 420px; }
+
+.nf__code {
+  font-size: 120px; font-weight: 900; letter-spacing: -6px;
+  background: linear-gradient(135deg, $blue, $green);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1; margin-bottom: 16px;
+}
+
+h1 { font-size: 28px; font-weight: 800; color: #18181B; margin: 0 0 10px; letter-spacing: -0.5px; }
+p { font-size: 16px; color: #71717A; line-height: 1.6; margin: 0 0 28px; }
+
+.nf__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.nf__btn {
+  padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 700;
+  font-family: $font; text-decoration: none; transition: all 0.22s;
+  &--primary {
+    background: $blue; color: #fff; box-shadow: 0 4px 16px rgba($blue, 0.3);
+    &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba($blue, 0.4); }
+  }
+  &--secondary {
+    background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.12); color: #3F3F46;
+    &:hover { background: rgba(0,0,0,0.08); color: #18181B; }
+  }
+}
+
+.nf--dark {
+  background: #09090B;
+  h1 { color: #FAFAFA; }
+  p { color: #71717A; }
+  .nf__btn--secondary {
+    background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: #A1A1AA;
+    &:hover { background: rgba(255,255,255,0.1); color: #FAFAFA; }
+  }
+}

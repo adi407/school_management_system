@@ -14,6 +14,28 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
   },
 
+  // ── Public pages ────────────────────────────────────────────────────
+  {
+    path: 'request-demo',
+    loadComponent: () => import('./features/public/request-demo/request-demo.component').then(m => m.RequestDemoComponent),
+  },
+  {
+    path: 'pricing',
+    loadComponent: () => import('./features/public/pricing/pricing.component').then(m => m.PricingComponent),
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./features/public/about/about.component').then(m => m.AboutComponent),
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./features/public/terms/terms.component').then(m => m.TermsComponent),
+  },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./features/public/privacy/privacy.component').then(m => m.PrivacyComponent),
+  },
+
   // ── Internal demo access — PIN-gated, not linked from anywhere ────────────
   // Path is intentionally non-obvious. Change DEMO_PIN in demo-login.component.ts to rotate.
   {
@@ -265,5 +287,8 @@ export const routes: Routes = [
     ],
   },
 
-  { path: '**', redirectTo: 'login' },
+  {
+    path: '**',
+    loadComponent: () => import('./features/public/not-found/not-found.component').then(m => m.NotFoundComponent),
+  },
 ];

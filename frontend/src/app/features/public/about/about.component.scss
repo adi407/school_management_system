@@ -1,0 +1,121 @@
+$font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+$text: #18181B; $text-2: #3F3F46; $text-3: #71717A;
+$blue: #2563EB; $green: #059669; $purple: #7C3AED;
+$bg: #FAFAFA; $surface: #FFFFFF; $border: rgba(0,0,0,0.08);
+
+:host { display: block; }
+
+.page { min-height: 100vh; background: $bg; font-family: $font; -webkit-font-smoothing: antialiased; }
+
+.page-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(20px, 4vw, 48px); height: 60px;
+  border-bottom: 1px solid $border; background: rgba(250,250,250,0.88); backdrop-filter: blur(16px);
+  &__brand {
+    display: flex; align-items: center; gap: 10px; text-decoration: none; color: $text;
+    font-weight: 800; font-size: 16px; letter-spacing: -0.5px;
+  }
+  &__logo {
+    width: 32px; height: 32px; border-radius: 10px;
+    background: linear-gradient(135deg, $blue, $green);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 12px rgba($blue, 0.3);
+  }
+}
+
+.btn-nav {
+  padding: 8px 20px; border-radius: 10px; background: $text; color: #fff;
+  font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s;
+  &:hover { background: lighten($text, 15%); }
+}
+
+.about-container { max-width: 960px; margin: 0 auto; padding: 60px 24px 80px; }
+
+.about-hero {
+  text-align: center; margin-bottom: 64px;
+  h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -1.5px; color: $text; margin: 16px 0 12px; }
+  p { font-size: 17px; line-height: 1.7; color: $text-3; max-width: 560px; margin: 0 auto; }
+}
+
+.section-tag {
+  display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: $blue; padding: 4px 14px; border-radius: 20px;
+  background: rgba($blue, 0.08); border: 1px solid rgba($blue, 0.15);
+}
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 64px;
+}
+
+.about-section {
+  background: $surface; border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 28px;
+  &__icon {
+    width: 52px; height: 52px; border-radius: 14px; margin-bottom: 16px;
+    background: rgba($blue, 0.06); color: $blue;
+    display: flex; align-items: center; justify-content: center;
+  }
+  h3 { font-size: 18px; font-weight: 700; color: $text; margin: 0 0 8px; }
+  p { font-size: 14px; line-height: 1.7; color: $text-3; margin: 0; }
+}
+
+.about-values {
+  margin-bottom: 64px;
+  h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: $text; text-align: center; margin: 0 0 32px; }
+}
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.value-item {
+  text-align: center; padding: 24px;
+  h4 { font-size: 16px; font-weight: 700; color: $text; margin: 0 0 8px; }
+  p { font-size: 14px; line-height: 1.65; color: $text-3; margin: 0; }
+}
+
+.about-cta {
+  text-align: center; padding: 48px 32px; border-radius: 20px;
+  background: linear-gradient(135deg, #EEF2FF, #F0FDF4);
+  h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: $text; margin: 0 0 10px; }
+  p { font-size: 16px; color: $text-3; margin: 0 0 24px; }
+}
+
+.btn-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 12px; background: $blue; color: #fff;
+  font-size: 16px; font-weight: 700; font-family: $font; text-decoration: none;
+  box-shadow: 0 4px 20px rgba($blue, 0.3); transition: all 0.22s;
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba($blue, 0.4); }
+}
+
+.page-footer {
+  padding: 24px; text-align: center; border-top: 1px solid $border;
+  &__links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px;
+    a { font-size: 13px; color: $text-3; text-decoration: none; &:hover { color: $text; } }
+  }
+  p { font-size: 12px; color: #A1A1AA; margin: 0; }
+}
+
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .values-grid { grid-template-columns: 1fr; }
+}
+
+.page--dark {
+  background: #09090B;
+  .page-nav { background: rgba(9,9,11,0.85); border-bottom-color: rgba(255,255,255,0.06); }
+  .page-nav__brand { color: #FAFAFA; }
+  .btn-nav { background: #FAFAFA; color: #09090B; }
+  .about-hero h1 { color: #FAFAFA; }
+  .about-hero p { color: #71717A; }
+  .section-tag { background: rgba($blue, 0.12); border-color: rgba($blue, 0.25); }
+  .about-section { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06);
+    h3 { color: #FAFAFA; } p { color: #71717A; }
+    &__icon { background: rgba($blue, 0.1); }
+  }
+  .about-values h2 { color: #FAFAFA; }
+  .value-item h4 { color: #FAFAFA; }
+  .value-item p { color: #71717A; }
+  .about-cta { background: linear-gradient(135deg, #0C0C1A, #071210);
+    h2 { color: #FAFAFA; } p { color: #71717A; }
+  }
+  .page-footer { border-top-color: rgba(255,255,255,0.06);
+    &__links a { color: #71717A; &:hover { color: #FAFAFA; } }
+  }
+}

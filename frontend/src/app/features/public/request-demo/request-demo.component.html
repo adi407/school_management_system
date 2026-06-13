@@ -1,0 +1,99 @@
+<div class="page" [class.page--dark]="theme.isDark()">
+  <nav class="page-nav">
+    <a routerLink="/" class="page-nav__brand">
+      <div class="page-nav__logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#059669"/>
+          </linearGradient></defs>
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+        </svg>
+      </div>
+      <span>SchoolManager</span>
+    </a>
+  </nav>
+
+  <div class="demo-container">
+    @if (!submitted()) {
+      <div class="demo-header">
+        <h1>Request a Demo</h1>
+        <p>See how SchoolManager can simplify your school operations. Fill in your details and we'll get back to you within 24 hours.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="demo-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name <span class="req">*</span></label>
+            <input id="name" formControlName="name" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address <span class="req">*</span></label>
+            <input id="email" type="email" formControlName="email" placeholder="you@school.edu" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input id="phone" formControlName="phone" placeholder="+91 98765 43210" />
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input id="city" formControlName="city" placeholder="e.g. Bangalore" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="schoolName">School Name</label>
+            <input id="schoolName" formControlName="schoolName" placeholder="Your school or institution" />
+          </div>
+          <div class="form-group">
+            <label for="role">Your Role</label>
+            <select id="role" formControlName="role">
+              <option value="">Select your role</option>
+              <option value="Principal">Principal</option>
+              <option value="Vice Principal">Vice Principal</option>
+              <option value="Administrator">Administrator</option>
+              <option value="Teacher">Teacher</option>
+              <option value="IT Head">IT Head</option>
+              <option value="Trustee/Owner">Trustee / Owner</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label for="message">Anything specific you'd like to see?</label>
+          <textarea id="message" formControlName="message" rows="3" placeholder="e.g. We need attendance + fee management for 800 students..."></textarea>
+        </div>
+
+        @if (error()) {
+          <div class="form-error">{{ error() }}</div>
+        }
+
+        <button type="submit" class="btn-submit" [disabled]="submitting()">
+          @if (submitting()) {
+            Submitting...
+          } @else {
+            Request Demo
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          }
+        </button>
+      </form>
+    } @else {
+      <div class="demo-success">
+        <div class="demo-success__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h2>Demo Request Received!</h2>
+        <p>Thank you for your interest in SchoolManager. We'll reach out to you within 24 hours to schedule a personalized demo.</p>
+        <a routerLink="/" class="btn-back">Back to Home</a>
+      </div>
+    }
+  </div>
+</div>
