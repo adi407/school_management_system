@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -23,19 +24,25 @@ public class FeeService {
     private final SchoolClassRepository  classRepository;
     private final AcademicYearRepository academicYearRepository;
     private final UserRepository         userRepository;
+    private final GuardianRepository     guardianRepository;
+    private final EmailService           emailService;
 
     public FeeService(FeeStructureRepository structureRepository,
                       FeePaymentRepository paymentRepository,
                       StudentRepository studentRepository,
                       SchoolClassRepository classRepository,
                       AcademicYearRepository academicYearRepository,
-                      UserRepository userRepository) {
+                      UserRepository userRepository,
+                      GuardianRepository guardianRepository,
+                      EmailService emailService) {
         this.structureRepository    = structureRepository;
         this.paymentRepository      = paymentRepository;
         this.studentRepository      = studentRepository;
         this.classRepository        = classRepository;
         this.academicYearRepository = academicYearRepository;
         this.userRepository         = userRepository;
+        this.guardianRepository     = guardianRepository;
+        this.emailService           = emailService;
     }
 
     // ── Fee Structures ────────────────────────────────────────────────────────
@@ -105,7 +112,15 @@ public class FeeService {
             payment.setFeeStructure(fs);
         }
 
-        return toPaymentDto(paymentRepository.save(payment));
+        FeePayment saved = paymentRepository.save(payment);
+
+        List<Guardian> guardians = guardianRepository
+            .findByStudentIdOrderByIsPrimaryDesc(student.getId());
+        if (!guardians.isEmpty()) {
+            emailService.sendFeeReceipt(guardians, student, saved);
+        }
+
+        return toPaymentDto(saved);
     }
 
     @Transactional(readOnly = true)
@@ -147,6 +162,35 @@ public class FeeService {
             totalFees, totalPaid, balance,
             structureDtos, paymentDtos
         );
+    }
+
+    // ── Fee Reminders ─────────────────────────────────────────────────────────
+
+    public int sendFeeReminders(UUID schoolId, UUID structureId) {
+        FeeStructure fs = structureRepository.findById(structureId)
+            .filter(s -> s.getSchoolId().equals(schoolId))
+            .orElseThrow(() -> new ResourceNotFoundException("FeeStructure", structureId));
+
+        UUID classId = fs.getSchoolClass() != null ? fs.getSchoolClass().getId() : null;
+        List<Student> students = classId != null
+            ? studentRepository.findBySchoolClassIdAndSchoolIdAndIsActiveTrue(classId, schoolId)
+            : studentRepository.findBySchoolIdAndIsActiveTrue(schoolId);
+
+        int sent = 0;
+        for (Student student : students) {
+            BigDecimal paid = paymentRepository.sumPaidByStudentAndFeeStructure(student.getId(), structureId);
+            BigDecimal balance = fs.getAmount().subtract(paid);
+            if (balance.compareTo(BigDecimal.ZERO) > 0) {
+                List<Guardian> guardians = guardianRepository
+                    .findByStudentIdOrderByIsPrimaryDesc(student.getId());
+                if (!guardians.isEmpty()) {
+                    emailService.sendFeeReminder(guardians, student,
+                        fs.getFeeType(), balance, fs.getDueDate());
+                    sent++;
+                }
+            }
+        }
+        return sent;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

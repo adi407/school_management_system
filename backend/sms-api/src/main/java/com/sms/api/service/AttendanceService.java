@@ -4,11 +4,9 @@ import com.sms.api.dto.attendance.AttendanceEntryRequest;
 import com.sms.api.dto.attendance.AttendanceRecordDto;
 import com.sms.api.dto.attendance.AttendanceSummaryDto;
 import com.sms.api.dto.attendance.MarkAttendanceRequest;
-import com.sms.api.entity.Attendance;
-import com.sms.api.entity.SchoolClass;
-import com.sms.api.entity.Student;
-import com.sms.api.entity.User;
+import com.sms.api.entity.*;
 import com.sms.api.repository.AttendanceRepository;
+import com.sms.api.repository.GuardianRepository;
 import com.sms.api.repository.SchoolClassRepository;
 import com.sms.api.repository.StudentRepository;
 import com.sms.api.repository.UserRepository;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,19 +26,27 @@ import java.util.stream.Collectors;
 @Transactional
 public class AttendanceService {
 
+    private static final Set<String> ALERT_STATUSES = Set.of("ABSENT", "LATE", "EXCUSED");
+
     private final AttendanceRepository  attendanceRepository;
     private final SchoolClassRepository classRepository;
     private final StudentRepository     studentRepository;
     private final UserRepository        userRepository;
+    private final GuardianRepository    guardianRepository;
+    private final EmailService          emailService;
 
     public AttendanceService(AttendanceRepository attendanceRepository,
                              SchoolClassRepository classRepository,
                              StudentRepository studentRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository,
+                             GuardianRepository guardianRepository,
+                             EmailService emailService) {
         this.attendanceRepository = attendanceRepository;
         this.classRepository      = classRepository;
         this.studentRepository    = studentRepository;
         this.userRepository       = userRepository;
+        this.guardianRepository   = guardianRepository;
+        this.emailService         = emailService;
     }
 
     // ── Teacher/Admin: bulk mark attendance for a class on a date ────────────
@@ -73,9 +80,20 @@ public class AttendanceService {
             return att;
         }).collect(Collectors.toList());
 
-        return attendanceRepository.saveAll(toSave).stream()
-            .map(this::toDto)
-            .collect(Collectors.toList());
+        List<Attendance> saved = attendanceRepository.saveAll(toSave);
+
+        saved.stream()
+            .filter(a -> ALERT_STATUSES.contains(a.getStatus()))
+            .forEach(a -> {
+                List<Guardian> guardians = guardianRepository
+                    .findByStudentIdOrderByIsPrimaryDesc(a.getStudent().getId());
+                if (!guardians.isEmpty()) {
+                    emailService.sendAttendanceAlert(guardians, a.getStudent(),
+                        a.getAttendanceDate(), a.getStatus());
+                }
+            });
+
+        return saved.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     // ── Get roll call for a class on a date ──────────────────────────────────

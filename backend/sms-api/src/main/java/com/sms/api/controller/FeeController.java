@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -94,5 +95,18 @@ public class FeeController {
         @AuthenticationPrincipal UserPrincipal principal
     ) {
         return ResponseEntity.ok(feeService.getStudentFeesSummary(principal.schoolId(), studentId));
+    }
+
+    // ── Reminders ────────────────────────────────────────────────────────────
+
+    @PostMapping("/structures/{structureId}/send-reminders")
+    @Operation(summary = "Send fee reminders to guardians of students with pending balance")
+    @PreAuthorize("hasAnyRole('SCHOOL_ADMIN','ACCOUNTANT')")
+    public ResponseEntity<Map<String, Object>> sendReminders(
+        @PathVariable UUID structureId,
+        @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        int sent = feeService.sendFeeReminders(principal.schoolId(), structureId);
+        return ResponseEntity.ok(Map.of("message", "Fee reminders sent", "count", sent));
     }
 }

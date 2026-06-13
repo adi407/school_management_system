@@ -29,13 +29,16 @@ public class StaffService {
     private final UserRepository   userRepository;
     private final SchoolRepository schoolRepository;
     private final PasswordEncoder  passwordEncoder;
+    private final EmailService     emailService;
 
     public StaffService(UserRepository userRepository,
                         SchoolRepository schoolRepository,
-                        PasswordEncoder passwordEncoder) {
+                        PasswordEncoder passwordEncoder,
+                        EmailService emailService) {
         this.userRepository   = userRepository;
         this.schoolRepository = schoolRepository;
         this.passwordEncoder  = passwordEncoder;
+        this.emailService     = emailService;
     }
 
     @Transactional(readOnly = true)
@@ -74,7 +77,9 @@ public class StaffService {
             : "Welcome@1234";
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
 
-        return toDto(userRepository.save(user));
+        User saved = userRepository.save(user);
+        emailService.sendWelcome(saved, school.getName());
+        return toDto(saved);
     }
 
     public StaffDto updateStaff(UUID schoolId, UUID staffId, UpdateStaffRequest req) {

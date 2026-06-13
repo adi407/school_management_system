@@ -22,6 +22,9 @@ public interface FeePaymentRepository extends JpaRepository<FeePayment, UUID> {
     @Query("SELECT COALESCE(SUM(p.amountPaid), 0) FROM FeePayment p WHERE p.student.id = :studentId")
     BigDecimal sumPaidByStudent(@Param("studentId") UUID studentId);
 
+    @Query("SELECT COALESCE(SUM(p.amountPaid), 0) FROM FeePayment p WHERE p.student.id = :studentId AND p.feeStructure.id = :structureId")
+    BigDecimal sumPaidByStudentAndFeeStructure(@Param("studentId") UUID studentId, @Param("structureId") UUID structureId);
+
     @Query("SELECT COALESCE(SUM(p.amountPaid), 0) FROM FeePayment p WHERE p.schoolId = :schoolId AND p.paymentDate = :date")
     BigDecimal sumCollectedOnDate(@Param("schoolId") UUID schoolId, @Param("date") java.time.LocalDate date);
 

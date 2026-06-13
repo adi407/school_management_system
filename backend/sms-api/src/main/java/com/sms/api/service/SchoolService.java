@@ -35,6 +35,7 @@ public class SchoolService {
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
     private final ModuleAssignmentService moduleAssignmentService;
+    private final EmailService emailService;
 
     public SchoolService(
         SchoolRepository schoolRepository,
@@ -42,7 +43,8 @@ public class SchoolService {
         FeatureFlagRepository featureFlagRepository,
         PasswordEncoder passwordEncoder,
         EntityManager entityManager,
-        @Lazy ModuleAssignmentService moduleAssignmentService
+        @Lazy ModuleAssignmentService moduleAssignmentService,
+        EmailService emailService
     ) {
         this.schoolRepository      = schoolRepository;
         this.userRepository        = userRepository;
@@ -50,6 +52,7 @@ public class SchoolService {
         this.passwordEncoder       = passwordEncoder;
         this.entityManager         = entityManager;
         this.moduleAssignmentService = moduleAssignmentService;
+        this.emailService          = emailService;
     }
 
     public Page<SchoolDto> listSchools(String search, String tier, Boolean isActive, Pageable pageable) {
@@ -94,6 +97,7 @@ public class SchoolService {
         admin.setPasswordHash(passwordEncoder.encode(req.adminPassword()));
         admin.setRole(Role.SCHOOL_ADMIN);
         admin = userRepository.save(admin);
+        emailService.sendWelcome(admin, school.getName());
 
         // Auto-assign ALL modules to the founding admin (full access, null sub-permissions)
         moduleAssignmentService.assignAllModules(school.getId(), admin.getId());

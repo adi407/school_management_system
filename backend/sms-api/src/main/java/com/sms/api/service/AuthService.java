@@ -41,6 +41,7 @@ public class AuthService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     public AuthService(
         UserRepository userRepository,
@@ -48,7 +49,8 @@ public class AuthService {
         FeatureFlagRepository featureFlagRepository,
         PasswordResetTokenRepository passwordResetTokenRepository,
         PasswordEncoder passwordEncoder,
-        JwtService jwtService
+        JwtService jwtService,
+        EmailService emailService
     ) {
         this.userRepository       = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -56,6 +58,7 @@ public class AuthService {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.passwordEncoder      = passwordEncoder;
         this.jwtService           = jwtService;
+        this.emailService         = emailService;
     }
 
     public AuthResponse login(LoginRequest request, String ipAddress, String userAgent) {
@@ -107,13 +110,7 @@ public class AuthService {
             prt.setExpiresAt(Instant.now().plusSeconds(30 * 60)); // 30 minutes
             passwordResetTokenRepository.save(prt);
 
-            // Dev fallback: log the token instead of sending email.
-            // In production, replace this with JavaMailSender integration.
-            // (We keep IP/UA params in case you later want to store them on the token record.)
-            org.slf4j.LoggerFactory.getLogger(AuthService.class).info(
-                "Password reset token for {} (dev): {} (ip={}, ua={})",
-                user.getEmail(), token, ipAddress, userAgent
-            );
+            emailService.sendPasswordReset(user.getEmail(), user.getFullName(), token);
         }, () -> {
             // Intentionally no-op.
         });

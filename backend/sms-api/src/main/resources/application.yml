@@ -44,15 +44,15 @@ spring:
     password: ${SPRING_RABBITMQ_PASSWORD:guest}
 
   mail:
-    host: ${MAIL_HOST:smtp.sendgrid.net}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:apikey}
+    host: ${MAIL_HOST:smtp.resend.com}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME:resend}
     password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
           auth: true
-          starttls:
+          ssl:
             enable: true
 
   servlet:
@@ -109,3 +109,10 @@ server:
   compression:
     enabled: true
     mime-types: application/json,text/html
+
+app:
+  email:
+    from: ${EMAIL_FROM:noreply@schoolmanager.live}
+    admin-to: ${EMAIL_ADMIN_TO:adityakumar20111@gmail.com}
+    frontend-url: ${FRONTEND_URL:https://schoolmanager.live}
+    enabled: ${EMAIL_ENABLED:true}

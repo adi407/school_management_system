@@ -40,6 +40,10 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
 
     Optional<Student> findByIdAndSchoolId(UUID id, UUID schoolId);
 
+    List<Student> findBySchoolClassIdAndSchoolIdAndIsActiveTrue(UUID classId, UUID schoolId);
+
+    List<Student> findBySchoolIdAndIsActiveTrue(UUID schoolId);
+
     /** All active students in a class — used by PTM briefing generation */
     List<Student> findBySchoolClassIdAndIsActiveTrueOrderByFirstNameAsc(UUID classId);
 

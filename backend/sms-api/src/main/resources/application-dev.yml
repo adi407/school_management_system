@@ -30,6 +30,10 @@ management:
     mail:
       enabled: false
 
+app:
+  email:
+    enabled: false
+
 logging:
   level:
     com.sms: DEBUG
