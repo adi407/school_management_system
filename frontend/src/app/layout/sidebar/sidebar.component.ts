@@ -46,8 +46,9 @@ export class SidebarComponent {
       label: 'Platform',
       roles: ['SUPER_ADMIN'],
       items: [
-        { label: 'Dashboard', route: '/super-admin/dashboard', icon: '◈' },
-        { label: 'Schools',   route: '/super-admin/schools',   icon: '🏫' },
+        { label: 'Dashboard',     route: '/super-admin/dashboard',     icon: '◈' },
+        { label: 'Registrations', route: '/super-admin/registrations', icon: '📋' },
+        { label: 'Schools',       route: '/super-admin/schools',       icon: '🏫' },
       ],
     },
 

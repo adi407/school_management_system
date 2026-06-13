@@ -2,12 +2,16 @@ package com.sms.api.controller;
 
 import com.sms.api.dto.feature.FeatureFlagDto;
 import com.sms.api.dto.feature.UpdateFeatureFlagsRequest;
+import com.sms.api.dto.registration.ApproveRegistrationRequest;
+import com.sms.api.dto.registration.RejectRegistrationRequest;
+import com.sms.api.dto.registration.SchoolRegistrationDto;
 import com.sms.api.dto.school.CreateSchoolRequest;
 import com.sms.api.dto.school.DeleteSchoolResponse;
 import com.sms.api.dto.school.SchoolDto;
 import com.sms.api.dto.school.UpdateSchoolRequest;
 import com.sms.api.security.UserPrincipal;
 import com.sms.api.service.FeatureFlagService;
+import com.sms.api.service.SchoolRegistrationService;
 import com.sms.api.service.SchoolService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,10 +36,16 @@ public class SuperAdminController {
 
     private final SchoolService schoolService;
     private final FeatureFlagService featureFlagService;
+    private final SchoolRegistrationService registrationService;
 
-    public SuperAdminController(SchoolService schoolService, FeatureFlagService featureFlagService) {
+    public SuperAdminController(
+        SchoolService schoolService,
+        FeatureFlagService featureFlagService,
+        SchoolRegistrationService registrationService
+    ) {
         this.schoolService      = schoolService;
         this.featureFlagService = featureFlagService;
+        this.registrationService = registrationService;
     }
 
     @GetMapping("/schools")
@@ -91,6 +101,49 @@ public class SuperAdminController {
     public ResponseEntity<DeleteSchoolResponse> hardDeleteSchool(@PathVariable UUID id) {
         return ResponseEntity.ok(schoolService.hardDelete(id));
     }
+
+    // ── School Registrations ─────────────────────────────────────────
+
+    @GetMapping("/registrations")
+    @Operation(summary = "List school registrations with optional status filter")
+    public ResponseEntity<Page<SchoolRegistrationDto>> listRegistrations(
+        @RequestParam(required = false) String status,
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        return ResponseEntity.ok(registrationService.listRegistrations(status, pageable));
+    }
+
+    @GetMapping("/registrations/pending-count")
+    @Operation(summary = "Count pending registrations")
+    public ResponseEntity<Map<String, Long>> pendingCount() {
+        return ResponseEntity.ok(Map.of("count", registrationService.countPending()));
+    }
+
+    @GetMapping("/registrations/{id}")
+    @Operation(summary = "Get registration details")
+    public ResponseEntity<SchoolRegistrationDto> getRegistration(@PathVariable UUID id) {
+        return ResponseEntity.ok(registrationService.getRegistration(id));
+    }
+
+    @PostMapping("/registrations/{id}/approve")
+    @Operation(summary = "Approve a school registration and create the school")
+    public ResponseEntity<SchoolRegistrationDto> approveRegistration(
+        @PathVariable UUID id,
+        @Valid @RequestBody ApproveRegistrationRequest request
+    ) {
+        return ResponseEntity.ok(registrationService.approveRegistration(id, request));
+    }
+
+    @PostMapping("/registrations/{id}/reject")
+    @Operation(summary = "Reject a school registration with reason")
+    public ResponseEntity<SchoolRegistrationDto> rejectRegistration(
+        @PathVariable UUID id,
+        @Valid @RequestBody RejectRegistrationRequest request
+    ) {
+        return ResponseEntity.ok(registrationService.rejectRegistration(id, request));
+    }
+
+    // ── Feature Flags ─────────────────────────────────────────────
 
     @GetMapping("/schools/{id}/features")
     @Operation(summary = "Get feature flags for a school")

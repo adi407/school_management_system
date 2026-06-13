@@ -1,0 +1,217 @@
+<div class="page" [class.page--dark]="theme.isDark()">
+  <nav class="page-nav">
+    <a routerLink="/" class="page-nav__brand">
+      <div class="page-nav__logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#059669"/>
+          </linearGradient></defs>
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <polygon points="12,5 19,8.5 12,12 5,8.5" fill="white" opacity="0.95"/>
+          <rect x="9" y="11.5" width="6" height="5" rx="1" fill="white" opacity="0.75"/>
+        </svg>
+      </div>
+      <span>SchoolManager</span>
+    </a>
+    <div class="page-nav__right">
+      <a routerLink="/login" class="nav-link">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="reg-container">
+    @if (!submitted()) {
+      <div class="reg-header">
+        <h1>Register Your School</h1>
+        <p>Get started with SchoolManager — fill in your school details and we'll set up your account within 48 hours.</p>
+      </div>
+
+      <!-- Step indicator -->
+      <div class="steps">
+        <div class="step" [class.step--active]="step() >= 1" [class.step--done]="step() > 1">
+          <div class="step__num">@if (step() > 1) { ✓ } @else { 1 }</div>
+          <span>School Details</span>
+        </div>
+        <div class="step__line" [class.step__line--active]="step() > 1"></div>
+        <div class="step" [class.step--active]="step() >= 2">
+          <div class="step__num">2</div>
+          <span>Admin Account</span>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="reg-form">
+
+        <!-- Step 1: School info -->
+        @if (step() === 1) {
+          <div class="form-section">
+            <h2 class="form-section__title">School Information</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="schoolName">School Name <span class="req">*</span></label>
+                <input id="schoolName" formControlName="schoolName" placeholder="e.g. Delhi Public School"
+                       (blur)="generateCode()" />
+                @if (form.controls.schoolName.touched && form.controls.schoolName.invalid) {
+                  <span class="field-error">School name is required</span>
+                }
+              </div>
+              <div class="form-group">
+                <label for="schoolCode">School Code <span class="req">*</span></label>
+                <input id="schoolCode" formControlName="schoolCode" placeholder="e.g. DPS"
+                       style="text-transform: uppercase" />
+                @if (form.controls.schoolCode.touched && form.controls.schoolCode.invalid) {
+                  <span class="field-error">3-20 chars, letters, numbers, hyphens only</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="board">Board <span class="req">*</span></label>
+                <select id="board" formControlName="board">
+                  <option value="CBSE">CBSE</option>
+                  <option value="ICSE">ICSE</option>
+                  <option value="STATE">State Board</option>
+                  <option value="IB">IB</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="requestedTier">Plan</label>
+                <select id="requestedTier" formControlName="requestedTier">
+                  <option value="FREE">Free</option>
+                  <option value="BASIC">Basic — ₹999/mo</option>
+                  <option value="PREMIUM">Premium — ₹2,499/mo</option>
+                  <option value="ENTERPRISE">Enterprise — Custom</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input id="city" formControlName="city" placeholder="e.g. New Delhi" />
+              </div>
+              <div class="form-group">
+                <label for="state">State</label>
+                <input id="state" formControlName="state" placeholder="e.g. Delhi" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="address">Address</label>
+                <input id="address" formControlName="address" placeholder="School address" />
+              </div>
+              <div class="form-group">
+                <label for="phone">School Phone</label>
+                <input id="phone" formControlName="phone" placeholder="+91 11 2345 6789" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="schoolEmail">School Email</label>
+                <input id="schoolEmail" type="email" formControlName="schoolEmail" placeholder="info@school.edu" />
+              </div>
+              <div class="form-group">
+                <label for="studentCount">Approximate Students</label>
+                <input id="studentCount" type="number" formControlName="studentCount" placeholder="e.g. 500" min="1" />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-next" (click)="nextStep()">
+                Next: Admin Details
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Step 2: Admin account -->
+        @if (step() === 2) {
+          <div class="form-section">
+            <h2 class="form-section__title">Admin Account</h2>
+            <p class="form-section__desc">This person will be the primary administrator for the school.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="adminName">Full Name <span class="req">*</span></label>
+                <input id="adminName" formControlName="adminName" placeholder="e.g. Rajesh Kumar" />
+                @if (form.controls.adminName.touched && form.controls.adminName.invalid) {
+                  <span class="field-error">Admin name is required</span>
+                }
+              </div>
+              <div class="form-group">
+                <label for="adminEmail">Email Address <span class="req">*</span></label>
+                <input id="adminEmail" type="email" formControlName="adminEmail" placeholder="admin@school.edu" />
+                @if (form.controls.adminEmail.touched && form.controls.adminEmail.invalid) {
+                  <span class="field-error">Valid email is required</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="adminPhone">Phone Number</label>
+                <input id="adminPhone" formControlName="adminPhone" placeholder="+91 98765 43210" />
+              </div>
+              <div class="form-group">
+                <label for="adminDesignation">Designation</label>
+                <select id="adminDesignation" formControlName="adminDesignation">
+                  <option value="">Select designation</option>
+                  <option value="Principal">Principal</option>
+                  <option value="Vice Principal">Vice Principal</option>
+                  <option value="Administrator">Administrator</option>
+                  <option value="IT Head">IT Head</option>
+                  <option value="Trustee/Owner">Trustee / Owner</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group form-group--full">
+              <label for="message">Anything else you'd like us to know?</label>
+              <textarea id="message" formControlName="message" rows="3"
+                        placeholder="e.g. We need the system ready before July for new admissions..."></textarea>
+            </div>
+
+            @if (error()) {
+              <div class="form-error">{{ error() }}</div>
+            }
+
+            <div class="form-actions form-actions--split">
+              <button type="button" class="btn-back" (click)="prevStep()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </button>
+              <button type="submit" class="btn-submit" [disabled]="submitting()">
+                @if (submitting()) {
+                  Submitting...
+                } @else {
+                  Register School
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                }
+              </button>
+            </div>
+          </div>
+        }
+      </form>
+    } @else {
+      <!-- Success state -->
+      <div class="reg-success">
+        <div class="reg-success__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h2>Registration Submitted!</h2>
+        <p>Thank you for registering your school. Our team will review your application and get back to you within <strong>48 hours</strong>.</p>
+        <p class="reg-success__check">Check your email at <strong>{{ form.controls.adminEmail.value }}</strong> for a confirmation.</p>
+        <div class="reg-success__actions">
+          <a routerLink="/" class="btn-home">Back to Home</a>
+          <a routerLink="/pricing" class="btn-pricing">View Plans</a>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -2,6 +2,7 @@ package com.sms.api.service;
 
 import com.sms.api.config.EmailProperties;
 import com.sms.api.entity.*;
+import com.sms.api.entity.SchoolRegistration;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
@@ -173,6 +174,98 @@ public class EmailService {
         );
         String subject = "Attendance: " + student.getFullName() + " was " + statusLabel + " on " + date.format(DATE_FMT);
         sendToGuardians(guardians, subject, html);
+    }
+
+    // ── School registration: confirmation to applicant ───────────────────────
+
+    @Async
+    public void sendRegistrationConfirmation(SchoolRegistration reg) {
+        String html = wrap(
+            "Registration Received",
+            "<p>Hi " + esc(reg.getAdminName()) + ",</p>"
+            + "<p>Thank you for registering <strong>" + esc(reg.getSchoolName()) + "</strong> on SchoolManager!</p>"
+            + "<p>Your registration is now <strong>pending review</strong>. Our team will review your application and get back to you within 48 hours.</p>"
+            + "<table style='width:100%;border-collapse:collapse;margin:16px 0'>"
+            + row("School", reg.getSchoolName())
+            + row("Code", reg.getSchoolCode())
+            + row("Board", reg.getBoard().name())
+            + row("Plan Requested", reg.getRequestedTier().name())
+            + row("City", reg.getCity())
+            + "</table>"
+            + "<p>You'll receive an email once your registration has been reviewed.</p>"
+            + "<p>— The SchoolManager Team</p>"
+        );
+        send(reg.getAdminEmail(), "Registration received — " + esc(reg.getSchoolName()), html);
+    }
+
+    // ── School registration: notification to super admin ───────────────────
+
+    @Async
+    public void sendRegistrationNotification(SchoolRegistration reg) {
+        String html = wrap(
+            "New School Registration",
+            "<p>A new school has registered and is awaiting your review:</p>"
+            + "<table style='width:100%;border-collapse:collapse;margin:16px 0'>"
+            + row("School Name", reg.getSchoolName())
+            + row("School Code", reg.getSchoolCode())
+            + row("Board", reg.getBoard().name())
+            + row("Requested Tier", reg.getRequestedTier().name())
+            + row("City", reg.getCity())
+            + row("State", reg.getState())
+            + row("Est. Students", reg.getStudentCount() != null ? reg.getStudentCount().toString() : "—")
+            + row("Admin Name", reg.getAdminName())
+            + row("Admin Email", reg.getAdminEmail())
+            + row("Phone", reg.getAdminPhone())
+            + row("Designation", reg.getAdminDesignation())
+            + row("Message", reg.getMessage())
+            + "</table>"
+            + button("Review in Dashboard", props.frontendUrl() + "/super-admin/registrations")
+        );
+        send(props.adminTo(), "New School Registration: " + esc(reg.getSchoolName()), html);
+    }
+
+    // ── School registration: approved ──────────────────────────────────────
+
+    @Async
+    public void sendRegistrationApproved(SchoolRegistration reg, String tempPassword) {
+        String loginUrl = props.frontendUrl() + "/login";
+        String html = wrap(
+            "Registration Approved!",
+            "<p>Hi " + esc(reg.getAdminName()) + ",</p>"
+            + "<p>Great news! Your school <strong>" + esc(reg.getSchoolName()) + "</strong> has been approved on SchoolManager.</p>"
+            + "<p>Your admin account is ready. Here are your login credentials:</p>"
+            + "<table style='width:100%;border-collapse:collapse;margin:16px 0'>"
+            + row("Email", reg.getAdminEmail())
+            + row("Temporary Password", tempPassword)
+            + row("School Code", reg.getSchoolCode())
+            + "</table>"
+            + "<p style='color:#E11D48;font-weight:600'>Please change your password after your first login.</p>"
+            + button("Sign In Now", loginUrl)
+            + "<p>If you have any questions, feel free to reach out to our support team.</p>"
+            + "<p>— The SchoolManager Team</p>"
+        );
+        send(reg.getAdminEmail(), "Your school is approved — Welcome to SchoolManager!", html);
+    }
+
+    // ── School registration: rejected ──────────────────────────────────────
+
+    @Async
+    public void sendRegistrationRejected(SchoolRegistration reg) {
+        String html = wrap(
+            "Registration Update",
+            "<p>Hi " + esc(reg.getAdminName()) + ",</p>"
+            + "<p>Thank you for your interest in SchoolManager. After reviewing your registration for <strong>"
+            + esc(reg.getSchoolName()) + "</strong>, we're unable to approve it at this time.</p>"
+            + "<div style='margin:16px 0;padding:16px;background:#FEF2F2;border-radius:8px;border-left:4px solid #E11D48'>"
+            + "<p style='margin:0;font-weight:600;color:#991B1B'>Reason:</p>"
+            + "<p style='margin:4px 0 0;color:#7F1D1D'>" + esc(reg.getRejectionReason()) + "</p>"
+            + "</div>"
+            + "<p>If you believe this was an error or would like to reapply with updated information, "
+            + "please <a href='" + props.frontendUrl() + "/register' style='color:#2563EB'>submit a new registration</a> "
+            + "or contact us at <a href='mailto:support@schoolmanager.live' style='color:#2563EB'>support@schoolmanager.live</a>.</p>"
+            + "<p>— The SchoolManager Team</p>"
+        );
+        send(reg.getAdminEmail(), "Registration update — " + esc(reg.getSchoolName()), html);
     }
 
     // ── Internal helpers ────────────────────────────────────────────────────

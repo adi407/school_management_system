@@ -35,6 +35,10 @@ export const routes: Routes = [
     path: 'privacy',
     loadComponent: () => import('./features/public/privacy/privacy.component').then(m => m.PrivacyComponent),
   },
+  {
+    path: 'register',
+    loadComponent: () => import('./features/public/register/register.component').then(m => m.RegisterComponent),
+  },
 
   // ── Internal demo access — PIN-gated, not linked from anywhere ────────────
   // Path is intentionally non-obvious. Change DEMO_PIN in demo-login.component.ts to rotate.
@@ -66,6 +70,10 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             loadComponent: () => import('./features/super-admin/dashboard/sa-dashboard.component').then(m => m.SaDashboardComponent),
+          },
+          {
+            path: 'registrations',
+            loadComponent: () => import('./features/super-admin/registrations/registration-list.component').then(m => m.RegistrationListComponent),
           },
           {
             path: 'schools',
