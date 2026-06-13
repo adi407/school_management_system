@@ -75,39 +75,12 @@ jobs:
           ENDSSH
 
       - name: Configure email on server
+        env:
+          RESEND_KEY: ${{ secrets.RESEND_API_KEY }}
         run: |
-          ssh root@${{ secrets.DROPLET_HOST }} bash << ENDSSH
-            echo 'MAIL_PASSWORD=${{ secrets.RESEND_API_KEY }}' > /opt/sms/app/.env
-            CONFIG=/opt/sms/app/application-prod.yml
-            # Add Resend SMTP config if not already present
-            if ! grep -q "smtp.resend.com" "\$CONFIG"; then
-              sed -i '/# ── Disable Mail/,/enable: false/c\\
-  # ── Resend SMTP ─────────────────────────────────────────────\\n\
-  mail:\\n\
-    host: smtp.resend.com\\n\
-    port: 465\\n\
-    username: resend\\n\
-    password: \${MAIL_PASSWORD}\\n\
-    properties:\\n\
-      mail:\\n\
-        smtp:\\n\
-          auth: true\\n\
-          ssl:\\n\
-            enable: true' "\$CONFIG"
-            fi
-            # Add app.email block if not already present
-            if ! grep -q "app:" "\$CONFIG"; then
-              cat >> "\$CONFIG" << 'BLOCK'
-
-app:
-  email:
-    from: noreply@schoolmanager.live
-    admin-to: adityakumar20111@gmail.com
-    frontend-url: https://schoolmanager.live
-    enabled: true
-BLOCK
-            fi
-          ENDSSH
+          ssh root@${{ secrets.DROPLET_HOST }} "echo 'MAIL_PASSWORD=${RESEND_KEY}' > /opt/sms/app/.env"
+          scp .github/scripts/configure-email.sh root@${{ secrets.DROPLET_HOST }}:/opt/sms/app/configure-email.sh
+          ssh root@${{ secrets.DROPLET_HOST }} "chmod +x /opt/sms/app/configure-email.sh && /opt/sms/app/configure-email.sh"
 
       - name: Restart & Verify
         run: |
